@@ -3,13 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import { CheckCircle, ArrowRight, ArrowLeft, Sparkles, Users, Target, Clock, Briefcase } from 'lucide-react';
-import { auth } from '../firebase'; 
-import { doc, setDoc, getFirestore } from 'firebase/firestore';
+import { auth } from '../firebase';
+import { doc, writeBatch, getFirestore } from 'firebase/firestore';
+import { useToast } from '../components/ui/use-toast';
 
 const db = getFirestore();
 
 const Onboarding = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -92,32 +94,59 @@ const Onboarding = () => {
 
   const handleComplete = async () => {
     setIsSubmitting(true);
+
     try {
       const user = auth.currentUser;
-      if (user) {
-        // Store in Firestore
-        await setDoc(doc(db, 'userPreferences', user.uid), {
-          ...answers,
-          completedAt: new Date(),
-          userId: user.uid,
-          email: user.email
-        });
-        
-        // Also store completion status
-        await setDoc(doc(db, 'userSettings', user.uid), {
-          onboardingCompleted: true,
-          completedAt: new Date()
-        }, { merge: true });
+      if (!user) {
+        throw new Error('User not authenticated');
       }
-      
+
+      // Create a batch write for atomic operation
+      const batch = writeBatch(db);
+
+      // Add user preferences to batch
+      const prefsRef = doc(db, 'userPreferences', user.uid);
+      batch.set(prefsRef, {
+        ...answers,
+        completedAt: new Date(),
+        userId: user.uid,
+        email: user.email
+      });
+
+      // Add completion status to batch
+      const settingsRef = doc(db, 'userSettings', user.uid);
+      batch.set(settingsRef, {
+        onboardingCompleted: true,
+        completedAt: new Date()
+      }, { merge: true });
+
+      // Commit the batch
+      await batch.commit();
+
       // Keep localStorage as backup
       localStorage.setItem('userPreferences', JSON.stringify(answers));
       localStorage.setItem('onboardingCompleted', 'true');
-      
+
+      toast({
+        title: "Setup Complete!",
+        description: "Your preferences have been saved successfully.",
+        duration: 3000
+      });
+
       navigate('/dashboard');
     } catch (error) {
       console.error('Error saving onboarding data:', error);
-      // Still navigate even if save fails
+      toast({
+        title: "Error Saving Preferences",
+        description: "Your preferences will be saved locally for now.",
+        variant: "destructive",
+        duration: 5000
+      });
+
+      // Save to localStorage as fallback
+      localStorage.setItem('userPreferences', JSON.stringify(answers));
+      localStorage.setItem('onboardingCompleted', 'true');
+
       navigate('/dashboard');
     } finally {
       setIsSubmitting(false);
@@ -133,10 +162,22 @@ const Onboarding = () => {
           skipped: true,
           completedAt: new Date()
         }, { merge: true });
+
+        toast({
+          title: "Setup Skipped",
+          description: "You can always complete your profile later from settings.",
+          duration: 3000
+        });
       }
       navigate('/dashboard');
     } catch (error) {
       console.error('Error saving skip status:', error);
+      toast({
+        title: "Error Saving Status",
+        description: "You'll be redirected to dashboard anyway.",
+        variant: "destructive",
+        duration: 3000
+      });
       navigate('/dashboard');
     }
   };
