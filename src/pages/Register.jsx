@@ -5,11 +5,14 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { useToast } from '../components/ui/use-toast';
+import { Icon } from '@iconify/react';
 
 const Register = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -62,9 +65,9 @@ const Register = () => {
       await createUser(formData.email, formData.password, formData.username);
       toast({
         title: "Success",
-        description: "Account created successfully!",
+        description: "Account created successfully! Redirecting to onboarding...",
       });
-      navigate('/dashboard');
+      navigate('/onboarding');
     } catch (error) {
       toast({
         title: "Error",
@@ -82,9 +85,9 @@ const Register = () => {
       await signInWithGoogle();
       toast({
         title: "Success",
-        description: "Signed in with Google successfully!",
+        description: "Signed in with Google successfully! Redirecting to onboarding...",
       });
-      navigate('/dashboard');
+      navigate('/onboarding');
     } catch (error) {
       toast({
         title: "Error",
@@ -100,10 +103,10 @@ const Register = () => {
     <div className="min-h-screen flex items-center justify-center bg-background px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8 p-6 sm:p-8 bg-card rounded-lg shadow-lg">
         <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-[#5F2B8D] font-satoshi">Create Account</h2>
-          <p className="mt-2 text-sm text-[#3E3E3E] font-satoshi">
+          <h2 className="text-3xl font-bold tracking-tight text-[#5F2B8D] dark:text-white font-satoshi">Create Account</h2>
+          <p className="mt-2 text-sm text-[#3E3E3E] dark:text-white font-satoshi">
             Already have an account?{' '}
-            <Link to="/login" className="text-[#5F2B8D] hover:underline">
+            <Link to="/login" className="text-[#5F2B8D] dark:text-[#FFD64A] hover:underline">
               Sign in
             </Link>
           </p>
@@ -139,28 +142,54 @@ const Register = () => {
 
             <div>
               <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                required
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Enter your password"
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  required
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Enter your password"
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  <Icon
+                    icon={showPassword ? "ph:eye-slash" : "ph:eye"}
+                    className="w-5 h-5"
+                  />
+                </button>
+              </div>
             </div>
 
             <div>
               <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <Input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                required
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                placeholder="Confirm your password"
-              />
+              <div className="relative">
+                <Input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  required
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Confirm your password"
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  <Icon
+                    icon={showConfirmPassword ? "ph:eye-slash" : "ph:eye"}
+                    className="w-5 h-5"
+                  />
+                </button>
+              </div>
             </div>
           </div>
 
@@ -178,7 +207,7 @@ const Register = () => {
             <span className="w-full border-t" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">
+            <span className="bg-background px-2 text-muted-foreground dark:text-white">
               Or continue with
             </span>
           </div>
@@ -187,7 +216,7 @@ const Register = () => {
         <Button
           type="button"
           variant="outline"
-          className="w-full border-[#3E3E3E] text-[#3E3E3E] hover:bg-[#FFD64A] font-satoshi"
+          className="w-full border-[#3E3E3E] dark:border-white text-[#3E3E3E] dark:text-white hover:bg-[#FFD64A] font-satoshi"
           onClick={handleGoogleSignIn}
           disabled={loading}
         >

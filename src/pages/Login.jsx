@@ -5,11 +5,13 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { useToast } from '../components/ui/use-toast';
+import { Icon } from '@iconify/react';
 
 const Login = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -68,10 +70,10 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-background px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8 p-6 sm:p-8 bg-card rounded-lg shadow-lg">
         <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-[#5F2B8D] font-satoshi">Welcome Back</h2>
-          <p className="mt-2 text-sm text-[#3E3E3E] font-satoshi">
+          <h2 className="text-3xl font-bold tracking-tight text-[#5F2B8D] dark:text-white font-satoshi">Welcome Back</h2>
+          <p className="mt-2 text-sm text-[#3E3E3E] dark:text-white font-satoshi">
             Don't have an account?{' '}
-            <Link to="/register" className="text-[#5F2B8D] hover:underline">
+            <Link to="/register" className="text-[#5F2B8D] dark:text-[#FFD64A] hover:underline">
               Sign up
             </Link>
           </p>
@@ -95,16 +97,28 @@ const Login = () => {
 
             <div>
               <Label htmlFor="password" className="font-satoshi">Password</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                required
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Enter your password"
-                className="font-satoshi"
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  required
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Enter your password"
+                  className="font-satoshi pr-10"
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  <Icon
+                    icon={showPassword ? "ph:eye-slash" : "ph:eye"}
+                    className="w-5 h-5"
+                  />
+                </button>
+              </div>
             </div>
           </div>
 
@@ -122,7 +136,7 @@ const Login = () => {
             <span className="w-full border-t border-[#3E3E3E]" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-white px-2 text-[#3E3E3E] font-satoshi">
+            <span className="bg-white dark:bg-background px-2 text-[#3E3E3E] dark:text-white font-satoshi">
               Or continue with
             </span>
           </div>
@@ -131,7 +145,7 @@ const Login = () => {
         <Button
           type="button"
           variant="outline"
-          className="w-full border-[#3E3E3E] text-[#3E3E3E] hover:bg-[#FFD64A] font-satoshi"
+          className="w-full border-[#3E3E3E] dark:border-white text-[#3E3E3E] dark:text-white hover:bg-[#FFD64A] font-satoshi"
           onClick={handleGoogleSignIn}
           disabled={loading}
         >
