@@ -101,7 +101,7 @@ const Register = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8 p-6 sm:p-8 bg-card rounded-lg shadow-lg">
+      <div className="w-full max-w-md space-y-6 p-8 bg-card rounded-lg shadow-lg">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight text-[#5F2B8D] dark:text-white font-satoshi">Create Account</h2>
           <p className="mt-2 text-sm text-[#3E3E3E] dark:text-white font-satoshi">
@@ -195,7 +195,7 @@ const Register = () => {
 
           <Button
             type="submit"
-            className="w-full bg-[#5F2B8D] hover:bg-[#FFD64A] text-white hover:text-[#3E3E3E] font-satoshi"
+            className="w-full bg-black hover:bg-gray-800 text-white font-satoshi"
             disabled={loading}
           >
             {loading ? 'Creating Account...' : 'Create Account'}
@@ -216,7 +216,7 @@ const Register = () => {
         <Button
           type="button"
           variant="outline"
-          className="w-full border-[#3E3E3E] dark:border-white text-[#3E3E3E] dark:text-white hover:bg-[#FFD64A] font-satoshi"
+          className="w-full border-[#3E3E3E] dark:border-white text-[#3E3E3E] dark:text-white hover:bg-black hover:text-white font-satoshi"
           onClick={handleGoogleSignIn}
           disabled={loading}
         >

@@ -10,221 +10,203 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "./ui/navigation-menu";
+import { Button } from "./ui/button";
+import { cn } from "../lib/utils";
+
+const menuItems = [
+    { name: 'Features', href: '/features' },
+    { name: 'Solution', href: '#link' },
+    { name: 'Pricing', href: '/pricing' },
+    { name: 'About', href: '/about' },
+]
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+    const [menuState, setMenuState] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 50);
+        }
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
-    return () => unsubscribe();
-  }, []);
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            setUser(currentUser);
+            setLoading(false);
+        });
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+        return () => unsubscribe();
+    }, []);
 
-  const handleSignOut = async () => {
-    try {
-      await signOutUser();
-      setIsOpen(false); // Close mobile menu after sign out
-    } catch (error) {
-      console.error('Sign out failed:', error);
-    }
-  };
+    const handleSignOut = async () => {
+        try {
+            await signOutUser();
+            setMenuState(false); // Close mobile menu after sign out
+        } catch (error) {
+            console.error('Sign out failed:', error);
+        }
+    };
 
-  const renderAuthButtons = () => {
-    if (loading) {
-      return (
-        <div className="animate-pulse bg-gray-200 h-6 w-16 rounded"></div>
-      );
-    }
+    const renderAuthButtons = () => {
+        if (loading) {
+            return (
+                <div className="animate-pulse bg-gray-200 h-6 w-16 rounded"></div>
+            );
+        }
 
-    if (user) {
-      const isGoogleUser = user.providerData.some(provider => provider.providerId === 'google.com');
-      
-      return (
-        <div className="flex items-center space-x-4">
-          <NavigationMenu>
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="flex items-center space-x-2">
-                  {isGoogleUser ? (
-                    <img
-                      src={user.photoURL}
-                      alt={user.displayName || 'User'}
-                      className="w-8 h-8 rounded-full"
-                    />
-                  ) : (
-                    <User size={20} className="text-gray-700" />
-                  )}
-                  <span className="text-gray-700 hidden sm:inline">
-                    {user.displayName || user.email}
-                  </span>
-                </NavigationMenuTrigger>
-                <NavigationMenuContent className="z-[60]">
-                  <div className="w-48 p-2">
-                    <Link
-                      to="/dashboard"
-                      className="flex items-center space-x-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
-                    >
-                      <LayoutDashboard size={16} />
-                      <span>Dashboard</span>
-                    </Link>
-                    <Link
-                      to="/settings"
-                      className="flex items-center space-x-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
-                    >
-                      <Settings size={16} />
-                      <span>Settings</span>
-                    </Link>
-                    <button
-                      onClick={handleSignOut}
-                      className="flex items-center space-x-2 w-full px-3 py-2 text-red-600 hover:bg-red-50 rounded-md transition-colors"
-                    >
-                      <LogOut size={16} />
-                      <span>Sign Out</span>
-                    </button>
-                  </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
-        </div>
-      );
-    }
+        if (user) {
+            const isGoogleUser = user.providerData.some(provider => provider.providerId === 'google.com');
+            
+            return (
+                <div className="flex items-center space-x-4">
+                    <NavigationMenu>
+                        <NavigationMenuList>
+                            <NavigationMenuItem>
+                                <NavigationMenuTrigger className="flex items-center space-x-2">
+                                    {isGoogleUser ? (
+                                        <img
+                                            src={user.photoURL}
+                                            alt={user.displayName || 'User'}
+                                            className="w-8 h-8 rounded-full"
+                                        />
+                                    ) : (
+                                        <User size={20} className="text-gray-700" />
+                                    )}
+                                    <span className="text-gray-700 hidden sm:inline">
+                                        {user.displayName || user.email}
+                                    </span>
+                                </NavigationMenuTrigger>
+                                <NavigationMenuContent className="z-[60]">
+                                    <div className="w-48 p-2">
+                                        <Link
+                                            to="/dashboard"
+                                            className="flex items-center space-x-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                                        >
+                                            <LayoutDashboard size={16} />
+                                            <span>Dashboard</span>
+                                        </Link>
+                                        <Link
+                                            to="/settings"
+                                            className="flex items-center space-x-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                                        >
+                                            <Settings size={16} />
+                                            <span>Settings</span>
+                                        </Link>
+                                        <button
+                                            onClick={handleSignOut}
+                                            className="flex items-center space-x-2 w-full px-3 py-2 text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                                        >
+                                            <LogOut size={16} />
+                                            <span>Sign Out</span>
+                                        </button>
+                                    </div>
+                                </NavigationMenuContent>
+                            </NavigationMenuItem>
+                        </NavigationMenuList>
+                    </NavigationMenu>
+                </div>
+            );
+        }
 
-    return (
-      <>
-        <Link 
-          to="/login" 
-          className="text-gray-700 hover:text-gray-900 transition-colors"
-        >
-          Login
-        </Link>
-        <Link 
-          to="/register" 
-          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition-colors"
-        >
-          Register
-        </Link>
-      </>
-    );
-  };
-
-  const renderMobileAuthButtons = () => {
-    if (loading) {
-      return (
-        <div className="animate-pulse bg-gray-200 h-6 mx-4 my-2 rounded"></div>
-      );
-    }
-
-    if (user) {
-      // Check if user signed in with Google
-      const isGoogleUser = user.providerData.some(provider => provider.providerId === 'google.com');
-      
-      return (
-        <div className="px-4 py-2 border-t border-gray-200">
-          <div className="flex items-center space-x-2 mb-2">
-            {isGoogleUser ? (
-              <img 
-                src={user.photoURL} 
-                alt={user.displayName || 'User'} 
-                className="w-6 h-6 rounded-full"
-              />
-            ) : (
-              <User size={16} className="text-gray-700" />
-            )}
-            <span className="text-gray-700 text-sm">
-              {user.displayName || user.email}
-            </span>
-          </div>
-          <button
-            onClick={handleSignOut}
-            className="w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition-colors"
-          >
-            Sign Out
-          </button>
-        </div>
-      );
-    }
+        return (
+            <>
+                <div className="flex items-center gap-2">
+                   
+                    <Button
+                        asChild
+                        variant="outline"
+                        size="sm">
+                        <Link to="/login">
+                            <span>Login</span>
+                        </Link>
+                    </Button>
+                    <Button
+                        asChild
+                        size="sm"
+                        className="bg-black hover:bg-gray-800 text-white">
+                        <Link to="/register">
+                            <span>Sign Up</span>
+                        </Link>
+                    </Button>
+                </div>
+            </>
+        );
+    };
 
     return (
-      <>
-        <Link 
-          to="/login" 
-          className="block text-gray-700 hover:text-gray-900 px-4 py-2 transition-colors"
-          onClick={() => setIsOpen(false)}
-        >
-          Login
-        </Link>
-        <Link 
-          to="/register" 
-          className="block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 mx-4 mb-2 rounded text-center transition-colors"
-          onClick={() => setIsOpen(false)}
-        >
-          Register
-        </Link>
-      </>
-    );
-  };
+        <header>
+            <nav
+                data-state={menuState && 'active'}
+                className="fixed z-[60] w-full px-2 md:px-4 group" style={{ top: 0 }}>
+                <div
+                    className={cn(
+                        'mx-auto mt-0 sm:mt-2 max-w-6xl px-4 sm:px-6 transition-all duration-300 lg:px-12',
+                        isScrolled && 'bg-background/80 max-w-4xl rounded-2xl border backdrop-blur-lg lg:px-5'
+                    )}>
+                    <div
+                        className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0 lg:py-4">
+                        <div className="flex w-full justify-between lg:w-auto">
+                            <Link to="/" aria-label="home" className="flex items-center space-x-2">
+                                <span className="text-gray-800 text-2xl font-bold">PitchOS</span>
+                            </Link>
 
-  return (
-    <nav className="bg-white shadow-md fixed top-0 left-0 right-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <Link to="/" className="text-gray-800 text-2xl font-bold">
-            PitchOS
-          </Link>
-          
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-6">
-            <Link to="/features" className="text-gray-700 hover:text-gray-900 transition-colors">
-              Features
-            </Link>
-            <Link to="/pricing" className="text-gray-700 hover:text-gray-900 transition-colors">
-              Pricing
-            </Link>
-            <Link to="/about" className="text-gray-700 hover:text-gray-900 transition-colors">
-              About
-            </Link>
-            {renderAuthButtons()}
-          </div>
-          
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
-            <button 
-              onClick={toggleMenu} 
-              className="text-gray-800 hover:text-gray-600 focus:outline-none transition-colors"
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
-        </div>
-        
-        {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="md:hidden bg-gray-50 border-t border-gray-200 relative z-[60]">
-            {user && (
-              <Link 
-                to="/dashboard" 
-                className="block text-gray-700 hover:text-gray-900 px-4 py-2 transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                Dashboard
-              </Link>
-            )}
-            {renderMobileAuthButtons()}
-          </div>
-        )}
-      </div>
-    </nav>
-  );
+                            <button
+                                onClick={() => setMenuState(!menuState)}
+                                aria-label={menuState == true ? 'Close Menu' : 'Open Menu'}
+                                className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden">
+                                <Menu
+                                    className="in-data-[state=active]:rotate-180 group-data-[state=active]:scale-0 group-data-[state=active]:opacity-0 m-auto size-6 duration-200" />
+                                <X
+                                    className="group-data-[state=active]:rotate-0 group-data-[state=active]:scale-100 group-data-[state=active]:opacity-100 absolute inset-0 m-auto size-6 -rotate-180 scale-0 opacity-0 duration-200" />
+                            </button>
+                        </div>
+
+                        <div className="absolute inset-0 m-auto hidden size-fit lg:block">
+                            <ul className="flex gap-8 text-sm">
+                                {menuItems.map((item, index) => (
+                                    <li key={index}>
+                                        <Link
+                                            to={item.href}
+                                            className="text-muted-foreground hover:text-accent-foreground block duration-150">
+                                            <span>{item.name}</span>
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        <div
+                            className="bg-background group-data-[state=active]:block lg:group-data-[state=active]:flex mb-4 hidden w-full flex-wrap items-center justify-end space-y-4 rounded-xl border p-4 shadow-lg md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none">
+                            <div className="lg:hidden">
+                                <ul className="space-y-6 text-base">
+                                    {menuItems.map((item, index) => (
+                                        <li key={index}>
+                                            <Link
+                                                to={item.href}
+                                                className="text-muted-foreground hover:text-accent-foreground block duration-150"
+                                                onClick={() => setMenuState(false)}>
+                                                <span>{item.name}</span>
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div
+                                className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
+                                {/* Desktop auth buttons */}
+                                {renderAuthButtons()}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+    );
 };
 
 export default Navbar;

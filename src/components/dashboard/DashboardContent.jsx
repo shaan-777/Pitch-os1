@@ -101,9 +101,9 @@ const DashboardContent = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="p-4 md:p-6 space-y-6"
+      className="p-4 sm:p-5 md:p-6 space-y-4 sm:space-y-6"
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
         {stats.map((stat, index) => (
           <StatCard
             key={index}
@@ -116,8 +116,8 @@ const DashboardContent = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="p-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        <Card className="p-4 sm:p-6">
           <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>
           {dashboardState.isLoading ? (
             <div className="space-y-3">
@@ -155,7 +155,7 @@ const DashboardContent = () => {
           )}
         </Card>
 
-        <Card className="p-6">
+        <Card className="p-4 sm:p-6">
           <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
           {dashboardState.isLoading ? (
             <div className="grid grid-cols-2 gap-3">
@@ -164,7 +164,7 @@ const DashboardContent = () => {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[
                 { label: 'Add User', icon: <Users className="w-5 h-5" /> },
                 { label: 'Create Report', icon: <BarChart3 className="w-5 h-5" /> },
@@ -174,7 +174,7 @@ const DashboardContent = () => {
                 <Button
                   key={index}
                   variant="outline"
-                  className="h-20 flex-col gap-2 hover:bg-accent"
+                  className="h-16 sm:h-20 flex-col gap-2 hover:bg-accent"
                 >
                   {action.icon}
                   <span className="text-xs">{action.label}</span>
@@ -186,7 +186,7 @@ const DashboardContent = () => {
       </div>
 
       {dashboardState.isLoading && (
-        <Card className="p-6">
+        <Card className="p-4 sm:p-6">
           <div className="flex items-center gap-3">
             <Loader2 className="w-5 h-5 animate-spin" />
             <span className="text-sm text-muted-foreground">Loading dashboard data...</span>

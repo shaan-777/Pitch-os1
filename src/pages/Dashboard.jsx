@@ -8,12 +8,12 @@ const DashboardLayout = () => {
   const { isCollapsed, isMobile } = useSidebar();
   
   return (
-    <div className="min-h-screen bg-background text-foreground pt-16">
+    <div className="min-h-[100dvh] bg-background text-foreground md:pt-16">
       {/* Main layout */}
       <Sidebar />
       <div className={`transition-all duration-300 ${
         isMobile ? 'ml-0' : isCollapsed ? 'ml-20' : 'ml-[280px]'
-      }`}>
+      } ${isMobile ? 'min-h-[100dvh]' : ''}`}>
         <Header />
         <DashboardContent />
       </div>
