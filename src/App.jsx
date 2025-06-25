@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Onboarding from './pages/Onboarding';
 import { useTheme } from './store/theme';
 import { Toaster } from './components/ui/toaster';
+import { Footer } from './components/Footer';
 
 function App() {
   const { theme } = useTheme();
@@ -26,6 +27,7 @@ function App() {
               <Route path="/onboarding" element={<Onboarding />} />
             </Routes>
           </main>
+          <Footer />
         </Router>
         <Toaster />
       </div>

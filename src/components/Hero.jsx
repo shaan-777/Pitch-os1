@@ -6,7 +6,6 @@ import { AnimatedGroup } from '@/components/ui/animated-group'
 import { cn } from '@/lib/utils'
 import { motion } from "framer-motion";
 import { useState, useMemo, useEffect } from 'react'
-import { ThemeToggle } from './ThemeToggle'
 
 const transitionVariants = {
     item: {

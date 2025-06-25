@@ -10,7 +10,7 @@ export function ThemeToggle() {
       variant="ghost"
       size="icon"
       onClick={toggleTheme}
-      className="fixed bottom-4 right-4"
+      className="text-muted-foreground hover:text-accent-foreground"
     >
       {theme === 'light' ? <Moon className="h-6 w-6" /> : <Sun className="h-6 w-6" />}
     </Button>

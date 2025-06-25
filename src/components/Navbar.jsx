@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, User, Settings, LogOut, LayoutDashboard } from 'lucide-react';
 import { auth, signOutUser } from '../firebase';
+import { ThemeToggle } from './ThemeToggle';
 import { onAuthStateChanged } from 'firebase/auth';
 import {
   NavigationMenu,
@@ -63,7 +64,8 @@ const Navbar = () => {
             const isGoogleUser = user.providerData.some(provider => provider.providerId === 'google.com');
             
             return (
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center gap-4">
+                    <ThemeToggle />
                     <NavigationMenu>
                         <NavigationMenuList>
                             <NavigationMenuItem>
@@ -116,7 +118,7 @@ const Navbar = () => {
         return (
             <>
                 <div className="flex items-center gap-2">
-                   
+                    <ThemeToggle />
                     <Button
                         asChild
                         variant="outline"
@@ -152,7 +154,7 @@ const Navbar = () => {
                         className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0 lg:py-4">
                         <div className="flex w-full justify-between lg:w-auto">
                             <Link to="/" aria-label="home" className="flex items-center space-x-2">
-                                <span className="text-gray-800 text-2xl font-bold">PitchOS</span>
+                                <span className="text-foreground text-2xl font-bold">PitchOS</span>
                             </Link>
 
                             <button
