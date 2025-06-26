@@ -43,7 +43,7 @@ export function FeaturesSectionWithHoverEffects() {
       icon: <IconHelp />,
     },
     {
-      title: "mentorship and guidence",
+      title: "Mentorship and Guidence",
       description:
         "Access stratergic mentorship from experienced founders , operators and investors",
       icon: <IconAdjustmentsBolt />,

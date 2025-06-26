@@ -23,8 +23,8 @@ export const SolutionsSection = () => {
             <div className="w-2 h-2 rounded-full mr-3 bg-green-500"></div>
             Founderoo
           </div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-light tracking-wide text-gray-800 dark:text-white">
-            SOLUTION TO THE PROBLEM
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-10 text-center text-gray-800 dark:text-white">
+            Solution To The Problem
           </h1>
         </div>
 

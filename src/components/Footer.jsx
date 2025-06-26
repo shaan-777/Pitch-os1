@@ -50,7 +50,7 @@ export function Footer() {
                 className="bg-foreground/20 absolute top-0 right-1/2 left-1/2 h-px w-1/3 -translate-x-1/2 -translate-y-1/2 rounded-full blur" />
             <div className="grid w-full gap-8 xl:grid-cols-3 xl:gap-8">
 				<AnimatedContainer className="space-y-4">
-					<FrameIcon className="size-8" />
+					<h3 className="text-2xl font-semibold">PitchOS</h3>
 					<p className="text-muted-foreground mt-8 text-sm md:mt-0">
 						© {new Date().getFullYear()} Asme. All rights reserved.
 					</p>
