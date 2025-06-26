@@ -111,7 +111,7 @@ export const Component = () => {
   const [activeView, setActiveView] = useState("technical");
 
   return (
-    <div className="container mx-auto px-4 py-16 max-w-4xl">
+    <div id="faq" className="container mx-auto px-4 py-16 max-w-4xl">
       <header className="text-center mb-12">
         <p className="text-sm font-medium text-primary mb-2">FAQs</p>
         <h1 className="text-4xl font-bold tracking-tight mb-4">
