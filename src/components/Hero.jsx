@@ -1,5 +1,6 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { auth } from '../firebase'
 import { ArrowRight, ChevronRight, Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { AnimatedGroup } from '@/components/ui/animated-group'
@@ -29,7 +30,7 @@ const transitionVariants = {
 
 
 export function HeroSection() {
-
+    const navigate = useNavigate();
     const [titleNumber, setTitleNumber] = useState(0);
 const titles = useMemo(
     () => ["vision", "showcase", "effortlessly", "get funded", "grow"],
@@ -122,7 +123,7 @@ useEffect(() => {
 
                                         <span className="text-spektr-cyan-50">Create Winning Pitches</span>
 
-                                        <span className="relative flex w-full justify-center overflow-hidden text-center md:pb-4 md:pt-1">
+                                        <span className="relative flex w-full justify-center overflow-hidden text-center h-16 md:h-24 pb-6 md:pb-6 pt-2 md:pt-2">
 
                                             &nbsp;
 
@@ -134,7 +135,7 @@ useEffect(() => {
 
                                                     className="absolute font-semibold"
 
-                                                    initial={{ opacity: 0, y: "-100" }}
+                                                    initial={{ opacity: 0, y: "-50" }}
 
                                                     transition={{ type: "spring", stiffness: 50 }}
 
@@ -152,7 +153,7 @@ useEffect(() => {
 
                                                             : {
 
-                                                                y: titleNumber > index ? -150 : 150,
+                                                                y: titleNumber > index ? -100 : 100,
 
                                                                 opacity: 0,
 
@@ -192,10 +193,19 @@ useEffect(() => {
                                     }}
                                     className="mt-12 flex flex-col items-center justify-center gap-2 md:flex-row">
                                     <div key={1} className="bg-foreground/10 rounded-[14px] border p-0.5">
-                                        <Button asChild size="lg" className="rounded-xl px-5 text-base">
-                                            <Link href="#link">
-                                                <span className="text-nowrap">Start Now</span>
-                                            </Link>
+                                        <Button
+                                            size="lg"
+                                            className="rounded-xl px-5 text-base"
+                                            onClick={() => {
+                                                const user = auth.currentUser;
+                                                if (user) {
+                                                    navigate('/dashboard');
+                                                } else {
+                                                    navigate('/login');
+                                                }
+                                            }}
+                                        >
+                                            <span className="text-nowrap">Start Now</span>
                                         </Button>
                                     </div>
                                     {/* <Button

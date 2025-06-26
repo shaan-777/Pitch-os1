@@ -18,7 +18,7 @@ const menuItems = [
     { name: 'Features', href: '#features' },
     { name: 'Solution', href: '#solution' },
     { name: 'Pricing', href: '#pricing' },
-    { name: 'About', href: '#faq' },
+    { name: 'Faq', href: '#faq' },
 ]
 
 const Navbar = () => {
