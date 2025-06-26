@@ -8,24 +8,28 @@ import {
   Bell,
   ChevronLeft, 
   ChevronRight,
-  Activity
+  Activity,
+  HomeIcon,
+  LayoutDashboard
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { useSidebar } from './SidebarContext';
 import NavItem from './NavItem';
+import Dashboard from '@/pages/Dashboard';
 
 const Sidebar = () => {
   const { isCollapsed, setIsCollapsed, isMobile } = useSidebar();
   const [activeItem, setActiveItem] = React.useState('dashboard');
 
   const navItems = [
-    { id: 'dashboard', icon: <Home />, label: 'Dashboard' },
+    { id: 'dashboard', icon: <LayoutDashboard />, label: 'Dashboard' },
     { id: 'analytics', icon: <BarChart3 />, label: 'Analytics' },
     { id: 'users', icon: <Users />, label: 'Users', badge: '12' },
     { id: 'notifications', icon: <Bell />, label: 'Notifications', badge: '3' },
     { id: 'settings', icon: <Settings />, label: 'Settings' },
+    { id: 'Back to home', icon: <Home />, label: 'Back To WebHome' },
   ];
 
   const handleClose = () => {

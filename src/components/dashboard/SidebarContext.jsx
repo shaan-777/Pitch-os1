@@ -11,15 +11,18 @@ export const useSidebar = () => {
 };
 
 export const SidebarProvider = ({ children }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true); // Start collapsed by default
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-      if (window.innerWidth < 768) {
-        setIsCollapsed(true);
-      }
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      
+      // Remove this auto-collapse behavior for mobile
+      // if (mobile) {
+      //   setIsCollapsed(true);
+      // }
     };
 
     checkMobile();
