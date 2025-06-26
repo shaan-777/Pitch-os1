@@ -15,7 +15,7 @@ export const SolutionsSection = () => {
   };
 
   return (
-    <div className="bg-white dark:bg-black transition-colors duration-300">
+    <div id="solution" className="bg-background transition-colors duration-300">
       <div className="container mx-auto px-4 sm:px-6 md:px-8 pt-16 pb-16 md:pt-20 md:pb-20 max-w-7xl">
         {/* Header */}
         <div className="text-center mb-12 md:mb-20">
@@ -46,10 +46,10 @@ export const SolutionsSection = () => {
                 - w-full on mobile, ensures card takes full width
                 - max-w-xs or max-w-sm to control maximum width on mobile if w-full is too wide
             */}
-            <div className="rounded-3xl p-6 sm:p-8 w-full max-w-xs mx-auto md:w-64 flex-shrink-0 bg-gray-50 dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 order-1 md:order-2">
+            <div className="rounded-3xl p-6 sm:p-8 w-full max-w-xs mx-auto md:w-64 flex-shrink-0 bg-muted border border-border order-1 md:order-2">
               <div className="flex items-center justify-between mb-4">
-                <div className="p-3 rounded-full bg-white dark:bg-neutral-800">
-                  <Search className="h-6 w-6 text-gray-700 dark:text-neutral-400" />
+                <div className="p-3 rounded-full bg-background">
+                  <Search className="h-6 w-6 text-foreground" />
                 </div>
               </div>
               <div className="text-center">
@@ -90,10 +90,10 @@ export const SolutionsSection = () => {
                 - md:order-1 on medium screens (card first, aligned left)
                 - w-full on mobile, max-w-xs to control width
             */}
-            <div className="rounded-3xl p-6 sm:p-8 w-full max-w-xs mx-auto md:w-64 flex-shrink-0 bg-black dark:bg-white border border-gray-800 dark:border-neutral-200 order-1 md:order-1">
+            <div className="rounded-3xl p-6 sm:p-8 w-full max-w-xs mx-auto md:w-64 flex-shrink-0 bg-primary text-primary-foreground border border-primary order-1 md:order-1">
               <div className="flex items-center justify-between mb-4">
-                <div className="p-3 rounded-full bg-white dark:bg-black">
-                  <Lightbulb className="h-6 w-6 text-black dark:text-white" />
+                <div className="p-3 rounded-full bg-primary-foreground">
+                  <Lightbulb className="h-6 w-6 text-primary" />
                 </div>
               </div>
               <div className="text-center">

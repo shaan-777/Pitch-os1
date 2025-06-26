@@ -15,10 +15,10 @@ import { Button } from "./ui/button";
 import { cn } from "../lib/utils";
 
 const menuItems = [
-    { name: 'Features', href: '/features' },
-    { name: 'Solution', href: '#link' },
-    { name: 'Pricing', href: '/pricing' },
-    { name: 'About', href: '/about' },
+    { name: 'Features', href: '#features' },
+    { name: 'Solution', href: '#solution' },
+    { name: 'Pricing', href: '#pricing' },
+    { name: 'About', href: '#faq' },
 ]
 
 const Navbar = () => {
@@ -172,11 +172,18 @@ const Navbar = () => {
                             <ul className="flex gap-8 text-sm">
                                 {menuItems.map((item, index) => (
                                     <li key={index}>
-                                        <Link
-                                            to={item.href}
-                                            className="text-muted-foreground hover:text-accent-foreground block duration-150">
+                                        <a
+                                            href={item.href}
+                                            className="text-muted-foreground hover:text-accent-foreground block duration-150"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                const element = document.querySelector(item.href);
+                                                if (element) {
+                                                    element.scrollIntoView({ behavior: 'smooth' });
+                                                }
+                                            }}>
                                             <span>{item.name}</span>
-                                        </Link>
+                                        </a>
                                     </li>
                                 ))}
                             </ul>
@@ -188,12 +195,19 @@ const Navbar = () => {
                                 <ul className="space-y-6 text-base">
                                     {menuItems.map((item, index) => (
                                         <li key={index}>
-                                            <Link
-                                                to={item.href}
+                                            <a
+                                                href={item.href}
                                                 className="text-muted-foreground hover:text-accent-foreground block duration-150"
-                                                onClick={() => setMenuState(false)}>
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    const element = document.querySelector(item.href);
+                                                    if (element) {
+                                                        element.scrollIntoView({ behavior: 'smooth' });
+                                                        setMenuState(false);
+                                                    }
+                                                }}>
                                                 <span>{item.name}</span>
-                                            </Link>
+                                            </a>
                                         </li>
                                     ))}
                                 </ul>
