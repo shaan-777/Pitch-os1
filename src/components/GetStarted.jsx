@@ -6,26 +6,26 @@ import { cn } from "@/lib/utils"
 const defaultFeatures = [
   {
     step: "Step 1",
-    title: "Sign Up",
+    title: "Sign Up & Create Your Profile",
     content: "Create your account in just 30 seconds with your email address. No credit card required to get started.",
     image: "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=600&h=400&fit=crop"
   },
   {
     step: "Step 2", 
-    title: "Set Up Profile",
-    content: "Customize your profile and preferences to get a personalized experience tailored just for you.",
+    title: "Create winning pitches",
+    content: "Our PitchMaster will help you to generate and craft precise winning pitches for your idea to become reality.",
     image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop"
   },
   {
     step: "Step 3",
-    title: "Connect & Collaborate", 
-    content: "Invite your team members and start collaborating on projects together in real-time.",
+    title: "Fine Tune Pitch to stand out more!", 
+    content: "PitchMasterAI will even give you further feedback and improvement scope and help monitor the strength of your pitch.",
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&h=400&fit=crop"
   },
   {
     step: "Step 4",
-    title: "Launch & Scale",
-    content: "Deploy your projects with confidence and scale your operations as your business grows.",
+    title: "Get your Vision Funded",
+    content: "With such highly calibrated pitches win and get your funding",
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop"
   }
 ]
