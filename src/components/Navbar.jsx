@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, User, Settings, LogOut, LayoutDashboard } from 'lucide-react';
 import { auth, signOutUser } from '../firebase';
 import { ThemeToggle } from './ThemeToggle';
@@ -26,6 +26,8 @@ const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -53,10 +55,34 @@ const Navbar = () => {
         }
     };
 
+    const handleNavClick = (href, e) => {
+        e.preventDefault();
+        
+        // If we're not on the home page, navigate to home first
+        if (location.pathname !== '/') {
+            navigate('/');
+            // Use setTimeout to wait for navigation to complete
+            setTimeout(() => {
+                const element = document.querySelector(href);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 100);
+        } else {
+            // If we're already on home page, just scroll to section
+            const element = document.querySelector(href);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        setMenuState(false); // Close mobile menu
+    };
+
     const renderAuthButtons = () => {
         if (loading) {
             return (
-                <div className="animate-pulse bg-gray-200 h-6 w-16 rounded"></div>
+                <div className="animate-pulse bg-muted h-6 w-16 rounded"></div>
             );
         }
 
@@ -69,7 +95,7 @@ const Navbar = () => {
                     <NavigationMenu>
                         <NavigationMenuList>
                             <NavigationMenuItem>
-                                <NavigationMenuTrigger className="flex items-center space-x-2">
+                                <NavigationMenuTrigger className="flex items-center space-x-2 bg-background border-border text-foreground hover:bg-accent hover:text-accent-foreground">
                                     {isGoogleUser ? (
                                         <img
                                             src={user.photoURL}
@@ -77,31 +103,31 @@ const Navbar = () => {
                                             className="w-8 h-8 rounded-full"
                                         />
                                     ) : (
-                                        <User size={20} className="text-gray-700" />
+                                        <User size={20} className="text-foreground" />
                                     )}
-                                    <span className="text-gray-700 hidden sm:inline">
+                                    <span className="text-foreground hidden sm:inline">
                                         {user.displayName || user.email}
                                     </span>
                                 </NavigationMenuTrigger>
-                                <NavigationMenuContent className="z-[60]">
+                                <NavigationMenuContent className="z-[60] bg-background border-border">
                                     <div className="w-48 p-2">
                                         <Link
                                             to="/dashboard"
-                                            className="flex items-center space-x-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                                            className="flex items-center space-x-2 px-3 py-2 text-foreground hover:bg-accent hover:text-accent-foreground rounded-md transition-colors"
                                         >
                                             <LayoutDashboard size={16} />
                                             <span>Dashboard</span>
                                         </Link>
                                         <Link
                                             to="/settings"
-                                            className="flex items-center space-x-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                                            className="flex items-center space-x-2 px-3 py-2 text-foreground hover:bg-accent hover:text-accent-foreground rounded-md transition-colors"
                                         >
                                             <Settings size={16} />
                                             <span>Settings</span>
                                         </Link>
                                         <button
                                             onClick={handleSignOut}
-                                            className="flex items-center space-x-2 w-full px-3 py-2 text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                                            className="flex items-center space-x-2 w-full px-3 py-2 text-destructive hover:bg-destructive/10 rounded-md transition-colors"
                                         >
                                             <LogOut size={16} />
                                             <span>Sign Out</span>
@@ -122,7 +148,8 @@ const Navbar = () => {
                     <Button
                         asChild
                         variant="outline"
-                        size="sm">
+                        size="sm"
+                        className="border-border text-foreground hover:bg-accent hover:text-accent-foreground">
                         <Link to="/login">
                             <span>Login</span>
                         </Link>
@@ -130,7 +157,7 @@ const Navbar = () => {
                     <Button
                         asChild
                         size="sm"
-                        className="bg-black hover:bg-gray-800 text-white">
+                        className="bg-primary hover:bg-primary/90 text-primary-foreground">
                         <Link to="/register">
                             <span>Sign Up</span>
                         </Link>
@@ -148,7 +175,7 @@ const Navbar = () => {
                 <div
                     className={cn(
                         'mx-auto mt-0 sm:mt-2 max-w-6xl px-4 sm:px-6 transition-all duration-300 lg:px-12',
-                        isScrolled && 'bg-background/80 max-w-4xl rounded-2xl border backdrop-blur-lg lg:px-5'
+                        isScrolled && 'bg-background/80 max-w-4xl rounded-2xl border border-border backdrop-blur-lg lg:px-5'
                     )}>
                     <div
                         className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0 lg:py-4">
@@ -160,7 +187,7 @@ const Navbar = () => {
                             <button
                                 onClick={() => setMenuState(!menuState)}
                                 aria-label={menuState == true ? 'Close Menu' : 'Open Menu'}
-                                className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden">
+                                className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden text-foreground">
                                 <Menu
                                     className="in-data-[state=active]:rotate-180 group-data-[state=active]:scale-0 group-data-[state=active]:opacity-0 m-auto size-6 duration-200" />
                                 <X
@@ -174,14 +201,8 @@ const Navbar = () => {
                                     <li key={index}>
                                         <a
                                             href={item.href}
-                                            className="text-muted-foreground hover:text-accent-foreground block duration-150"
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                const element = document.querySelector(item.href);
-                                                if (element) {
-                                                    element.scrollIntoView({ behavior: 'smooth' });
-                                                }
-                                            }}>
+                                            className="text-muted-foreground hover:text-foreground block duration-150"
+                                            onClick={(e) => handleNavClick(item.href, e)}>
                                             <span>{item.name}</span>
                                         </a>
                                     </li>
@@ -190,22 +211,15 @@ const Navbar = () => {
                         </div>
 
                         <div
-                            className="bg-background group-data-[state=active]:block lg:group-data-[state=active]:flex mb-4 hidden w-full flex-wrap items-center justify-end space-y-4 rounded-xl border p-4 shadow-lg md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none">
+                            className="bg-background border-border group-data-[state=active]:block lg:group-data-[state=active]:flex mb-4 hidden w-full flex-wrap items-center justify-end space-y-4 rounded-xl border p-4 shadow-lg md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none">
                             <div className="lg:hidden">
                                 <ul className="space-y-6 text-base">
                                     {menuItems.map((item, index) => (
                                         <li key={index}>
                                             <a
                                                 href={item.href}
-                                                className="text-muted-foreground hover:text-accent-foreground block duration-150"
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    const element = document.querySelector(item.href);
-                                                    if (element) {
-                                                        element.scrollIntoView({ behavior: 'smooth' });
-                                                        setMenuState(false);
-                                                    }
-                                                }}>
+                                                className="text-muted-foreground hover:text-foreground block duration-150"
+                                                onClick={(e) => handleNavClick(item.href, e)}>
                                                 <span>{item.name}</span>
                                             </a>
                                         </li>
