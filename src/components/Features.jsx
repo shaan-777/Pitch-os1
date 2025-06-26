@@ -13,8 +13,8 @@ import {
 export function FeaturesSectionWithHoverEffects() {
   const features = [
     {
-      title: "AI-powered pitch deck generator with guided prompts
-",
+      title: "AI-powered pitch deck generator with guided prompts",
+
       description:
         "Generate decks with guided prompts, smart formatting, and investor-oriented language suggestions.",
       icon: <IconTerminal2 />,
