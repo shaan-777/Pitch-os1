@@ -7,7 +7,8 @@ import { AnimatedGroup } from '@/components/ui/animated-group'
 import { cn } from '@/lib/utils'
 import { motion } from "framer-motion";
 import { useState, useMemo, useEffect } from 'react'
-
+import dashboard from  '../assets/dashboard.jpg'
+import dark from '../assets/dark.jpg'
 const transitionVariants = {
     item: {
         hidden: {
@@ -121,7 +122,7 @@ useEffect(() => {
 
                                     <h1 className="text-5xl md:text-7xl max-w-2xl tracking-tighter text-center font-regular">
 
-                                        <span className="text-spektr-cyan-50">Create Winning Pitches</span>
+                                        <span className="text-spektr-cyan-50">Craft Pitches That Win Investors</span>
 
                                         <span className="relative flex w-full justify-center overflow-hidden text-center h-16 md:h-24 pb-6 md:pb-6 pt-2 md:pt-2">
 
@@ -239,21 +240,21 @@ useEffect(() => {
                                 <div
                                     aria-hidden
                                     className="bg-gradient-to-b to-background absolute inset-0 z-10 from-transparent from-35%" />
-                                {/* <div
+                                <div
                                     className="inset-shadow-2xs ring-background dark:inset-shadow-white/20 bg-background relative mx-auto max-w-6xl overflow-hidden rounded-2xl border p-4 shadow-lg shadow-zinc-950/15 ring-1">
                                     <img
                                         className="bg-background aspect-15/8 relative hidden rounded-2xl dark:block"
-                                        src="https://tailark.com//_next/image?url=%2Fmail2.png&w=3840&q=75"
+                                        src= {dark}
                                         alt="app screen"
                                         width="2700"
                                         height="1440" />
                                     <img
                                         className="z-2 border-border/25 aspect-15/8 relative rounded-2xl border dark:hidden"
-                                        src="https://tailark.com/_next/image?url=%2Fmail2-light.png&w=3840&q=75"
+                                        src= {dashboard}
                                         alt="app screen"
                                         width="2700"
                                         height="1440" />
-                                </div> */}
+                                </div>
                             </div>
                         </AnimatedGroup>
                     </div>
