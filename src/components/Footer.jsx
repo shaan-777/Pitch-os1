@@ -52,7 +52,7 @@ export function Footer() {
 				<AnimatedContainer className="space-y-4">
 					<h3 className="text-2xl font-semibold">PitchOS</h3>
 					<p className="text-muted-foreground mt-8 text-sm md:mt-0">
-						© {new Date().getFullYear()} Asme. All rights reserved.
+						© {new Date().getFullYear()} PitchOS. All rights reserved.
 					</p>
 				</AnimatedContainer>
 
