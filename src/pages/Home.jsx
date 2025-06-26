@@ -7,6 +7,7 @@ import { Component } from '@/components/faq-section';
 import { FeaturesSectionWithHoverEffects } from '@/components/Features';
 import { Pricing } from '@/components/ui/Pricing';
 import { PageLoader } from '@/components/ui/page-loader';
+import { SolutionsSection } from '@/components/Solutions';
 
 
 
@@ -48,6 +49,12 @@ export default function Home() {
         <motion.div variants={childVariants}>
           <div className="py-16 md:py-24">
             <FeatureSteps />
+          </div>
+        </motion.div>
+
+        <motion.div variants={childVariants}>
+          <div className="py-16 md:py-24">
+            <SolutionsSection/>
           </div>
         </motion.div>
 

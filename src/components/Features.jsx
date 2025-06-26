@@ -1,116 +1,3 @@
-// import { cn } from "@/lib/utils";
-// import {
-//   IconAdjustmentsBolt,
-//   IconCloud,
-//   IconCurrencyDollar,
-//   IconEaseInOut,
-//   IconHeart,
-//   IconHelp,
-//   IconRouteAltLeft,
-//   IconTerminal2,
-// } from "@tabler/icons-react";
-
-// export function FeaturesSectionWithHoverEffects() {
-//   const features = [
-//     {
-//       title: "AI-powered pitch deck generator with guided prompts",
-
-//       description:
-//         "Generate decks with guided prompts, smart formatting, and investor-oriented language suggestions.",
-//       icon: <IconTerminal2 />,
-//     },
-//     {
-//       title: "Console",
-//       description:
-//         "A dashboard that gives founder visibility over tasks , milestones , market status",
-//       icon: <IconEaseInOut />,
-//     },
-//     {
-//       title: "PitchMaster",
-//       description:
-//         "Practice the pitch with live AI feedback on tone , clarity , engagement ",
-//       icon: <IconCurrencyDollar />,
-//     },
-//     {
-//       title: "Curated Profiles",
-//       description: "We just cannot be taken down by anyone.",
-//       icon: <IconCloud />,
-//     },
-//     {
-//       title: "Founder's Copilot",
-//       description: "AI FAQ chatbot for instant answers to legal , funding , product stratergy",
-//       icon: <IconRouteAltLeft />,
-//     },
-//     {
-//       title: "Evaluate",
-//       description:
-//         "getting a score on how investment ready are you based upon numerous parameters",
-//       icon: <IconHelp />,
-//     },
-//     {
-//       title: "mentorship and guidence",
-//       description:
-//         "Access stratergic mentorship from experienced founders , operators and investors",
-//       icon: <IconAdjustmentsBolt />,
-//     },
-//     {
-//       title: "Community support",
-//       description: "Connect with ambitious founders , exchange knowledge and grow in space designed for innovation . ",
-//       icon: <IconHeart />,
-//     },
-//   ];
-//   return (
-//     <div
-//       className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4  relative z-10 py-10 max-w-7xl mx-auto">
-//       {features.map((feature, index) => (
-//         <Feature key={feature.title} {...feature} index={index} />
-//       ))}
-//     </div>
-//   );
-// }
-
-// const Feature = ({
-//   title,
-//   description,
-//   icon,
-//   index
-// }) => {
-//   return (
-//     <div
-//       className={cn(
-//         "flex flex-col lg:border-r  py-10 relative group/feature dark:border-neutral-800",
-//         (index === 0 || index === 4) && "lg:border-l dark:border-neutral-800",
-//         index < 4 && "lg:border-b dark:border-neutral-800"
-//       )}>
-//       {index < 4 && (
-//         <div
-//           className="opacity-0 group-hover/feature:opacity-100 transition duration-200 absolute inset-0 h-full w-full bg-gradient-to-t from-neutral-100 dark:from-neutral-800 to-transparent pointer-events-none" />
-//       )}
-//       {index >= 4 && (
-//         <div
-//           className="opacity-0 group-hover/feature:opacity-100 transition duration-200 absolute inset-0 h-full w-full bg-gradient-to-b from-neutral-100 dark:from-neutral-800 to-transparent pointer-events-none" />
-//       )}
-//       <div
-//         className="mb-4 relative z-10 px-10 text-neutral-600 dark:text-neutral-400">
-//         {icon}
-//       </div>
-//       <div className="text-lg font-bold mb-2 relative z-10 px-10">
-//         <div
-//           className="absolute left-0 inset-y-0 h-6 group-hover/feature:h-8 w-1 rounded-tr-full rounded-br-full bg-neutral-300 dark:bg-neutral-700 group-hover/feature:bg-blue-500 transition-all duration-200 origin-center" />
-//         <span
-//           className="group-hover/feature:translate-x-2 transition duration-200 inline-block text-neutral-800 dark:text-neutral-100">
-//           {title}
-//         </span>
-//       </div>
-//       <p
-//         className="text-sm text-neutral-600 dark:text-neutral-300 max-w-xs relative z-10 px-10">
-//         {description}
-//       </p>
-//     </div>
-//   );
-// };
-
-// // comment
 import { cn } from "@/lib/utils";
 import {
   IconAdjustmentsBolt,
@@ -127,6 +14,7 @@ export function FeaturesSectionWithHoverEffects() {
   const features = [
     {
       title: "AI-powered pitch deck generator with guided prompts",
+
       description:
         "Generate decks with guided prompts, smart formatting, and investor-oriented language suggestions.",
       icon: <IconTerminal2 />,
@@ -134,48 +22,36 @@ export function FeaturesSectionWithHoverEffects() {
     {
       title: "Console",
       description:
-        "A dashboard that gives founders visibility over tasks, milestones, and market status.",
+        "A dashboard that gives founder visibility over tasks , milestones , market status",
       icon: <IconEaseInOut />,
     },
     {
       title: "PitchMaster",
       description:
-        "Practice your pitch with live AI feedback on tone, clarity, and engagement.",
+        "Practice the pitch with live AI feedback on tone , clarity , engagement ",
       icon: <IconCurrencyDollar />,
     },
     {
-      title: "Curated Profiles",
-      description:
-        "Robust profiles that ensure your presence is secure and reliable.",
-      icon: <IconCloud />,
-    },
-    {
       title: "Founder's Copilot",
-      description:
-        "AI FAQ chatbot for instant answers to legal, funding, and product strategy questions.",
+      description: "AI FAQ chatbot for instant answers to legal , funding , product stratergy",
       icon: <IconRouteAltLeft />,
     },
     {
       title: "Evaluate",
       description:
-        "Get a score on how investment-ready you are based on numerous parameters.",
+        "getting a score on how investment ready are you based upon numerous parameters",
       icon: <IconHelp />,
     },
     {
-      title: "Mentorship and Guidance",
+      title: "mentorship and guidence",
       description:
-        "Access strategic mentorship from experienced founders, operators, and investors.",
+        "Access stratergic mentorship from experienced founders , operators and investors",
       icon: <IconAdjustmentsBolt />,
-    },
-    {
-      title: "Community Support",
-      description:
-        "Connect with ambitious founders, exchange knowledge, and grow in a space designed for innovation.",
-      icon: <IconHeart />,
-    },
+    }
   ];
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 relative z-10 py-10 max-w-7xl mx-auto">
+    <div
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4  relative z-10 py-10 max-w-7xl mx-auto">
       {features.map((feature, index) => (
         <Feature key={feature.title} {...feature} index={index} />
       ))}
@@ -192,7 +68,7 @@ const Feature = ({
   return (
     <div
       className={cn(
-        "flex flex-col lg:border-r py-10 relative group/feature dark:border-neutral-800",
+        "flex flex-col lg:border-r  py-10 relative group/feature dark:border-neutral-800",
         (index === 0 || index === 4) && "lg:border-l dark:border-neutral-800",
         index < 4 && "lg:border-b dark:border-neutral-800"
       )}>
@@ -204,18 +80,24 @@ const Feature = ({
         <div
           className="opacity-0 group-hover/feature:opacity-100 transition duration-200 absolute inset-0 h-full w-full bg-gradient-to-b from-neutral-100 dark:from-neutral-800 to-transparent pointer-events-none" />
       )}
-      <div className="mb-4 relative z-10 px-10 text-neutral-600 dark:text-neutral-400">
+      <div
+        className="mb-4 relative z-10 px-10 text-neutral-600 dark:text-neutral-400">
         {icon}
       </div>
       <div className="text-lg font-bold mb-2 relative z-10 px-10">
-        <div className="absolute left-0 inset-y-0 h-6 group-hover/feature:h-8 w-1 rounded-tr-full rounded-br-full bg-neutral-300 dark:bg-neutral-700 group-hover/feature:bg-blue-500 transition-all duration-200 origin-center" />
-        <span className="group-hover/feature:translate-x-2 transition duration-200 inline-block text-neutral-800 dark:text-neutral-100">
+        <div
+          className="absolute left-0 inset-y-0 h-6 group-hover/feature:h-8 w-1 rounded-tr-full rounded-br-full bg-neutral-300 dark:bg-neutral-700 group-hover/feature:bg-blue-500 transition-all duration-200 origin-center" />
+        <span
+          className="group-hover/feature:translate-x-2 transition duration-200 inline-block text-neutral-800 dark:text-neutral-100">
           {title}
         </span>
       </div>
-      <p className="text-sm text-neutral-600 dark:text-neutral-300 max-w-xs relative z-10 px-10">
+      <p
+        className="text-sm text-neutral-600 dark:text-neutral-300 max-w-xs relative z-10 px-10">
         {description}
       </p>
     </div>
   );
 };
+
+// comment
