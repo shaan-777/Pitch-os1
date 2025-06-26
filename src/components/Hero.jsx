@@ -32,7 +32,7 @@ export function HeroSection() {
 
     const [titleNumber, setTitleNumber] = useState(0);
 const titles = useMemo(
-    () => ["amazing", "new", "wonderful", "beautiful", "smart"],
+    () => ["vision", "showcase", "effortlessly", "get funded", "grow"],
     []
 );
 
@@ -105,7 +105,7 @@ useEffect(() => {
                                     <Link
                                         href="#link"
                                         className="hover:bg-background dark:hover:border-t-border bg-muted group mx-auto flex w-fit items-center gap-4 rounded-full border p-1 pl-4 shadow-md shadow-black/5 transition-all duration-300 dark:border-t-white/5 dark:shadow-zinc-950">
-                                        <span className="text-foreground text-sm">Introducing Support for AI Models</span>
+                                        <span className="text-foreground text-sm">Try out PitchMaster now!</span>
                                         <span
                                             className="dark:border-background block h-4 w-0.5 border-l bg-white dark:bg-zinc-700"></span>
 
@@ -126,7 +126,7 @@ useEffect(() => {
 
                                     <h1 className="text-5xl md:text-7xl max-w-2xl tracking-tighter text-center font-regular">
 
-                                        <span className="text-spektr-cyan-50">Pitch Perfect Os</span>
+                                        <span className="text-spektr-cyan-50">Create Winning Pitches</span>
 
                                         <span className="relative flex w-full justify-center overflow-hidden text-center md:pb-4 md:pt-1">
 
@@ -180,7 +180,7 @@ useEffect(() => {
                                     </div>
 
                                     <p className="mx-auto mt-8 max-w-2xl text-balance text-lg">
-                                       Transform your vision into investor-ready presentations with our proven framework.
+                                 Transform your ideas into compelling pitches in minutes with our powerful AI-driven platform. Take charge of your journey from concept to funding and bring your vision to life with confidence!
                                     </p>
                                 </AnimatedGroup>
 
@@ -200,11 +200,11 @@ useEffect(() => {
                                     <div key={1} className="bg-foreground/10 rounded-[14px] border p-0.5">
                                         <Button asChild size="lg" className="rounded-xl px-5 text-base">
                                             <Link href="#link">
-                                                <span className="text-nowrap">Start Building</span>
+                                                <span className="text-nowrap">Start Now</span>
                                             </Link>
                                         </Button>
                                     </div>
-                                    <Button
+                                    {/* <Button
                                         key={2}
                                         asChild
                                         size="lg"
@@ -213,7 +213,7 @@ useEffect(() => {
                                         <Link href="#link">
                                             <span className="text-nowrap">Request a demo</span>
                                         </Link>
-                                    </Button>
+                                    </Button> */}
                                 </AnimatedGroup>
                             </div>
                         </div>
