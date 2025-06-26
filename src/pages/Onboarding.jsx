@@ -12,7 +12,7 @@ import {
   Briefcase,
 } from "lucide-react";
 import { auth } from "../firebase";
-import { doc, writeBatch, getFirestore } from "firebase/firestore";
+import { doc, writeBatch, getFirestore, setDoc } from "firebase/firestore";
 import { useToast } from "../components/ui/use-toast";
 import { useTheme } from "@/store/theme";
 
@@ -49,10 +49,10 @@ const Onboarding = () => {
           label: "What's your highest education?",
           type: "select",
           options: [
-            { value: "highschool", label: "High School", emoji: "🎓" },
-            { value: "bachelors", label: "Bachelor's Degree", emoji: "📚" },
-            { value: "masters", label: "Master's Degree", emoji: "🎯" },
-            { value: "phd", label: "PhD", emoji: "🔬" },
+            { value: "highschool", label: "High School" },
+            { value: "bachelors", label: "Bachelor's Degree" },
+            { value: "masters", label: "Master's Degree" },
+            { value: "phd", label: "PhD" },
           ],
         },
         {
@@ -60,10 +60,10 @@ const Onboarding = () => {
           label: "What's your age group?",
           type: "select",
           options: [
-            { value: "18-24", label: "18-24 years", emoji: "👶" },
-            { value: "25-34", label: "25-34 years", emoji: "👱" },
-            { value: "35-44", label: "35-44 years", emoji: "👨" },
-            { value: "45+", label: "45+ years", emoji: "🧓" },
+            { value: "18-24", label: "18-24 years" },
+            { value: "25-34", label: "25-34 years" },
+            { value: "35-44", label: "35-44 years" },
+            { value: "45+", label: "45+ years" },
           ],
         },
       ],
@@ -76,11 +76,10 @@ const Onboarding = () => {
         {
           value: "entrepreneur",
           label: "Entrepreneur / Startup Founder",
-          emoji: "🚀",
         },
-        { value: "investor", label: "Investor / VC", emoji: "💰" },
-        { value: "consultant", label: "Business Consultant", emoji: "📊" },
-        { value: "student", label: "Student / Researcher", emoji: "🎓" },
+        { value: "investor", label: "Investor / VC" },
+        { value: "consultant", label: "Business Consultant" },
+        { value: "student", label: "Student / Researcher" },
       ],
     },
     {
@@ -88,10 +87,10 @@ const Onboarding = () => {
       question: "Which industry are you most interested in?",
       icon: <Target className="w-6 h-6" />,
       options: [
-        { value: "tech", label: "Technology & Software", emoji: "💻" },
-        { value: "healthcare", label: "Healthcare & Biotech", emoji: "🏥" },
-        { value: "finance", label: "Finance & Fintech", emoji: "💳" },
-        { value: "retail", label: "Retail & E-commerce", emoji: "🛍️" },
+        { value: "tech", label: "Technology & Software" },
+        { value: "healthcare", label: "Healthcare & Biotech" },
+        { value: "finance", label: "Finance & Fintech" },
+        { value: "retail", label: "Retail & E-commerce" },
       ],
     },
     {
@@ -99,14 +98,13 @@ const Onboarding = () => {
       question: "How much experience do you have with pitch presentations?",
       icon: <Users className="w-6 h-6" />,
       options: [
-        { value: "beginner", label: "Beginner (0-1 years)", emoji: "🌱" },
+        { value: "beginner", label: "Beginner (0-1 years)" },
         {
           value: "intermediate",
           label: "Intermediate (2-5 years)",
-          emoji: "🌿",
         },
-        { value: "advanced", label: "Advanced (5+ years)", emoji: "🌳" },
-        { value: "expert", label: "Expert (10+ years)", emoji: "🏆" },
+        { value: "advanced", label: "Advanced (5+ years)" },
+        { value: "expert", label: "Expert (10+ years)" },
       ],
     },
     {
@@ -117,22 +115,18 @@ const Onboarding = () => {
         {
           value: "create",
           label: "Create compelling pitch decks",
-          emoji: "✨",
         },
         {
           value: "analyze",
           label: "Analyze and improve existing pitches",
-          emoji: "📈",
         },
         {
           value: "learn",
           label: "Learn best practices and techniques",
-          emoji: "📚",
         },
         {
           value: "collaborate",
           label: "Collaborate with team members",
-          emoji: "🤝",
         },
       ],
     },
@@ -141,10 +135,10 @@ const Onboarding = () => {
       question: "How often do you plan to use PitchOS?",
       icon: <Clock className="w-6 h-6" />,
       options: [
-        { value: "daily", label: "Daily", emoji: "🔥" },
-        { value: "weekly", label: "Weekly", emoji: "📅" },
-        { value: "monthly", label: "Monthly", emoji: "🗓️" },
-        { value: "occasionally", label: "Occasionally", emoji: "⭐" },
+        { value: "daily", label: "Daily" },
+        { value: "weekly", label: "Weekly" },
+        { value: "monthly", label: "Monthly" },
+        { value: "occasionally", label: "Occasionally" },
       ],
     },
   ];
@@ -306,12 +300,12 @@ const Onboarding = () => {
               {currentQuestion.options.map((option, index) => {
                 if (option.type === "text") {
                   return (
-                    <div key={option.value} className="flex flex-col gap-2 p-4 border-2 rounded-xl">
-                      <label className="text-sm font-semibold">{option.label}</label>
+                    <div key={option.value} className="flex flex-col gap-2 p-4 border-2 rounded-xl border-border bg-card">
+                      <label className="text-sm font-semibold text-foreground">{option.label}</label>
                       <input
                         type="text"
                         placeholder={option.placeholder}
-                        className="p-2 border rounded-md"
+                        className="p-3 border border-border rounded-md bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                         value={answers[option.value] || ''}
                         onChange={(e) => handleAnswerSelect(option.value, e.target.value)}
                       />
@@ -321,17 +315,24 @@ const Onboarding = () => {
                 
                 if (option.type === "select") {
                   return (
-                    <div key={option.value} className="flex flex-col gap-2 p-4 border-2 rounded-xl">
-                      <label className="text-sm font-semibold">{option.label}</label>
+                    <div key={option.value} className="flex flex-col gap-2 p-4 border-2 rounded-xl border-border bg-card">
+                      <label className="text-sm font-semibold text-foreground">{option.label}</label>
                       <select
-                        className="p-2 border rounded-md"
+                        className="p-3 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent appearance-none cursor-pointer"
                         value={answers[option.value] || ''}
                         onChange={(e) => handleAnswerSelect(option.value, e.target.value)}
+                        style={{
+                          backgroundImage: `url("data:image/svg+xml;charset=utf-8,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
+                          backgroundPosition: 'right 0.5rem center',
+                          backgroundRepeat: 'no-repeat',
+                          backgroundSize: '1.5em 1.5em',
+                          paddingRight: '2.5rem'
+                        }}
                       >
-                        <option value="">Select {option.label}</option>
+                        <option value="" className="text-muted-foreground">Select {option.label}</option>
                         {option.options.map(opt => (
-                          <option key={opt.value} value={opt.value}>
-                            {opt.emoji} {opt.label}
+                          <option key={opt.value} value={opt.value} className="bg-background text-foreground">
+                            {opt.label}
                           </option>
                         ))}
                       </select>
@@ -350,32 +351,29 @@ const Onboarding = () => {
                         ? "border-primary bg-accent shadow-lg scale-105"
                         : "border-border bg-card hover:border-muted-foreground hover:bg-accent/50"
                     }`}
-                  style={{
-                    animationDelay: `${index * 100}ms`,
-                  }}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <span className="text-xl sm:text-2xl">
-                        {option.emoji}
-                      </span>
-                      <span
-                        className={`font-semibold text-sm sm:text-base transition-colors ${
-                          answers[currentQuestion.id] === option.value
-                            ? "text-foreground"
-                            : "text-muted-foreground group-hover:text-foreground"
-                        }`}
-                      >
-                        {option.label}
-                      </span>
+                    style={{
+                      animationDelay: `${index * 100}ms`,
+                    }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <span
+                          className={`font-semibold text-sm sm:text-base transition-colors ${
+                            answers[currentQuestion.id] === option.value
+                              ? "text-foreground"
+                              : "text-muted-foreground group-hover:text-foreground"
+                          }`}
+                        >
+                          {option.label}
+                        </span>
+                      </div>
+                      {answers[currentQuestion.id] === option.value && (
+                        <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                      )}
                     </div>
-                    {answers[currentQuestion.id] === option.value && (
-                      <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
-                    )}
-                  </div>
-                </button>
-              );
-            })}
+                  </button>
+                );
+              })}
             </div>
           </Card>
 
