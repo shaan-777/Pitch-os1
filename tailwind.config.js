@@ -62,6 +62,16 @@ export default {
     			sm: 'calc(var(--radius) - 4px)'
     		},
     		keyframes: {
+    			'ping-slow': {
+    				'0%, 100%': {
+    					transform: 'scale(1)',
+    					opacity: '1'
+    				},
+    				'50%': {
+    					transform: 'scale(1.5)',
+    					opacity: '0'
+    				}
+    			},
     			'accordion-down': {
     				from: {
     					height: '0'
@@ -81,7 +91,8 @@ export default {
     		},
     		animation: {
     			'accordion-down': 'accordion-down 0.2s ease-out',
-    			'accordion-up': 'accordion-up 0.2s ease-out'
+    			'accordion-up': 'accordion-up 0.2s ease-out',
+    			'ping-slow': 'ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite'
     		}
     	}
     },

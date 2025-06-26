@@ -60,9 +60,7 @@ const FAQ_SECTIONS = {
         id: "Why should I use PitchOS for my startup?",
         question: "Why should I use PitchOS for my startup?",
         answer:
-          "PitchOS streamlines the funding process, connects you with relevant investors, and provides tools to improve your pitch and track your progress.
-
-",
+          "PitchOS streamlines the funding process, connects you with relevant investors, and provides tools to improve your pitch and track your progress.",
       },
       {
         id: "what does it offer",
@@ -80,7 +78,7 @@ const FAQ_SECTIONS = {
         id: "design needs",
         question: "Is my data secure on PitchOS?",
         answer:
-          "Absolutely. PitchOS uses industry-standard encryption to keep your documents and personal information safe.
+          "Absolutely. PitchOS uses industry-standard encryption to keep your documents and personal information safe.",
       },
       {
         id: "Is PitchOS mobile-friendly?",
@@ -88,19 +86,6 @@ const FAQ_SECTIONS = {
         answer:
           "Yes, you can access and use PitchOS on your phone or tablet, making it easy to manage your fundraising on the go.",
       },
-      
-      // {
-      //   id: "open-source or paid",
-      //   question: "Is this library open-source or paid?",
-      //   answer: "The library is open-source.",
-      // },
-      // {
-      //   id: "request new features",
-      //   question:
-      //     "How can I contribute to or request new features for the library?",
-      //   answer:
-      //     "Contributions are welcome! You can open issues or pull requests on our GitHub repository.",
-      // },
     ],
   },
   icons: {
@@ -161,7 +146,7 @@ export const Component = () => {
         </p>
       </header>
       <div className="flex justify-center sticky top-2">
-        <Tabs
+        {/* <Tabs
           defaultValue="general"
           onValueChange={(value) => setActiveView(value)}
           className="mb-8 max-w-xl border rounded-xl bg-background">
@@ -170,7 +155,7 @@ export const Component = () => {
             <TabsTrigger value="icons">UI Icons</TabsTrigger>
             <TabsTrigger value="library">Library</TabsTrigger>
           </TabsList>
-        </Tabs>
+        </Tabs> */}
       </div>
       <FAQAccordion
         category={FAQ_SECTIONS[activeView].category}

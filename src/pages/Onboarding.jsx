@@ -28,6 +28,47 @@ const Onboarding = () => {
 
   const questions = [
     {
+      id: "personalInfo",
+      question: "Tell us about yourself",
+      icon: <Users className="w-6 h-6" />,
+      options: [
+        {
+          value: "city",
+          label: "Which city do you live in?",
+          type: "text",
+          placeholder: "Enter your city",
+        },
+        {
+          value: "state",
+          label: "Which state are you from?",
+          type: "text",
+          placeholder: "Enter your state",
+        },
+        {
+          value: "education",
+          label: "What's your highest education?",
+          type: "select",
+          options: [
+            { value: "highschool", label: "High School", emoji: "🎓" },
+            { value: "bachelors", label: "Bachelor's Degree", emoji: "📚" },
+            { value: "masters", label: "Master's Degree", emoji: "🎯" },
+            { value: "phd", label: "PhD", emoji: "🔬" },
+          ],
+        },
+        {
+          value: "age",
+          label: "What's your age group?",
+          type: "select",
+          options: [
+            { value: "18-24", label: "18-24 years", emoji: "👶" },
+            { value: "25-34", label: "25-34 years", emoji: "👱" },
+            { value: "35-44", label: "35-44 years", emoji: "👨" },
+            { value: "45+", label: "45+ years", emoji: "🧓" },
+          ],
+        },
+      ],
+    },
+    {
       id: "role",
       question: "What best describes your role?",
       icon: <Briefcase className="w-6 h-6" />,
@@ -262,17 +303,53 @@ const Onboarding = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {currentQuestion.options.map((option, index) => (
-                <button
-                  key={option.value}
-                  onClick={() =>
-                    handleAnswerSelect(currentQuestion.id, option.value)
-                  }
-                  className={`group relative p-4 sm:p-6 text-left rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg ${
-                    answers[currentQuestion.id] === option.value
-                      ? "border-primary bg-accent shadow-lg scale-105"
-                      : "border-border bg-card hover:border-muted-foreground hover:bg-accent/50"
-                  }`}
+              {currentQuestion.options.map((option, index) => {
+                if (option.type === "text") {
+                  return (
+                    <div key={option.value} className="flex flex-col gap-2 p-4 border-2 rounded-xl">
+                      <label className="text-sm font-semibold">{option.label}</label>
+                      <input
+                        type="text"
+                        placeholder={option.placeholder}
+                        className="p-2 border rounded-md"
+                        value={answers[option.value] || ''}
+                        onChange={(e) => handleAnswerSelect(option.value, e.target.value)}
+                      />
+                    </div>
+                  );
+                }
+                
+                if (option.type === "select") {
+                  return (
+                    <div key={option.value} className="flex flex-col gap-2 p-4 border-2 rounded-xl">
+                      <label className="text-sm font-semibold">{option.label}</label>
+                      <select
+                        className="p-2 border rounded-md"
+                        value={answers[option.value] || ''}
+                        onChange={(e) => handleAnswerSelect(option.value, e.target.value)}
+                      >
+                        <option value="">Select {option.label}</option>
+                        {option.options.map(opt => (
+                          <option key={opt.value} value={opt.value}>
+                            {opt.emoji} {opt.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  );
+                }
+                
+                return (
+                  <button
+                    key={option.value}
+                    onClick={() =>
+                      handleAnswerSelect(currentQuestion.id, option.value)
+                    }
+                    className={`group relative p-4 sm:p-6 text-left rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg ${
+                      answers[currentQuestion.id] === option.value
+                        ? "border-primary bg-accent shadow-lg scale-105"
+                        : "border-border bg-card hover:border-muted-foreground hover:bg-accent/50"
+                    }`}
                   style={{
                     animationDelay: `${index * 100}ms`,
                   }}
@@ -297,7 +374,8 @@ const Onboarding = () => {
                     )}
                   </div>
                 </button>
-              ))}
+              );
+            })}
             </div>
           </Card>
 
@@ -324,7 +402,12 @@ const Onboarding = () => {
 
               <Button
                 onClick={handleNext}
-                disabled={!isAnswered || isSubmitting}
+                disabled={
+                  (currentQuestion.id === "personalInfo" &&
+                    (!answers.city || !answers.state || !answers.education || !answers.age)) ||
+                  (!isAnswered && currentQuestion.id !== "personalInfo") ||
+                  isSubmitting
+                }
                 className="flex items-center gap-2 px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-105 disabled:opacity-50 disabled:transform-none disabled:hover:scale-100"
               >
                 {isSubmitting ? (

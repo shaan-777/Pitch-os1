@@ -89,12 +89,6 @@ useEffect(() => {
                                 },
                             }}
                             className="absolute inset-0 -z-20">
-                            <img
-                                src="https://ik.imagekit.io/lrigu76hy/tailark/night-background.jpg?updatedAt=1745733451120"
-                                alt="background"
-                                className="absolute inset-x-0 top-56 -z-20 hidden lg:top-32 dark:block"
-                                width="3276"
-                                height="4095" />
                         </AnimatedGroup>
                         <div
                             aria-hidden
@@ -235,7 +229,7 @@ useEffect(() => {
                                 <div
                                     aria-hidden
                                     className="bg-gradient-to-b to-background absolute inset-0 z-10 from-transparent from-35%" />
-                                <div
+                                {/* <div
                                     className="inset-shadow-2xs ring-background dark:inset-shadow-white/20 bg-background relative mx-auto max-w-6xl overflow-hidden rounded-2xl border p-4 shadow-lg shadow-zinc-950/15 ring-1">
                                     <img
                                         className="bg-background aspect-15/8 relative hidden rounded-2xl dark:block"
@@ -249,7 +243,7 @@ useEffect(() => {
                                         alt="app screen"
                                         width="2700"
                                         height="1440" />
-                                </div>
+                                </div> */}
                             </div>
                         </AnimatedGroup>
                     </div>
