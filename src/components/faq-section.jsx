@@ -1,4 +1,4 @@
-"use client";;
+"use client";
 import * as React from "react";
 import { useState } from "react";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 
+// These are your shadcn/ui components for Tabs
 const Tabs = TabsPrimitive.Root;
 
 const TabsList = React.forwardRef(({ className, ...props }, ref) => (
@@ -46,90 +47,46 @@ const TabsContent = React.forwardRef(({ className, ...props }, ref) => (
 ));
 TabsContent.displayName = TabsPrimitive.Content.displayName;
 
+// Consolidated FAQ_SECTIONS to only include the 'technical' category for PitchOS
 const FAQ_SECTIONS = {
-  general: {
-    category: "General",
+  technical: {
+    category: "Technical",
     items: [
       {
-        id: "what-is",
-        question: "What is ShapeX UI?",
+        id: "tech-requirements",
+        question: "What kind of technical requirements does PitchOS have? Do I need special software?",
         answer:
-          "ShapeX UI is a comprehensive design system and UI kit that helps designers and developers create consistent, beautiful interfaces.",
+          "PitchOS is a cloud-based platform, so you won't need to install any special software. You can access it directly through your web browser on any modern device (desktop, laptop, tablet, or smartphone). A stable internet connection is all you need to get the most out of our service.",
       },
       {
-        id: "why-need",
-        question: "Why do I need a UI kit?",
+        id: "data-security-privacy",
+        question: "How does PitchOS ensure the security and privacy of my pitch data?",
         answer:
-          "A UI kit helps maintain consistency across your projects, speeds up your workflow, and ensures best practices in design and development.",
+          "We prioritize the security and confidentiality of your sensitive pitch data. PitchOS employs industry-standard encryption protocols for data in transit and at rest. Access to your account is secured through robust authentication methods, and we adhere to strict privacy policies to ensure your intellectual property remains yours.",
       },
       {
-        id: "what does it offer",
-        question: "What is this UI library, and what does it offer?",
+        id: "technical-support",
+        question: "What kind of technical support can I expect if I encounter an issue?",
         answer:
-          "This UI library is built on top of ShadCN UI and includes 30+ pre-designed components such as headers, footers, login forms, sign-up forms, FAQs, CTAs, contact sections, and more. It allows developers to quickly build high-quality user interfaces with ease.",
+          "Our team is here to help! If you encounter any technical difficulties, you can reach out to our support team through our dedicated help desk or email. We offer assistance with platform navigation, troubleshooting common issues, and general guidance to ensure a smooth experience with PitchOS.",
       },
       {
-        id: "tech stack",
-        question: "Is this library compatible with my project’s tech stack?",
+        id: "feature-updates",
+        question: "How often does PitchOS get updated with new features or improvements?",
         answer:
-          "Yes, the library is compatible with modern JavaScript frameworks like React.js and Next.js. It is designed to integrate seamlessly with Tailwind CSS, as it is built on ShadCN UI principles.",
+          "We're continuously working to enhance PitchOS with new features, AI model improvements, and performance optimizations. Updates are rolled out regularly to ensure you always have access to the latest tools and a cutting-edge experience. We strive for a seamless update process that won't disrupt your workflow.",
       },
       {
-        id: "design needs",
-        question: "Can I customize the components to fit my design needs?",
+        id: "api-integrations",
+        question: "Is there an API or any integration capabilities for PitchOS down the line?",
         answer:
-          "Absolutely! All components are fully customizable and allow you to tweak styles, variants, and layouts using Tailwind CSS or additional configurations.",
-      },
-      {
-        id: "dark mode",
-        question: "Does this library support dark mode?",
-        answer:
-          "Yes, the library fully supports dark mode out of the box. You can toggle between light and dark themes or configure the components to match your application's theme.",
-      },
-      {
-        id: "mobile-friendly",
-        question: "Are the components responsive and mobile-friendly?",
-        answer:
-          "Yes, all components are designed to be fully responsive, ensuring that they look great on devices of all sizes, from desktops to mobile phones.",
-      },
-      {
-        id: "open-source or paid",
-        question: "Is this library open-source or paid?",
-        answer: "The library is open-source.",
-      },
-      {
-        id: "request new features",
-        question:
-          "How can I contribute to or request new features for the library?",
-        answer:
-          "Contributions are welcome! You can open issues or pull requests on our GitHub repository.",
-      },
-    ],
-  },
-  icons: {
-    category: "Icons",
-    items: [
-      {
-        id: "icon-formats",
-        question: "What icon formats are supported?",
-        answer:
-          "Our icons are available in multiple formats including SVG, PDF, and AI files.",
-      },
-    ],
-  },
-  library: {
-    category: "Library",
-    items: [
-      {
-        id: "library-access",
-        question: "How do I access the library?",
-        answer:
-          "The library is available through our web platform after logging in to your account.",
+          "While not fully launched yet, we are actively exploring and planning API access and various integration possibilities for PitchOS. Our goal is to enable seamless connections with other tools and workflows in the future, providing more flexibility and automation for our users. Stay tuned for updates on our development roadmap!",
       },
     ],
   },
 };
 
+// Component to render an Accordion for a given FAQ category
 const FAQAccordion = ({ category, items }) => (
   <div className="">
     <Badge variant={"outline"} className="py-2 px-6 rounded-md">
@@ -148,8 +105,10 @@ const FAQAccordion = ({ category, items }) => (
   </div>
 );
 
+// Main FAQ Component
 export const Component = () => {
-  const [activeView, setActiveView] = useState("general");
+  // Initialize activeView to 'technical' as it's the only category now
+  const [activeView, setActiveView] = useState("technical");
 
   return (
     <div className="container mx-auto px-4 py-16 max-w-4xl">
@@ -165,19 +124,31 @@ export const Component = () => {
       </header>
       <div className="flex justify-center sticky top-2">
         <Tabs
-          defaultValue="general"
+          // Set defaultValue to 'technical' to ensure the correct tab is active on load
+          defaultValue="technical"
+          // In this setup, onValueChange isn't strictly necessary as there's only one tab,
+          // but it's kept for future expansion if more categories are added.
           onValueChange={(value) => setActiveView(value)}
           className="mb-8 max-w-xl border rounded-xl bg-background">
-          <TabsList className="w-full justify-start h-12 p-1">
-            <TabsTrigger value="general">General FAQs</TabsTrigger>
-            <TabsTrigger value="icons">UI Icons</TabsTrigger>
-            <TabsTrigger value="library">Library</TabsTrigger>
+          <TabsList className="w-full justify-center h-12 p-1">
+            {/* Only the 'Technical FAQs' tab is rendered */}
+            <TabsTrigger value="technical">Technical FAQs</TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
-      <FAQAccordion
-        category={FAQ_SECTIONS[activeView].category}
-        items={FAQ_SECTIONS[activeView].items} />
+      {/* Conditionally render FAQAccordion:
+          It will always render the 'technical' category as activeView is initialized to 'technical'
+          and FAQ_SECTIONS.technical exists. */}
+      {activeView && FAQ_SECTIONS[activeView] ? (
+        <FAQAccordion
+          category={FAQ_SECTIONS[activeView].category}
+          items={FAQ_SECTIONS[activeView].items}
+        />
+      ) : (
+        // This fallback text will generally not be shown in this configuration
+        // unless 'activeView' somehow becomes invalid or FAQ_SECTIONS is empty.
+        <p className="text-center text-muted-foreground">No FAQs found for this category.</p>
+      )}
     </div>
   );
 };
