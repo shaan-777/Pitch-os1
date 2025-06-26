@@ -13,48 +13,49 @@ import {
 export function FeaturesSectionWithHoverEffects() {
   const features = [
     {
-      title: "Built for developers",
+      title: "AI-powered pitch deck generator with guided prompts
+",
       description:
-        "Built for engineers, developers, dreamers, thinkers and doers.",
+        "Generate decks with guided prompts, smart formatting, and investor-oriented language suggestions.",
       icon: <IconTerminal2 />,
     },
     {
-      title: "Ease of use",
+      title: "Console",
       description:
-        "It's as easy as using an Apple, and as expensive as buying one.",
+        "A dashboard that gives founder visibility over tasks , milestones , market status",
       icon: <IconEaseInOut />,
     },
     {
-      title: "Pricing like no other",
+      title: "PitchMaster",
       description:
-        "Our prices are best in the market. No cap, no lock, no credit card required.",
+        "Practice the pitch with live AI feedback on tone , clarity , engagement ",
       icon: <IconCurrencyDollar />,
     },
     {
-      title: "100% Uptime guarantee",
+      title: "Curated Profiles",
       description: "We just cannot be taken down by anyone.",
       icon: <IconCloud />,
     },
     {
-      title: "Multi-tenant Architecture",
-      description: "You can simply share passwords instead of buying new seats",
+      title: "Founder's Copilot",
+      description: "AI FAQ chatbot for instant answers to legal , funding , product stratergy",
       icon: <IconRouteAltLeft />,
     },
     {
-      title: "24/7 Customer Support",
+      title: "Evaluate",
       description:
-        "We are available a 100% of the time. Atleast our AI Agents are.",
+        "getting a score on how investment ready are you based upon numerous parameters",
       icon: <IconHelp />,
     },
     {
-      title: "Money back guarantee",
+      title: "mentorship and guidence",
       description:
-        "If you donot like EveryAI, we will convince you to like us.",
+        "Access stratergic mentorship from experienced founders , operators and investors",
       icon: <IconAdjustmentsBolt />,
     },
     {
-      title: "And everything else",
-      description: "I just ran out of copy ideas. Accept my sincere apologies",
+      title: "Community support",
+      description: "Connect with ambitious founders , exchange knowledge and grow in space designed for innovation . ",
       icon: <IconHeart />,
     },
   ];
