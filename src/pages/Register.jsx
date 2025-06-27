@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { auth, signInWithGoogle, createUser } from '../firebase';
+import { signInWithGoogle, createUser } from '../firebase';
+import { useAuthStore } from '@/store/auth';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
@@ -10,7 +11,22 @@ import { Icon } from '@iconify/react';
 const Register = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user, loading: authLoading } = useAuthStore();
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -62,7 +78,10 @@ const Register = () => {
 
     setLoading(true);
     try {
-      await createUser(formData.email, formData.password, formData.username);
+      const user = await createUser(formData.email, formData.password, formData.username);
+      if (user) {
+        navigate('/dashboard');
+      }
       toast({
         title: "Success",
         description: "Account created successfully! Redirecting to onboarding...",
@@ -82,7 +101,10 @@ const Register = () => {
   const handleGoogleSignIn = async () => {
     setLoading(true);
     try {
-      await signInWithGoogle();
+      const user = await signInWithGoogle();
+      if (user) {
+        navigate('/dashboard');
+      }
       toast({
         title: "Success",
         description: "Signed in with Google successfully! Redirecting to onboarding...",

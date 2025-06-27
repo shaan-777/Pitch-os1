@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { auth, signInWithGoogle, signInWithEmailPassword } from '../firebase';
+import { signInWithGoogle, signInWithEmailPassword } from '../firebase';
+import { useAuthStore } from '@/store/auth';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
@@ -10,7 +11,22 @@ import { Icon } from '@iconify/react';
 const Login = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user, loading: authLoading } = useAuthStore();
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -29,7 +45,10 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await signInWithEmailPassword(formData.email, formData.password);
+      const user = await signInWithEmailPassword(formData.email, formData.password);
+      if (user) {
+        navigate('/dashboard');
+      }
       toast({
         title: "Success",
         description: "Signed in successfully!",
@@ -49,7 +68,10 @@ const Login = () => {
   const handleGoogleSignIn = async () => {
     setLoading(true);
     try {
-      await signInWithGoogle();
+      const user = await signInWithGoogle();
+      if (user) {
+        navigate('/dashboard');
+      }
       toast({
         title: "Success",
         description: "Signed in with Google successfully!",

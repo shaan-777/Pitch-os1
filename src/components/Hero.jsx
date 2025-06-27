@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils'
 import { motion } from "framer-motion";
 import { useState, useMemo, useEffect } from 'react'
 import dashboard from  '../assets/dashboard.jpg'
-import dark from '../assets/dark.jpg'
+import dark from '../assets/dark.png'
 const transitionVariants = {
     item: {
         hidden: {
