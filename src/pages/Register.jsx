@@ -15,8 +15,10 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (user) {
+    if (user && localStorage.getItem("onboardingCompleted") === "true") {
       navigate('/dashboard');
+    } else if (user) {
+      navigate('/onboarding');
     }
   }, [user, navigate]);
 
@@ -79,9 +81,6 @@ const Register = () => {
     setLoading(true);
     try {
       const user = await createUser(formData.email, formData.password, formData.username);
-      if (user) {
-        navigate('/dashboard');
-      }
       toast({
         title: "Success",
         description: "Account created successfully! Redirecting to onboarding...",
@@ -102,9 +101,6 @@ const Register = () => {
     setLoading(true);
     try {
       const user = await signInWithGoogle();
-      if (user) {
-        navigate('/dashboard');
-      }
       toast({
         title: "Success",
         description: "Signed in with Google successfully! Redirecting to onboarding...",

@@ -15,8 +15,10 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (user) {
+    if (user && localStorage.getItem("onboardingCompleted") === "true") {
       navigate('/dashboard');
+    } else if (user) {
+      navigate('/onboarding');
     }
   }, [user, navigate]);
 
@@ -46,9 +48,6 @@ const Login = () => {
     setLoading(true);
     try {
       const user = await signInWithEmailPassword(formData.email, formData.password);
-      if (user) {
-        navigate('/dashboard');
-      }
       toast({
         title: "Success",
         description: "Signed in successfully!",
@@ -69,9 +68,6 @@ const Login = () => {
     setLoading(true);
     try {
       const user = await signInWithGoogle();
-      if (user) {
-        navigate('/dashboard');
-      }
       toast({
         title: "Success",
         description: "Signed in with Google successfully!",

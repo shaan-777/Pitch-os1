@@ -37,8 +37,12 @@ const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
-    if (!loading && !user) {
-      navigate('/login');
+    if (!loading) {
+      if (!user) {
+        navigate('/login');
+      } else if (localStorage.getItem("onboardingCompleted") !== "true") {
+        navigate('/onboarding');
+      }
     }
   }, [user, loading, navigate]);
 
