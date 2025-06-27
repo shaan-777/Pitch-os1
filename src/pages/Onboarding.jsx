@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
@@ -10,6 +10,7 @@ import {
   Target,
   Clock,
   Briefcase,
+  Loader2,
 } from "lucide-react";
 import { auth } from "../firebase";
 import { doc, writeBatch, getFirestore, setDoc } from "firebase/firestore";
@@ -18,6 +19,17 @@ import { useTheme } from "@/store/theme";
 
 const db = getFirestore();
 
+// List of Indian states
+const indianStates = [
+  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
+  "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka",
+  "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram",
+  "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu",
+  "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal",
+  "Delhi", "Jammu and Kashmir", "Ladakh", "Puducherry", "Chandigarh",
+  "Dadra and Nagar Haveli", "Daman and Diu", "Lakshadweep"
+];
+
 const Onboarding = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -25,6 +37,13 @@ const Onboarding = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // State-related state
+  const [stateInput, setStateInput] = useState('');
+  const [filteredStates, setFilteredStates] = useState([]);
+  const [showStateDropdown, setShowStateDropdown] = useState(false);
+  
+  const dropdownRef = useRef(null);
 
   const questions = [
     {
@@ -32,6 +51,12 @@ const Onboarding = () => {
       question: "Tell us about yourself",
       icon: <Users className="w-6 h-6" />,
       options: [
+        {
+          value: "name",
+          label: "What's your name?",
+          type: "text",
+          placeholder: "Enter your full name",
+        },
         {
           value: "city",
           label: "Which city do you live in?",
@@ -41,8 +66,8 @@ const Onboarding = () => {
         {
           value: "state",
           label: "Which state are you from?",
-          type: "text",
-          placeholder: "Enter your state",
+          type: "search",
+          placeholder: "Type to search state",
         },
         {
           value: "education",
@@ -73,10 +98,7 @@ const Onboarding = () => {
       question: "What best describes your role?",
       icon: <Briefcase className="w-6 h-6" />,
       options: [
-        {
-          value: "entrepreneur",
-          label: "Entrepreneur / Startup Founder",
-        },
+        { value: "entrepreneur", label: "Entrepreneur / Startup Founder" },
         { value: "investor", label: "Investor / VC" },
         { value: "consultant", label: "Business Consultant" },
         { value: "student", label: "Student / Researcher" },
@@ -99,10 +121,7 @@ const Onboarding = () => {
       icon: <Users className="w-6 h-6" />,
       options: [
         { value: "beginner", label: "Beginner (0-1 years)" },
-        {
-          value: "intermediate",
-          label: "Intermediate (2-5 years)",
-        },
+        { value: "intermediate", label: "Intermediate (2-5 years)" },
         { value: "advanced", label: "Advanced (5+ years)" },
         { value: "expert", label: "Expert (10+ years)" },
       ],
@@ -112,22 +131,10 @@ const Onboarding = () => {
       question: "What is your primary goal with PitchOS?",
       icon: <Target className="w-6 h-6" />,
       options: [
-        {
-          value: "create",
-          label: "Create compelling pitch decks",
-        },
-        {
-          value: "analyze",
-          label: "Analyze and improve existing pitches",
-        },
-        {
-          value: "learn",
-          label: "Learn best practices and techniques",
-        },
-        {
-          value: "collaborate",
-          label: "Collaborate with team members",
-        },
+        { value: "create", label: "Create compelling pitch decks" },
+        { value: "analyze", label: "Analyze and improve existing pitches" },
+        { value: "learn", label: "Learn best practices and techniques" },
+        { value: "collaborate", label: "Collaborate with team members" },
       ],
     },
     {
@@ -142,6 +149,42 @@ const Onboarding = () => {
       ],
     },
   ];
+
+  // Handle state search
+  const handleStateSearch = useCallback((value) => {
+    setStateInput(value);
+    const filtered = indianStates.filter(state =>
+      state.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredStates(filtered);
+    setShowStateDropdown(value.length >= 2 && filtered.length > 0);
+  }, []);
+
+  // Handle state selection
+  const handleStateSelect = useCallback((state) => {
+    setAnswers(prev => ({ ...prev, state }));
+    setStateInput(state);
+    setShowStateDropdown(false);
+  }, []);
+
+  // Handle clicks outside dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowStateDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Update state input when step changes
+  useEffect(() => {
+    setStateInput(answers.state || '');
+  }, [currentStep, answers.state]);
 
   const handleAnswerSelect = (questionId, value) => {
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
@@ -170,10 +213,8 @@ const Onboarding = () => {
         throw new Error("User not authenticated");
       }
 
-      // Create a batch write for atomic operation
       const batch = writeBatch(db);
 
-      // Add user preferences to batch
       const prefsRef = doc(db, "userPreferences", user.uid);
       batch.set(prefsRef, {
         ...answers,
@@ -182,7 +223,6 @@ const Onboarding = () => {
         email: user.email,
       });
 
-      // Add completion status to batch
       const settingsRef = doc(db, "userSettings", user.uid);
       batch.set(
         settingsRef,
@@ -193,12 +233,7 @@ const Onboarding = () => {
         { merge: true }
       );
 
-      // Commit the batch
       await batch.commit();
-
-      // Keep localStorage as backup
-      localStorage.setItem("userPreferences", JSON.stringify(answers));
-      localStorage.setItem("onboardingCompleted", "true");
 
       toast({
         title: "Setup Complete!",
@@ -215,10 +250,6 @@ const Onboarding = () => {
         variant: "destructive",
         duration: 5000,
       });
-
-      // Save to localStorage as fallback
-      localStorage.setItem("userPreferences", JSON.stringify(answers));
-      localStorage.setItem("onboardingCompleted", "true");
 
       navigate("/dashboard");
     } finally {
@@ -242,8 +273,7 @@ const Onboarding = () => {
 
         toast({
           title: "Setup Skipped",
-          description:
-            "You can always complete your profile later from settings.",
+          description: "You can always complete your profile later from settings.",
           duration: 3000,
         });
       }
@@ -261,7 +291,9 @@ const Onboarding = () => {
   };
 
   const currentQuestion = questions[currentStep];
-  const isAnswered = answers[currentQuestion.id];
+  const isPersonalInfoComplete = currentQuestion.id === "personalInfo" && 
+    answers.name && answers.city && answers.state && answers.education && answers.age;
+  const isOtherQuestionAnswered = currentQuestion.id !== "personalInfo" && answers[currentQuestion.id];
 
   return (
     <div className="min-h-screen bg-background pt-20 sm:pt-16 pb-8">
@@ -298,6 +330,7 @@ const Onboarding = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {currentQuestion.options.map((option, index) => {
+                // Text input
                 if (option.type === "text") {
                   return (
                     <div key={option.value} className="flex flex-col gap-2 p-4 border-2 rounded-xl border-border bg-card">
@@ -305,14 +338,58 @@ const Onboarding = () => {
                       <input
                         type="text"
                         placeholder={option.placeholder}
-                        className="p-3 border border-border rounded-md bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                        className="w-full p-3 border border-border rounded-md bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                         value={answers[option.value] || ''}
                         onChange={(e) => handleAnswerSelect(option.value, e.target.value)}
                       />
                     </div>
                   );
                 }
-                
+
+                // Search input for state
+                if (option.type === "search") {
+                  return (
+                    <div key={option.value} className="flex flex-col gap-2 p-4 border-2 rounded-xl border-border bg-card">
+                      <label className="text-sm font-semibold text-foreground">{option.label}</label>
+                      <div className="relative" ref={dropdownRef}>
+                        <input
+                          type="text"
+                          placeholder={option.placeholder}
+                          className="w-full p-3 border border-border rounded-md bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                          value={stateInput}
+                          onChange={(e) => {
+                            handleStateSearch(e.target.value);
+                            handleAnswerSelect('state', e.target.value);
+                          }}
+                        />
+                        
+                        {/* Dropdown */}
+                        {showStateDropdown && (
+                          <div className="absolute z-10 w-full mt-1 max-h-60 overflow-auto bg-background border border-border rounded-md shadow-lg">
+                            {filteredStates.length > 0 ? (
+                              filteredStates.map((state, i) => (
+                                <div
+                                  key={i}
+                                  className="px-4 py-2 text-sm cursor-pointer hover:bg-accent focus:bg-accent outline-none transition-colors border-b border-border last:border-b-0"
+                                  onClick={() => handleStateSelect(state)}
+                                  onMouseDown={(e) => e.preventDefault()}
+                                >
+                                  {state}
+                                </div>
+                              ))
+                            ) : (
+                              <div className="px-4 py-2 text-sm text-muted-foreground">
+                                No states found
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                }
+
+                // Select dropdown
                 if (option.type === "select") {
                   return (
                     <div key={option.value} className="flex flex-col gap-2 p-4 border-2 rounded-xl border-border bg-card">
@@ -329,9 +406,9 @@ const Onboarding = () => {
                           paddingRight: '2.5rem'
                         }}
                       >
-                        <option value="" className="text-muted-foreground">Select {option.label}</option>
+                        <option value="">Select {option.label.toLowerCase()}</option>
                         {option.options.map(opt => (
-                          <option key={opt.value} value={opt.value} className="bg-background text-foreground">
+                          <option key={opt.value} value={opt.value}>
                             {opt.label}
                           </option>
                         ))}
@@ -339,34 +416,27 @@ const Onboarding = () => {
                     </div>
                   );
                 }
-                
+
+                // Radio button options
                 return (
                   <button
                     key={option.value}
-                    onClick={() =>
-                      handleAnswerSelect(currentQuestion.id, option.value)
-                    }
+                    onClick={() => handleAnswerSelect(currentQuestion.id, option.value)}
                     className={`group relative p-4 sm:p-6 text-left rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg ${
                       answers[currentQuestion.id] === option.value
                         ? "border-primary bg-accent shadow-lg scale-105"
                         : "border-border bg-card hover:border-muted-foreground hover:bg-accent/50"
                     }`}
-                    style={{
-                      animationDelay: `${index * 100}ms`,
-                    }}
+                    style={{ animationDelay: `${index * 100}ms` }}
                   >
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <span
-                          className={`font-semibold text-sm sm:text-base transition-colors ${
-                            answers[currentQuestion.id] === option.value
-                              ? "text-foreground"
-                              : "text-muted-foreground group-hover:text-foreground"
-                          }`}
-                        >
-                          {option.label}
-                        </span>
-                      </div>
+                      <span className={`font-semibold text-sm sm:text-base transition-colors ${
+                        answers[currentQuestion.id] === option.value
+                          ? "text-foreground"
+                          : "text-muted-foreground group-hover:text-foreground"
+                      }`}>
+                        {option.label}
+                      </span>
                       {answers[currentQuestion.id] === option.value && (
                         <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                       )}
@@ -400,12 +470,7 @@ const Onboarding = () => {
 
               <Button
                 onClick={handleNext}
-                disabled={
-                  (currentQuestion.id === "personalInfo" &&
-                    (!answers.city || !answers.state || !answers.education || !answers.age)) ||
-                  (!isAnswered && currentQuestion.id !== "personalInfo") ||
-                  isSubmitting
-                }
+                disabled={(!isPersonalInfoComplete && !isOtherQuestionAnswered) || isSubmitting}
                 className="flex items-center gap-2 px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-105 disabled:opacity-50 disabled:transform-none disabled:hover:scale-100"
               >
                 {isSubmitting ? (
@@ -415,9 +480,7 @@ const Onboarding = () => {
                   </>
                 ) : (
                   <>
-                    {currentStep === questions.length - 1
-                      ? "Complete Setup"
-                      : "Next"}
+                    {currentStep === questions.length - 1 ? "Complete Setup" : "Next"}
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
@@ -428,8 +491,7 @@ const Onboarding = () => {
           {/* Footer text */}
           <div className="text-center mt-8">
             <p className="text-sm text-muted-foreground">
-              Almost there! This will help us personalize your PitchOS
-              experience.
+              Almost there! This will help us personalize your PitchOS experience.
             </p>
           </div>
         </div>

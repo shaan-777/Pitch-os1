@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '@/store/auth';
 import { 
   Home, 
@@ -64,7 +64,8 @@ const Dashboard = () => {
   };
 
   const sidebarItems = [
-    { title: "Dashboard", icon: Home, url: "#", active: true },
+    { title: "Back to Home", icon: Home, url: "/", active: false },
+    { title: "Dashboard", icon: Monitor, url: "#", active: true },
     { title: "Pitch Builder", icon: Monitor, url: "#" },
     { title: "AI Tools", icon: Sparkles, url: "#" },
     { title: "Ideas Hub", icon: Lightbulb, url: "#" },
@@ -134,20 +135,20 @@ const Dashboard = () => {
           <div className="flex-1 overflow-y-auto">
             <nav className="p-4 space-y-2">
               {sidebarItems.map((item) => (
-                <a
+                <Link
                   key={item.title}
-                  href={item.url}
+                  to={item.url}
                   className={`
                     flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
-                    ${item.active 
-                      ? 'bg-gray-100 text-gray-900' 
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    ${item.active
+                      ? 'bg-accent text-foreground'
+                      : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground'
                     }
                   `}
                 >
                   <item.icon className="w-4 h-4" />
                   <span>{item.title}</span>
-                </a>
+                </Link>
               ))}
             </nav>
           </div>
