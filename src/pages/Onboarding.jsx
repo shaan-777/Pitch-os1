@@ -16,6 +16,7 @@ import { auth } from "../firebase";
 import { doc, writeBatch, getFirestore, setDoc } from "firebase/firestore";
 import { useToast } from "../components/ui/use-toast";
 import { useTheme } from "@/store/theme";
+import { useAuthStore } from '../store/auth';
 
 const db = getFirestore();
 
@@ -32,6 +33,7 @@ const indianStates = [
 
 const Onboarding = () => {
   const navigate = useNavigate();
+  const { completeOnboarding } = useAuthStore();
   const { toast } = useToast();
   const { theme } = useTheme();
   const [currentStep, setCurrentStep] = useState(0);
@@ -241,6 +243,7 @@ const Onboarding = () => {
         duration: 3000,
       });
 
+      completeOnboarding();
       navigate("/dashboard");
     } catch (error) {
       console.error("Error saving onboarding data:", error);
@@ -251,6 +254,7 @@ const Onboarding = () => {
         duration: 5000,
       });
 
+      completeOnboarding();
       navigate("/dashboard");
     } finally {
       setIsSubmitting(false);

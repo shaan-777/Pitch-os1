@@ -23,44 +23,101 @@ import {
   Sparkles, 
   Send,
   Menu,
-  X
+  X,
+  Play
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import Tutorial from '@/components/Tutorial';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { user, loading, logout } = useAuthStore();
+  const { user, loading, logout, isOnboardingCompleted } = useAuthStore();
   const [aiPrompt, setAiPrompt] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
+  const [tutorialOpen, setTutorialOpen] = useState(false);
+
+  // Tutorial steps configuration
+  const tutorialSteps = [
+    {
+      target: '[data-tutorial="new-pitch-btn"]',
+      title: 'Create Your First Pitch',
+      content: 'Click this button to start building your pitch deck with our AI-powered tools. You can create professional presentations in minutes.',
+      placement: 'bottom'
+    },
+    {
+      target: '[data-tutorial="ai-assistant"]',
+      title: 'AI Pitch Assistant',
+      content: 'Use our AI assistant to get help with your pitch content, market research, and business strategy. Just type your question and get instant insights.',
+      placement: 'top'
+    },
+    {
+      target: '[data-tutorial="stats-grid"]',
+      title: 'Track Your Progress',
+      content: 'Monitor your pitch development, community engagement, and funding progress with these key metrics.',
+      placement: 'bottom'
+    }
+  ];
 
   useEffect(() => {
-    if (!loading) {
+    // Only perform auth checks once loading is complete
+    if (!loading && !authChecked) {
+      setAuthChecked(true);
+      
       if (!user) {
+        console.log('No user found, redirecting to login');
         navigate('/login');
-      } else if (localStorage.getItem("onboardingCompleted") !== "true") {
-        navigate('/onboarding');
+        return;
       }
-    }
-  }, [user, loading, navigate]);
 
-  if (loading) {
+      // Check onboarding status
+      const onboardingCompleted = isOnboardingCompleted ? isOnboardingCompleted() : localStorage.getItem("onboardingCompleted") === "true";
+      console.log('Onboarding status:', onboardingCompleted);
+      console.log('User:', user);
+
+      if (!onboardingCompleted) {
+        console.log('Onboarding not completed, redirecting to onboarding');
+        navigate('/onboarding');
+        return;
+      }
+
+      console.log('User authenticated and onboarding completed, staying on dashboard');
+    }
+  }, [user, loading, navigate, authChecked]);
+
+  // Show loading spinner while auth is being checked
+  if (loading || !authChecked) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          <p className="text-sm text-muted-foreground">Loading dashboard...</p>
+        </div>
       </div>
     );
   }
 
+  // Don't render anything if user is not authenticated
   if (!user) {
     return null;
   }
 
   const handleLogout = async () => {
-    await logout();
-    navigate('/');
+    try {
+      await logout();
+      // Clear onboarding status on logout
+      localStorage.removeItem("onboardingCompleted");
+      navigate('/');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
+  const startTutorial = () => {
+    setTutorialOpen(true);
   };
 
   const sidebarItems = [
@@ -98,6 +155,14 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background flex">
+      {/* Tutorial Component */}
+      <Tutorial
+        steps={tutorialSteps}
+        isOpen={tutorialOpen}
+        onClose={() => setTutorialOpen(false)}
+        onComplete={() => setTutorialOpen(false)}
+      />
+
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div 
@@ -208,7 +273,17 @@ const Dashboard = () => {
                 <Bell className="w-5 h-5" />
               </Button>
               <ThemeToggle />
-              <Button className="gap-2">
+              {/* Tutorial Button */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={startTutorial}
+                className="gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+              >
+                <Play className="w-4 h-4" />
+                Tutorial
+              </Button>
+              <Button className="gap-2" data-tutorial="new-pitch-btn">
                 <Plus className="w-4 h-4" />
                 <span className="hidden sm:inline">New Pitch</span>
               </Button>
@@ -240,7 +315,7 @@ const Dashboard = () => {
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6" data-tutorial="stats-grid">
             {stats.map((stat, index) => (
               <Card key={index}>
                 <CardContent className="p-4 lg:p-6">
@@ -260,7 +335,7 @@ const Dashboard = () => {
           </div>
 
           {/* Main Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6" data-tutorial="ai-assistant">
             {/* AI Assistant */}
             <Card className="lg:col-span-2">
               <CardHeader>
