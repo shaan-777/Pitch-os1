@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '@/store/auth';
-import { 
-  Home, 
-  Monitor, 
-  Lightbulb, 
-  Users, 
-  TrendingUp, 
-  Settings, 
-  User, 
-  Bell, 
-  Search, 
-  Plus, 
-  Zap, 
-  Target, 
-  DollarSign, 
-  Award, 
-  FileText, 
-  BarChart3, 
-  Calendar, 
-  ChevronRight, 
-  Sparkles, 
+import {
+  Home,
+  Monitor,
+  Lightbulb,
+  Users,
+  TrendingUp,
+  Settings,
+  User,
+  Bell,
+  Search,
+  Plus,
+  Zap,
+  Target,
+  DollarSign,
+  Award,
+  FileText,
+  BarChart3,
+  Calendar,
+  ChevronRight,
+  Sparkles,
   Send,
   Menu,
   X,
@@ -31,6 +31,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import Tutorial from '@/components/Tutorial';
+import ProfileSection from '@/components/ProfileSection';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -39,6 +40,7 @@ const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
   const [tutorialOpen, setTutorialOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
 
   // Tutorial steps configuration
   const tutorialSteps = [
@@ -66,7 +68,7 @@ const Dashboard = () => {
     // Only perform auth checks once loading is complete
     if (!loading && !authChecked) {
       setAuthChecked(true);
-      
+
       if (!user) {
         console.log('No user found, redirecting to login');
         navigate('/login');
@@ -165,7 +167,7 @@ const Dashboard = () => {
 
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
@@ -173,10 +175,10 @@ const Dashboard = () => {
 
       {/* Sidebar */}
       <div className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-card border-r border-border transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0
+        fixed inset-y-0 left-0 z-50 w-64 bg-card border-r border-border transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:fixed lg:inset-y-0
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-screen">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
             <div className="flex items-center gap-2">
@@ -188,7 +190,7 @@ const Dashboard = () => {
                 <p className="text-xs text-gray-500">Founder Dashboard</p>
               </div>
             </div>
-            <button 
+            <button
               className="lg:hidden p-1"
               onClick={() => setSidebarOpen(false)}
             >
@@ -197,7 +199,7 @@ const Dashboard = () => {
           </div>
 
           {/* Navigation */}
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto min-h-0">
             <nav className="p-4 space-y-2">
               {sidebarItems.map((item) => (
                 <Link
@@ -219,8 +221,11 @@ const Dashboard = () => {
           </div>
 
           {/* Footer */}
-          <div className="p-4 border-t border-gray-200">
-            <div className="flex items-center gap-3 p-2">
+          <div className="p-4 border-t border-gray-200 flex-shrink-0">
+            <div
+              className="flex items-center gap-3 p-2 cursor-pointer hover:bg-gray-50 rounded-lg"
+              onClick={() => setProfileOpen(true)}
+            >
               <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
                 <span className="text-sm font-medium">
                   {user?.displayName?.[0] || user?.email?.[0] || '?'}
@@ -230,21 +235,13 @@ const Dashboard = () => {
                 <p className="text-sm font-medium">{user?.displayName || 'User'}</p>
                 <p className="text-xs text-muted-foreground">{user?.email}</p>
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleLogout}
-                className="text-muted-foreground"
-              >
-                Sign out
-              </Button>
             </div>
           </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 lg:ml-64">
         {/* Header */}
         <header className="bg-card border-b border-border px-4 lg:px-6 py-4">
           <div className="flex items-center justify-between">
@@ -255,7 +252,7 @@ const Dashboard = () => {
               >
                 <Menu className="w-5 h-5" />
               </button>
-              
+
               <div className="relative flex-1 max-w-md hidden sm:block">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
@@ -438,7 +435,7 @@ const Dashboard = () => {
                     <span>75%</span>
                   </div>
                   <div className="w-full bg-muted rounded-full h-2">
-                    <div className="bg-primary h-2 rounded-full" style={{width: '75%'}}></div>
+                    <div className="bg-primary h-2 rounded-full" style={{ width: '75%' }}></div>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -447,7 +444,7 @@ const Dashboard = () => {
                     <span>60%</span>
                   </div>
                   <div className="w-full bg-muted rounded-full h-2">
-                    <div className="bg-primary h-2 rounded-full" style={{width: '60%'}}></div>
+                    <div className="bg-primary h-2 rounded-full" style={{ width: '60%' }}></div>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -456,7 +453,7 @@ const Dashboard = () => {
                     <span>40%</span>
                   </div>
                   <div className="w-full bg-muted rounded-full h-2">
-                    <div className="bg-primary h-2 rounded-full" style={{width: '40%'}}></div>
+                    <div className="bg-primary h-2 rounded-full" style={{ width: '40%' }}></div>
                   </div>
                 </div>
               </CardContent>
@@ -503,6 +500,12 @@ const Dashboard = () => {
           </div>
         </main>
       </div>
+      <ProfileSection
+        user={user}
+        isOpen={profileOpen}
+        onClose={() => setProfileOpen(false)}
+        onLogout={handleLogout}
+      />
     </div>
   );
 };
