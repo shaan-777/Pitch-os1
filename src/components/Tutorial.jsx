@@ -5,7 +5,19 @@ import { Button } from "@/components/ui/button";
 const Tutorial = ({ steps, isOpen, onClose, onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
+  const [isMobile, setIsMobile] = useState(false);
   const overlayRef = useRef(null);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     if (isOpen && steps[currentStep]) {
@@ -13,7 +25,7 @@ const Tutorial = ({ steps, isOpen, onClose, onComplete }) => {
       window.addEventListener('resize', updateTooltipPosition);
       return () => window.removeEventListener('resize', updateTooltipPosition);
     }
-  }, [isOpen, currentStep, steps]);
+  }, [isOpen, currentStep, steps, isMobile]);
 
   const updateTooltipPosition = () => {
     const step = steps[currentStep];
@@ -25,39 +37,70 @@ const Tutorial = ({ steps, isOpen, onClose, onComplete }) => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
 
-      // Calculate position based on placement
-      let top, left;
-      const tooltipWidth = 320;
-      const tooltipHeight = 200;
+      // Mobile positioning - always center bottom or top
+      if (isMobile) {
+        const tooltipWidth = Math.min(280, window.innerWidth - 32);
+        const tooltipHeight = 200;
+        const centerX = window.innerWidth / 2 - tooltipWidth / 2;
+        
+        // Check if there's space below the element
+        const spaceBelow = window.innerHeight - rect.bottom;
+        const spaceAbove = rect.top;
+        
+        if (spaceBelow >= tooltipHeight + 40) {
+          // Position below
+          setTooltipPosition({
+            top: rect.bottom + scrollTop + 16,
+            left: Math.max(16, centerX)
+          });
+        } else if (spaceAbove >= tooltipHeight + 40) {
+          // Position above
+          setTooltipPosition({
+            top: rect.top + scrollTop - tooltipHeight - 16,
+            left: Math.max(16, centerX)
+          });
+        } else {
+          // Position at bottom of screen if no space
+          setTooltipPosition({
+            top: window.innerHeight - tooltipHeight - 80 + scrollTop,
+            left: Math.max(16, centerX)
+          });
+        }
+      } else {
+        // Desktop positioning (original logic)
+        let top, left;
+        const tooltipWidth = 320;
+        const tooltipHeight = 200;
 
-      switch (step.placement || 'bottom') {
-        case 'top':
-          top = rect.top + scrollTop - tooltipHeight - 20;
-          left = rect.left + scrollLeft + (rect.width / 2) - (tooltipWidth / 2);
-          break;
-        case 'bottom':
-          top = rect.bottom + scrollTop + 20;
-          left = rect.left + scrollLeft + (rect.width / 2) - (tooltipWidth / 2);
-          break;
-        case 'left':
-          top = rect.top + scrollTop + (rect.height / 2) - (tooltipHeight / 2);
-          left = rect.left + scrollLeft - tooltipWidth - 20;
-          break;
-        case 'right':
-          top = rect.top + scrollTop + (rect.height / 2) - (tooltipHeight / 2);
-          left = rect.right + scrollLeft + 20;
-          break;
-        default:
-          top = rect.bottom + scrollTop + 20;
-          left = rect.left + scrollLeft + (rect.width / 2) - (tooltipWidth / 2);
+        switch (step.placement || 'bottom') {
+          case 'top':
+            top = rect.top + scrollTop - tooltipHeight - 20;
+            left = rect.left + scrollLeft + (rect.width / 2) - (tooltipWidth / 2);
+            break;
+          case 'bottom':
+            top = rect.bottom + scrollTop + 20;
+            left = rect.left + scrollLeft + (rect.width / 2) - (tooltipWidth / 2);
+            break;
+          case 'left':
+            top = rect.top + scrollTop + (rect.height / 2) - (tooltipHeight / 2);
+            left = rect.left + scrollLeft - tooltipWidth - 20;
+            break;
+          case 'right':
+            top = rect.top + scrollTop + (rect.height / 2) - (tooltipHeight / 2);
+            left = rect.right + scrollLeft + 20;
+            break;
+          default:
+            top = rect.bottom + scrollTop + 20;
+            left = rect.left + scrollLeft + (rect.width / 2) - (tooltipWidth / 2);
+        }
+
+        // Keep tooltip within viewport bounds
+        const padding = 20;
+        left = Math.max(padding, Math.min(window.innerWidth - tooltipWidth - padding, left));
+        top = Math.max(padding, top);
+
+        setTooltipPosition({ top, left });
       }
-
-      // Keep tooltip within viewport bounds
-      const padding = 20;
-      left = Math.max(padding, Math.min(window.innerWidth - tooltipWidth - padding, left));
-      top = Math.max(padding, top);
-
-      setTooltipPosition({ top, left });
 
       // Highlight the target element
       targetElement.style.position = 'relative';
@@ -123,41 +166,47 @@ const Tutorial = ({ steps, isOpen, onClose, onComplete }) => {
       
       {/* Tooltip */}
       <div
-        className="fixed z-[1002] bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700 p-6 max-w-sm"
+        className={`fixed z-[1002] bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700 ${
+          isMobile ? 'p-4 mx-4' : 'p-6'
+        } ${isMobile ? 'max-w-none' : 'max-w-sm'}`}
         style={{
           top: `${tooltipPosition.top}px`,
           left: `${tooltipPosition.left}px`,
-          width: '320px'
+          width: isMobile ? `${Math.min(280, window.innerWidth - 32)}px` : '320px'
         }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between mb-4">
+        <div className={`flex items-center justify-between ${isMobile ? 'mb-3' : 'mb-4'}`}>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-            <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
+            <span className={`font-medium text-gray-600 dark:text-gray-300 ${isMobile ? 'text-xs' : 'text-sm'}`}>
               Step {currentStep + 1} of {steps.length}
             </span>
           </div>
           <button
             onClick={handleClose}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1"
           >
-            <X className="w-4 h-4" />
+            <X className={isMobile ? 'w-5 h-5' : 'w-4 h-4'} />
           </button>
         </div>
 
         {/* Content */}
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+        <div className={isMobile ? 'mb-4' : 'mb-6'}>
+          <h3 className={`font-semibold text-gray-900 dark:text-white mb-2 ${
+            isMobile ? 'text-base' : 'text-lg'
+          }`}>
             {step.title}
           </h3>
-          <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+          <p className={`text-gray-600 dark:text-gray-300 leading-relaxed ${
+            isMobile ? 'text-xs' : 'text-sm'
+          }`}>
             {step.content}
           </p>
         </div>
 
         {/* Progress bar */}
-        <div className="mb-4">
+        <div className={isMobile ? 'mb-3' : 'mb-4'}>
           <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1">
             <div 
               className="bg-blue-500 h-1 rounded-full transition-all duration-300"
@@ -167,34 +216,34 @@ const Tutorial = ({ steps, isOpen, onClose, onComplete }) => {
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-between">
+        <div className={`flex items-center justify-between ${isMobile ? 'gap-2' : ''}`}>
           <Button
             variant="ghost"
-            size="sm"
+            size={isMobile ? 'sm' : 'sm'}
             onClick={handlePrevious}
             disabled={currentStep === 0}
-            className="gap-1"
+            className={`gap-1 ${isMobile ? 'px-2 text-xs' : ''}`}
           >
-            <ChevronLeft className="w-4 h-4" />
-            Previous
+            <ChevronLeft className={isMobile ? 'w-3 h-3' : 'w-4 h-4'} />
+            {isMobile ? 'Prev' : 'Previous'}
           </Button>
           
-          <div className="flex gap-2">
+          <div className={`flex ${isMobile ? 'gap-1' : 'gap-2'}`}>
             <Button
               variant="ghost"
-              size="sm"
+              size={isMobile ? 'sm' : 'sm'}
               onClick={handleClose}
-              className="text-gray-600 dark:text-gray-300"
+              className={`text-gray-600 dark:text-gray-300 ${isMobile ? 'px-2 text-xs' : ''}`}
             >
-              Skip Tour
+              Skip{isMobile ? '' : ' Tour'}
             </Button>
             <Button
-              size="sm"
+              size={isMobile ? 'sm' : 'sm'}
               onClick={handleNext}
-              className="gap-1"
+              className={`gap-1 ${isMobile ? 'px-3 text-xs' : ''}`}
             >
               {currentStep === steps.length - 1 ? 'Finish' : 'Next'}
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className={isMobile ? 'w-3 h-3' : 'w-4 h-4'} />
             </Button>
           </div>
         </div>
