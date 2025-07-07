@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
-import { User, Settings, CreditCard, Bell, LogOut, X, Camera, Edit2 } from 'lucide-react';
+import { User, Settings, CreditCard, Bell, LogOut, X, Camera, Edit2, Loader2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { updateProfile } from "firebase/auth";
+import { auth } from "../firebase";
 
 const ProfileSection = ({ user, isOpen, onClose, onLogout }) => {
     const [activeTab, setActiveTab] = useState('profile');
     const [isEditing, setIsEditing] = useState(false);
     const [displayName, setDisplayName] = useState(user?.displayName || '');
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [updateSuccess, setUpdateSuccess] = useState(false);
+    const [updateError, setUpdateError] = useState('');
 
     if (!isOpen) return null;
 
@@ -18,32 +23,64 @@ const ProfileSection = ({ user, isOpen, onClose, onLogout }) => {
         { id: 'notifications', label: 'Notifications', icon: Bell },
     ];
 
-    const handleSave = () => {
-        // Add your save logic here
+    const handleSave = async () => {
+        if (!displayName.trim()) {
+            setUpdateError('Display name cannot be empty');
+            return;
+        }
+
+        setIsUpdating(true);
+        setUpdateError('');
+        setUpdateSuccess(false);
+
+        try {
+            // Update Firebase Auth profile
+            await updateProfile(auth.currentUser, {
+                displayName: displayName.trim()
+            });
+
+            setUpdateSuccess(true);
+            setIsEditing(false);
+            
+            // Clear success message after 3 seconds
+            setTimeout(() => setUpdateSuccess(false), 3000);
+            
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            setUpdateError('Failed to update profile. Please try again.');
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
+    const handleCancel = () => {
+        setDisplayName(user?.displayName || '');
         setIsEditing(false);
+        setUpdateError('');
+        setUpdateSuccess(false);
     };
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-2 sm:p-4">
-            <div className="bg-white rounded-lg shadow-xl w-full h-full sm:max-w-2xl sm:w-full sm:max-h-[90vh] sm:h-auto overflow-hidden">
+            <div className="bg-white rounded-lg shadow-xl w-full h-full sm:w-full sm:max-w-3xl lg:max-w-4xl xl:max-w-5xl sm:h-auto sm:max-h-[95vh] overflow-hidden">
                 {/* Header */}
-                <div className="flex items-center justify-between p-4 sm:p-6 border-b">
-                    <h2 className="text-lg sm:text-xl font-semibold">Account Settings</h2>
-                    <Button variant="ghost" size="icon" onClick={onClose}>
-                        <X className="w-5 h-5" />
+                <div className="flex items-center justify-between p-3 sm:p-4 md:p-6 border-b bg-white sticky top-0 z-10">
+                    <h2 className="text-lg sm:text-xl md:text-2xl font-semibold truncate">Account Settings</h2>
+                    <Button variant="ghost" size="icon" onClick={onClose} className="flex-shrink-0">
+                        <X className="w-4 h-4 sm:w-5 sm:h-5" />
                     </Button>
                 </div>
 
                 {/* Mobile Tab Navigation */}
-                <div className="block sm:hidden border-b">
-                    <div className="flex overflow-x-auto">
+                <div className="block sm:hidden border-b bg-white sticky top-14 z-10">
+                    <div className="flex overflow-x-auto scrollbar-hide">
                         {tabs.map((tab) => (
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                className={`flex-shrink-0 flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === tab.id
-                                        ? 'border-blue-500 text-blue-600'
-                                        : 'border-transparent text-gray-600'
+                                className={`flex-shrink-0 flex items-center gap-2 px-3 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${activeTab === tab.id
+                                        ? 'border-blue-500 text-blue-600 bg-blue-50'
+                                        : 'border-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                                     }`}
                             >
                                 <tab.icon className="w-4 h-4" />
@@ -55,42 +92,42 @@ const ProfileSection = ({ user, isOpen, onClose, onLogout }) => {
 
                 <div className="flex h-full sm:h-auto">
                     {/* Desktop Sidebar */}
-                    <div className="hidden sm:block w-48 bg-gray-50 p-4 space-y-2">
+                    <div className="hidden sm:block w-48 md:w-56 lg:w-64 bg-gray-50 p-4 space-y-2">
                         {tabs.map((tab) => (
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors ${activeTab === tab.id
-                                        ? 'bg-blue-100 text-blue-700'
-                                        : 'text-gray-600 hover:bg-gray-100'
+                                className={`w-full flex items-center gap-3 px-3 py-2.5 text-left rounded-lg transition-colors ${activeTab === tab.id
+                                        ? 'bg-blue-100 text-blue-700 border border-blue-200'
+                                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                                     }`}
                             >
-                                <tab.icon className="w-4 h-4" />
-                                <span className="text-sm">{tab.label}</span>
+                                <tab.icon className="w-4 h-4 md:w-5 md:h-5" />
+                                <span className="text-sm md:text-base">{tab.label}</span>
                             </button>
                         ))}
                     </div>
 
                     {/* Content */}
-                    <div className="flex-1 p-4 sm:p-6 overflow-y-auto h-full sm:max-h-[70vh]">
+                    <div className="flex-1 p-3 sm:p-4 md:p-6 overflow-y-auto h-full sm:max-h-[75vh]">
                         {activeTab === 'profile' && (
                             <div className="space-y-4 sm:space-y-6">
                                 {/* Profile Picture */}
-                                <div className="flex flex-col sm:flex-row items-center gap-4">
+                                <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
                                     <div className="relative">
-                                        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-blue-100 rounded-full flex items-center justify-center">
-                                            <span className="text-xl sm:text-2xl font-semibold text-blue-700">
+                                        <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 bg-blue-100 rounded-full flex items-center justify-center">
+                                            <span className="text-2xl sm:text-3xl md:text-4xl font-semibold text-blue-700">
                                                 {user?.displayName?.[0] || user?.email?.[0] || '?'}
                                             </span>
                                         </div>
-                                        <button className="absolute -bottom-1 -right-1 p-1 bg-white rounded-full border shadow-sm">
-                                            <Camera className="w-3 h-3" />
+                                        <button className="absolute -bottom-1 -right-1 p-1.5 bg-white rounded-full border shadow-sm hover:bg-gray-50 transition-colors">
+                                            <Camera className="w-3 h-3 sm:w-4 sm:h-4" />
                                         </button>
                                     </div>
-                                    <div className="text-center sm:text-left">
-                                        <h3 className="font-semibold text-lg sm:text-base">{user?.displayName || 'User'}</h3>
-                                        <p className="text-sm text-gray-500 break-all sm:break-normal">{user?.email}</p>
-                                        <span className="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full mt-1">
+                                    <div className="text-center sm:text-left flex-1">
+                                        <h3 className="font-semibold text-lg sm:text-xl md:text-2xl">{user?.displayName || 'User'}</h3>
+                                        <p className="text-sm sm:text-base text-gray-500 break-all sm:break-normal">{user?.email}</p>
+                                        <span className="inline-block px-3 py-1 text-xs sm:text-sm bg-blue-100 text-blue-700 rounded-full mt-2">
                                             Pro Member
                                         </span>
                                     </div>
@@ -98,36 +135,53 @@ const ProfileSection = ({ user, isOpen, onClose, onLogout }) => {
 
                                 {/* Profile Info */}
                                 <Card>
-                                    <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0">
-                                        <CardTitle className="text-base sm:text-lg">Personal Information</CardTitle>
+                                    <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0 pb-3">
+                                        <CardTitle className="text-base sm:text-lg md:text-xl">Personal Information</CardTitle>
                                         <Button
                                             variant="ghost"
                                             size="sm"
                                             onClick={() => setIsEditing(!isEditing)}
+                                            className="hover:bg-gray-100"
+                                            disabled={isUpdating}
                                         >
-                                            <Edit2 className="w-4 h-4" />
+                                            <Edit2 className="w-4 h-4 mr-2" />
+                                            {isEditing ? 'Cancel' : 'Edit'}
                                         </Button>
                                     </CardHeader>
-                                    <CardContent className="space-y-4">
+                                    <CardContent className="space-y-4 sm:space-y-6">
+                                        {/* Success/Error Messages */}
+                                        {updateSuccess && (
+                                            <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                                                <p className="text-sm text-green-800 font-medium">Profile updated successfully!</p>
+                                            </div>
+                                        )}
+                                        {updateError && (
+                                            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                                                <p className="text-sm text-red-800 font-medium">{updateError}</p>
+                                            </div>
+                                        )}
+
                                         <div>
-                                            <label className="text-sm font-medium text-gray-700">Display Name</label>
+                                            <label className="text-sm font-medium text-gray-700 block mb-1">Display Name</label>
                                             {isEditing ? (
                                                 <Input
                                                     value={displayName}
                                                     onChange={(e) => setDisplayName(e.target.value)}
-                                                    className="mt-1"
+                                                    className="text-sm sm:text-base"
+                                                    placeholder="Enter your display name"
+                                                    disabled={isUpdating}
                                                 />
                                             ) : (
-                                                <p className="mt-1 text-gray-900 break-words">{user?.displayName || 'Not set'}</p>
+                                                <p className="text-sm sm:text-base text-gray-900 break-words">{user?.displayName || 'Not set'}</p>
                                             )}
                                         </div>
                                         <div>
-                                            <label className="text-sm font-medium text-gray-700">Email</label>
-                                            <p className="mt-1 text-gray-900 break-all">{user?.email}</p>
+                                            <label className="text-sm font-medium text-gray-700 block mb-1">Email</label>
+                                            <p className="text-sm sm:text-base text-gray-900 break-all">{user?.email}</p>
                                         </div>
                                         <div>
-                                            <label className="text-sm font-medium text-gray-700">Member Since</label>
-                                            <p className="mt-1 text-gray-900">January 2024</p>
+                                            <label className="text-sm font-medium text-gray-700 block mb-1">Member Since</label>
+                                            <p className="text-sm sm:text-base text-gray-900">January 2024</p>
                                         </div>
                                         {isEditing && (
                                             <div className="flex flex-col sm:flex-row gap-2 pt-2">
@@ -143,21 +197,30 @@ const ProfileSection = ({ user, isOpen, onClose, onLogout }) => {
                         )}
 
                         {activeTab === 'settings' && (
-                            <div className="space-y-4">
-                                <h3 className="text-base sm:text-lg font-semibold">Preferences</h3>
+                            <div className="space-y-4 sm:space-y-6">
+                                <h3 className="text-base sm:text-lg md:text-xl font-semibold">Preferences</h3>
                                 <Card>
                                     <CardContent className="pt-4 sm:pt-6 space-y-4">
                                         <div className="flex items-center justify-between py-2">
-                                            <span className="text-sm sm:text-base">Dark Mode</span>
-                                            <input type="checkbox" className="rounded w-4 h-4" />
+                                            <div className="flex-1">
+                                                <span className="text-sm sm:text-base font-medium">Dark Mode</span>
+                                                <p className="text-xs sm:text-sm text-gray-500">Switch to dark theme</p>
+                                            </div>
+                                            <input type="checkbox" className="rounded w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
                                         </div>
                                         <div className="flex items-center justify-between py-2">
-                                            <span className="text-sm sm:text-base">Email Notifications</span>
-                                            <input type="checkbox" defaultChecked className="rounded w-4 h-4" />
+                                            <div className="flex-1">
+                                                <span className="text-sm sm:text-base font-medium">Email Notifications</span>
+                                                <p className="text-xs sm:text-sm text-gray-500">Receive email updates</p>
+                                            </div>
+                                            <input type="checkbox" defaultChecked className="rounded w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
                                         </div>
                                         <div className="flex items-center justify-between py-2">
-                                            <span className="text-sm sm:text-base">Auto-save Pitches</span>
-                                            <input type="checkbox" defaultChecked className="rounded w-4 h-4" />
+                                            <div className="flex-1">
+                                                <span className="text-sm sm:text-base font-medium">Auto-save Pitches</span>
+                                                <p className="text-xs sm:text-sm text-gray-500">Automatically save your work</p>
+                                            </div>
+                                            <input type="checkbox" defaultChecked className="rounded w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -165,57 +228,69 @@ const ProfileSection = ({ user, isOpen, onClose, onLogout }) => {
                         )}
 
                         {activeTab === 'billing' && (
-                            <div className="space-y-4">
-                                <h3 className="text-base sm:text-lg font-semibold">Billing & Subscription</h3>
+                            <div className="space-y-4 sm:space-y-6">
+                                <h3 className="text-base sm:text-lg md:text-xl font-semibold">Billing & Subscription</h3>
                                 <Card>
                                     <CardContent className="pt-4 sm:pt-6">
-                                        <div className="space-y-3">
-                                            <div className="flex justify-between text-sm sm:text-base">
-                                                <span>Current Plan</span>
-                                                <span className="font-semibold">Pro Member</span>
+                                        <div className="space-y-3 sm:space-y-4">
+                                            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0">
+                                                <span className="text-sm sm:text-base font-medium">Current Plan</span>
+                                                <span className="text-sm sm:text-base font-semibold text-blue-600">Pro Member</span>
                                             </div>
-                                            <div className="flex justify-between text-sm sm:text-base">
-                                                <span>Next Billing</span>
-                                                <span>Feb 15, 2024</span>
+                                            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0">
+                                                <span className="text-sm sm:text-base font-medium">Next Billing</span>
+                                                <span className="text-sm sm:text-base">Feb 15, 2024</span>
                                             </div>
-                                            <div className="flex justify-between text-sm sm:text-base">
-                                                <span>Amount</span>
-                                                <span>$29/month</span>
+                                            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0">
+                                                <span className="text-sm sm:text-base font-medium">Amount</span>
+                                                <span className="text-sm sm:text-base font-semibold">$29/month</span>
                                             </div>
                                         </div>
-                                        <Button className="w-full mt-4" variant="outline">
-                                            Manage Subscription
-                                        </Button>
+                                        <div className="flex flex-col sm:flex-row gap-2 mt-6">
+                                            <Button className="w-full sm:flex-1" variant="outline">
+                                                Manage Subscription
+                                            </Button>
+                                            <Button className="w-full sm:w-auto" variant="ghost">
+                                                View Invoices
+                                            </Button>
+                                        </div>
                                     </CardContent>
                                 </Card>
                             </div>
                         )}
 
                         {activeTab === 'notifications' && (
-                            <div className="space-y-4">
-                                <h3 className="text-base sm:text-lg font-semibold">Notification Preferences</h3>
+                            <div className="space-y-4 sm:space-y-6">
+                                <h3 className="text-base sm:text-lg md:text-xl font-semibold">Notification Preferences</h3>
                                 <Card>
-                                    <CardContent className="pt-4 sm:pt-6 space-y-4">
-                                        <div className="flex items-start sm:items-center justify-between gap-3">
+                                    <CardContent className="pt-4 sm:pt-6 space-y-4 sm:space-y-6">
+                                        <div className="flex items-start justify-between gap-3">
                                             <div className="flex-1">
                                                 <p className="font-medium text-sm sm:text-base">Pitch Updates</p>
-                                                <p className="text-xs sm:text-sm text-gray-500">Get notified about pitch feedback</p>
+                                                <p className="text-xs sm:text-sm text-gray-500 mt-1">Get notified about pitch feedback and status changes</p>
                                             </div>
-                                            <input type="checkbox" defaultChecked className="rounded w-4 h-4 flex-shrink-0" />
+                                            <input type="checkbox" defaultChecked className="rounded w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5" />
                                         </div>
-                                        <div className="flex items-start sm:items-center justify-between gap-3">
+                                        <div className="flex items-start justify-between gap-3">
                                             <div className="flex-1">
                                                 <p className="font-medium text-sm sm:text-base">Community Activity</p>
-                                                <p className="text-xs sm:text-sm text-gray-500">Updates from the community</p>
+                                                <p className="text-xs sm:text-sm text-gray-500 mt-1">Updates from community discussions and activities</p>
                                             </div>
-                                            <input type="checkbox" defaultChecked className="rounded w-4 h-4 flex-shrink-0" />
+                                            <input type="checkbox" defaultChecked className="rounded w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5" />
                                         </div>
-                                        <div className="flex items-start sm:items-center justify-between gap-3">
+                                        <div className="flex items-start justify-between gap-3">
                                             <div className="flex-1">
                                                 <p className="font-medium text-sm sm:text-base">Funding Opportunities</p>
-                                                <p className="text-xs sm:text-sm text-gray-500">New funding matches</p>
+                                                <p className="text-xs sm:text-sm text-gray-500 mt-1">Receive alerts about new funding matches and opportunities</p>
                                             </div>
-                                            <input type="checkbox" defaultChecked className="rounded w-4 h-4 flex-shrink-0" />
+                                            <input type="checkbox" defaultChecked className="rounded w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5" />
+                                        </div>
+                                        <div className="flex items-start justify-between gap-3">
+                                            <div className="flex-1">
+                                                <p className="font-medium text-sm sm:text-base">Security Alerts</p>
+                                                <p className="text-xs sm:text-sm text-gray-500 mt-1">Important security notifications and account alerts</p>
+                                            </div>
+                                            <input type="checkbox" defaultChecked className="rounded w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5" />
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -225,18 +300,23 @@ const ProfileSection = ({ user, isOpen, onClose, onLogout }) => {
                 </div>
 
                 {/* Footer */}
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-4 sm:p-6 border-t bg-gray-50 gap-3 sm:gap-0">
-                    <Button variant="ghost" onClick={onClose} className="order-2 sm:order-1">
-                        Close
-                    </Button>
-                    <Button
-                        variant="outline"
-                        onClick={onLogout}
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50 order-1 sm:order-2"
-                    >
-                        <LogOut className="w-4 h-4 mr-2" />
-                        Sign Out
-                    </Button>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-3 sm:p-4 md:p-6 border-t bg-gray-50 gap-3 sm:gap-4 sticky bottom-0">
+                    <div className="hidden sm:flex text-xs sm:text-sm text-gray-500">
+                        Last updated: {new Date().toLocaleDateString()}
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                        <Button variant="ghost" onClick={onClose} className="order-2 sm:order-1">
+                            Close
+                        </Button>
+                        <Button
+                            variant="outline"
+                            onClick={onLogout}
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 order-1 sm:order-2"
+                        >
+                            <LogOut className="w-4 h-4 mr-2" />
+                            Sign Out
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>
