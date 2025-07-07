@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
-import { User, Settings, CreditCard, Bell, LogOut, X, Camera, Edit2, Loader2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { User, Settings, CreditCard, Bell, LogOut, X, Camera, Edit2, Loader2, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { updateProfile } from "firebase/auth";
 import { auth } from "../firebase";
+import { doc, getDoc, getFirestore } from "firebase/firestore";
+
+const db = getFirestore();
 
 const ProfileSection = ({ user, isOpen, onClose, onLogout }) => {
     const [activeTab, setActiveTab] = useState('profile');
@@ -13,8 +16,8 @@ const ProfileSection = ({ user, isOpen, onClose, onLogout }) => {
     const [isUpdating, setIsUpdating] = useState(false);
     const [updateSuccess, setUpdateSuccess] = useState(false);
     const [updateError, setUpdateError] = useState('');
-
-    if (!isOpen) return null;
+    const [onboardingStatus, setOnboardingStatus] = useState(null);
+    const [loadingOnboardingStatus, setLoadingOnboardingStatus] = useState(true);
 
     const tabs = [
         { id: 'profile', label: 'Profile', icon: User },
@@ -22,6 +25,50 @@ const ProfileSection = ({ user, isOpen, onClose, onLogout }) => {
         { id: 'billing', label: 'Billing', icon: CreditCard },
         { id: 'notifications', label: 'Notifications', icon: Bell },
     ];
+
+    // Check onboarding status when component mounts
+    useEffect(() => {
+        const checkOnboardingStatus = async () => {
+            if (!user?.uid) return;
+            
+            try {
+                setLoadingOnboardingStatus(true);
+                const settingsRef = doc(db, "userSettings", user.uid);
+                const settingsDoc = await getDoc(settingsRef);
+                
+                if (settingsDoc.exists()) {
+                    const data = settingsDoc.data();
+                    setOnboardingStatus({
+                        completed: data.onboardingCompleted || false,
+                        skipped: data.skipped || false
+                    });
+                } else {
+                    // No settings document means onboarding not completed
+                    setOnboardingStatus({
+                        completed: false,
+                        skipped: false
+                    });
+                }
+            } catch (error) {
+                console.error('Error checking onboarding status:', error);
+                setOnboardingStatus({
+                    completed: false,
+                    skipped: false
+                });
+            } finally {
+                setLoadingOnboardingStatus(false);
+            }
+        };
+
+        if (isOpen && user) {
+            checkOnboardingStatus();
+        }
+    }, [isOpen, user]);
+
+    // Update displayName when user changes
+    useEffect(() => {
+        setDisplayName(user?.displayName || '');
+    }, [user?.displayName]);
 
     const handleSave = async () => {
         if (!displayName.trim()) {
@@ -59,6 +106,18 @@ const ProfileSection = ({ user, isOpen, onClose, onLogout }) => {
         setUpdateError('');
         setUpdateSuccess(false);
     };
+
+    const handleContinueOnboarding = () => {
+        // Close the profile modal and navigate to onboarding
+        onClose();
+        // Navigate to onboarding - you'll need to implement this navigation logic
+        // For example, using React Router:
+        // navigate('/onboarding');
+        window.location.href = '/onboarding';
+    };
+
+    // Early return AFTER all hooks have been called
+    if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-2 sm:p-4">
@@ -112,6 +171,47 @@ const ProfileSection = ({ user, isOpen, onClose, onLogout }) => {
                     <div className="flex-1 p-3 sm:p-4 md:p-6 overflow-y-auto h-full sm:max-h-[75vh]">
                         {activeTab === 'profile' && (
                             <div className="space-y-4 sm:space-y-6">
+                                {/* Onboarding Status Banner */}
+                                {!loadingOnboardingStatus && onboardingStatus && onboardingStatus.skipped && (
+                                    <Card className="border-amber-200 bg-amber-50">
+                                        <CardContent className="pt-4">
+                                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                                                <div className="flex-1">
+                                                    <h3 className="font-semibold text-amber-800 mb-1">Complete Your Profile Setup</h3>
+                                                    <p className="text-sm text-amber-700">
+                                                        You skipped the initial setup. Complete it now to personalize your PitchOS experience and get better recommendations.
+                                                    </p>
+                                                </div>
+                                                <Button
+                                                    onClick={handleContinueOnboarding}
+                                                    className="bg-amber-600 hover:bg-amber-700 text-white flex items-center gap-2 whitespace-nowrap"
+                                                    size="sm"
+                                                >
+                                                    Complete Setup
+                                                    <ArrowRight className="w-4 h-4" />
+                                                </Button>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                )}
+
+                                {/* Onboarding Completed Banner */}
+                                {!loadingOnboardingStatus && onboardingStatus && onboardingStatus.completed && !onboardingStatus.skipped && (
+                                    <Card className="border-green-200 bg-green-50">
+                                        <CardContent className="pt-4">
+                                            <div className="flex items-center gap-3">
+                                                <CheckCircle2 className="w-5 h-5 text-green-600" />
+                                                <div>
+                                                    <h3 className="font-semibold text-green-800">Profile Setup Complete</h3>
+                                                    <p className="text-sm text-green-700">
+                                                        Your profile is fully set up and personalized.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                )}
+
                                 {/* Profile Picture */}
                                 <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
                                     <div className="relative">
@@ -185,8 +285,17 @@ const ProfileSection = ({ user, isOpen, onClose, onLogout }) => {
                                         </div>
                                         {isEditing && (
                                             <div className="flex flex-col sm:flex-row gap-2 pt-2">
-                                                <Button onClick={handleSave} size="sm" className="w-full sm:w-auto">Save Changes</Button>
-                                                <Button variant="outline" onClick={() => setIsEditing(false)} size="sm" className="w-full sm:w-auto">
+                                                <Button onClick={handleSave} size="sm" className="w-full sm:w-auto">
+                                                    {isUpdating ? (
+                                                        <>
+                                                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                                            Saving...
+                                                        </>
+                                                    ) : (
+                                                        'Save Changes'
+                                                    )}
+                                                </Button>
+                                                <Button variant="outline" onClick={handleCancel} size="sm" className="w-full sm:w-auto">
                                                     Cancel
                                                 </Button>
                                             </div>
