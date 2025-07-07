@@ -16,43 +16,74 @@ import { doc, getDoc, getFirestore } from 'firebase/firestore';
 function RequireOnboarding({ children }) {
   const { user, loading } = useAuthStore();
   const [checking, setChecking] = useState(true);
-  const [shouldRedirect, setShouldRedirect] = useState(null); // null: unknown, true: redirect to onboarding, false: redirect to dashboard
+  const [shouldRedirect, setShouldRedirect] = useState(null);
   const location = useLocation();
-  const navigate = useNavigate ? useNavigate() : null;
+  const navigate = useNavigate();
   const db = getFirestore();
 
   useEffect(() => {
-    if (!loading && user) {
-      const checkOnboarding = async () => {
+    let isMounted = true;
+
+    const checkOnboarding = async () => {
+      if (!user || loading) {
+        if (isMounted) {
+          setChecking(false);
+          setShouldRedirect(false);
+        }
+        return;
+      }
+
+      try {
+        console.log('Checking onboarding status for user:', user.uid);
         const settingsRef = doc(db, 'userSettings', user.uid);
         const settingsSnap = await getDoc(settingsRef);
-        if (settingsSnap.exists() && settingsSnap.data().onboardingCompleted) {
-          setShouldRedirect(false); // completed
-        } else {
-          setShouldRedirect(true); // not completed
+        
+        const isCompleted = settingsSnap.exists() && settingsSnap.data().onboardingCompleted === true;
+        console.log('Onboarding status:', isCompleted);
+        
+        if (isMounted) {
+          setShouldRedirect(!isCompleted);
+          setChecking(false);
         }
-        setChecking(false);
-      };
-      checkOnboarding();
-    } else if (!user && !loading) {
-      setChecking(false);
-      setShouldRedirect(false); // not logged in, let route handle
-    }
-  }, [user, loading]);
+      } catch (error) {
+        console.error('Error checking onboarding status:', error);
+        // On error, don't redirect to be safe
+        if (isMounted) {
+          setShouldRedirect(false);
+          setChecking(false);
+        }
+      }
+    };
+
+    checkOnboarding();
+    return () => {
+      isMounted = false;
+    };
+  }, [user, loading, db]);
 
   useEffect(() => {
-    if (!checking && shouldRedirect !== null && navigate) {
+    if (!checking && shouldRedirect !== null && user) {
+      console.log('Current path:', location.pathname);
+      console.log('Should redirect to onboarding:', shouldRedirect);
+      
       if (shouldRedirect && location.pathname !== '/onboarding') {
+        console.log('Redirecting to onboarding');
         navigate('/onboarding', { replace: true });
       } else if (!shouldRedirect && location.pathname === '/onboarding') {
+        console.log('Redirecting to dashboard');
         navigate('/dashboard', { replace: true });
       }
     }
-  }, [checking, shouldRedirect, location.pathname, navigate]);
+  }, [checking, shouldRedirect, location.pathname, navigate, user]);
 
   if (checking) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
   }
+
   return children;
 }
 

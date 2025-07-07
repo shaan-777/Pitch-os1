@@ -215,6 +215,7 @@ const Onboarding = () => {
 
       const batch = writeBatch(db);
 
+      // Save user preferences
       const prefsRef = doc(db, "userPreferences", user.uid);
       batch.set(prefsRef, {
         ...answers,
@@ -223,17 +224,16 @@ const Onboarding = () => {
         email: user.email,
       });
 
+      // Set onboarding as completed
       const settingsRef = doc(db, "userSettings", user.uid);
-      batch.set(
-        settingsRef,
-        {
-          onboardingCompleted: true,
-          completedAt: new Date(),
-        },
-        { merge: true }
-      );
+      batch.set(settingsRef, {
+        onboardingCompleted: true,
+        completedAt: new Date(),
+      });
 
       await batch.commit();
+
+      console.log('Onboarding completed successfully for user:', user.uid);
 
       toast({
         title: "Setup Complete!",
@@ -246,12 +246,10 @@ const Onboarding = () => {
       console.error("Error saving onboarding data:", error);
       toast({
         title: "Error Saving Preferences",
-        description: "Your preferences will be saved locally for now.",
+        description: "Please try again. If the problem persists, contact support.",
         variant: "destructive",
         duration: 5000,
       });
-
-      navigate("/dashboard");
     } finally {
       setIsSubmitting(false);
     }

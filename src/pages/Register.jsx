@@ -15,10 +15,8 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (user && localStorage.getItem("onboardingCompleted") === "true") {
+    if (user) {
       navigate('/dashboard');
-    } else if (user) {
-      navigate('/onboarding');
     }
   }, [user, navigate]);
 
