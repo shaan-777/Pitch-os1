@@ -75,18 +75,7 @@ const Dashboard = () => {
         return;
       }
 
-      // Check onboarding status
-      const onboardingCompleted = isOnboardingCompleted ? isOnboardingCompleted() : localStorage.getItem("onboardingCompleted") === "true";
-      console.log('Onboarding status:', onboardingCompleted);
-      console.log('User:', user);
-
-      if (!onboardingCompleted) {
-        console.log('Onboarding not completed, redirecting to onboarding');
-        navigate('/onboarding');
-        return;
-      }
-
-      console.log('User authenticated and onboarding completed, staying on dashboard');
+      console.log('User authenticated, staying on dashboard');
     }
   }, [user, loading, navigate, authChecked]);
 

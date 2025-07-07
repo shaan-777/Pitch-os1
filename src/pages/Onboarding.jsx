@@ -228,6 +228,7 @@ const Onboarding = () => {
       const settingsRef = doc(db, "userSettings", user.uid);
       batch.set(settingsRef, {
         onboardingCompleted: true,
+        skipped: false,
         completedAt: new Date(),
       });
 
@@ -241,7 +242,9 @@ const Onboarding = () => {
         duration: 3000,
       });
 
-      navigate("/dashboard");
+      // Add a small delay before navigation to ensure Firestore update is processed
+      await new Promise(resolve => setTimeout(resolve, 500));
+      navigate("/dashboard", { replace: true });
     } catch (error) {
       console.error("Error saving onboarding data:", error);
       toast({
@@ -268,31 +271,47 @@ const Onboarding = () => {
       }
       if (!user) throw new Error("User not authenticated");
 
-      await setDoc(
-        doc(db, "userSettings", user.uid),
-        {
-          onboardingCompleted: true,
-          skipped: true,
-          completedAt: new Date(),
-        },
-        { merge: true }
-      );
+      // Create a batch write
+      const batch = writeBatch(db);
+
+      // Set minimal user preferences
+      const prefsRef = doc(db, "userPreferences", user.uid);
+      batch.set(prefsRef, {
+        userId: user.uid,
+        email: user.email,
+        skippedAt: new Date(),
+      });
+
+      // Set onboarding as completed with skipped flag
+      const settingsRef = doc(db, "userSettings", user.uid);
+      batch.set(settingsRef, {
+        onboardingCompleted: true,
+        skipped: true,
+        completedAt: new Date(),
+      });
+
+      // Commit both operations
+      await batch.commit();
+
+      console.log('Onboarding skipped successfully for user:', user.uid);
 
       toast({
         title: "Setup Skipped",
         description: "You can always complete your profile later from settings.",
         duration: 3000,
       });
-      navigate("/dashboard");
+
+      // Add a small delay before navigation to ensure Firestore update is processed
+      await new Promise(resolve => setTimeout(resolve, 500));
+      navigate("/dashboard", { replace: true });
     } catch (error) {
-      console.error("Error saving skip status:", error);
+      console.error("Error skipping onboarding:", error);
       toast({
-        title: "Error Saving Status",
-        description: "You'll be redirected to dashboard anyway.",
+        title: "Error Skipping Setup",
+        description: "Please try again. If the problem persists, contact support.",
         variant: "destructive",
-        duration: 3000,
+        duration: 5000,
       });
-      navigate("/dashboard");
     } finally {
       setIsSubmitting(false);
     }

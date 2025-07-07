@@ -16,19 +16,20 @@ import { doc, getDoc, getFirestore } from 'firebase/firestore';
 function RequireOnboarding({ children }) {
   const { user, loading } = useAuthStore();
   const [checking, setChecking] = useState(true);
-  const [shouldRedirect, setShouldRedirect] = useState(null);
+  const [onboardingStatus, setOnboardingStatus] = useState(null); // null = unknown, true = completed, false = not completed
   const location = useLocation();
   const navigate = useNavigate();
   const db = getFirestore();
 
+  // Check onboarding status
   useEffect(() => {
     let isMounted = true;
+    let timeoutId;
 
     const checkOnboarding = async () => {
       if (!user || loading) {
         if (isMounted) {
           setChecking(false);
-          setShouldRedirect(false);
         }
         return;
       }
@@ -39,43 +40,54 @@ function RequireOnboarding({ children }) {
         const settingsSnap = await getDoc(settingsRef);
         
         const isCompleted = settingsSnap.exists() && settingsSnap.data().onboardingCompleted === true;
-        console.log('Onboarding status:', isCompleted);
+        console.log('Onboarding completed:', isCompleted);
         
         if (isMounted) {
-          setShouldRedirect(!isCompleted);
+          setOnboardingStatus(isCompleted);
           setChecking(false);
         }
       } catch (error) {
         console.error('Error checking onboarding status:', error);
-        // On error, don't redirect to be safe
         if (isMounted) {
-          setShouldRedirect(false);
           setChecking(false);
         }
       }
     };
 
-    checkOnboarding();
+    // Clear any existing timeout
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    // Add a small delay to prevent rapid re-checks
+    timeoutId = setTimeout(checkOnboarding, 100);
+
     return () => {
       isMounted = false;
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
     };
   }, [user, loading, db]);
 
+  // Handle redirects
   useEffect(() => {
-    if (!checking && shouldRedirect !== null && user) {
-      console.log('Current path:', location.pathname);
-      console.log('Should redirect to onboarding:', shouldRedirect);
-      
-      if (shouldRedirect && location.pathname !== '/onboarding') {
+    if (!checking && user && onboardingStatus !== null) {
+      const currentPath = location.pathname;
+      console.log('Current path:', currentPath);
+      console.log('Onboarding completed:', onboardingStatus);
+
+      if (!onboardingStatus && currentPath !== '/onboarding') {
         console.log('Redirecting to onboarding');
         navigate('/onboarding', { replace: true });
-      } else if (!shouldRedirect && location.pathname === '/onboarding') {
+      } else if (onboardingStatus && currentPath === '/onboarding') {
         console.log('Redirecting to dashboard');
         navigate('/dashboard', { replace: true });
       }
     }
-  }, [checking, shouldRedirect, location.pathname, navigate, user]);
+  }, [checking, onboardingStatus, location.pathname, navigate, user]);
 
+  // Show loading state
   if (checking) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -84,7 +96,13 @@ function RequireOnboarding({ children }) {
     );
   }
 
-  return children;
+  // If we're not checking and either there's no user or onboarding is completed, render children
+  if (!checking && (!user || onboardingStatus === true || location.pathname === '/onboarding')) {
+    return children;
+  }
+
+  // Otherwise, render nothing while we handle the redirect
+  return null;
 }
 
 function AppContent() {
