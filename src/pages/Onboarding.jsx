@@ -258,25 +258,33 @@ const Onboarding = () => {
   };
 
   const handleSkip = async () => {
+    setIsSubmitting(true);
     try {
-      const user = auth.currentUser;
-      if (user) {
-        await setDoc(
-          doc(db, "userSettings", user.uid),
-          {
-            onboardingCompleted: true,
-            skipped: true,
-            completedAt: new Date(),
-          },
-          { merge: true }
-        );
-
-        toast({
-          title: "Setup Skipped",
-          description: "You can always complete your profile later from settings.",
-          duration: 3000,
-        });
+      let user = auth.currentUser;
+      // Wait for user to be available (max 2 seconds)
+      let retries = 0;
+      while (!user && retries < 10) {
+        await new Promise(res => setTimeout(res, 200));
+        user = auth.currentUser;
+        retries++;
       }
+      if (!user) throw new Error("User not authenticated");
+
+      await setDoc(
+        doc(db, "userSettings", user.uid),
+        {
+          onboardingCompleted: true,
+          skipped: true,
+          completedAt: new Date(),
+        },
+        { merge: true }
+      );
+
+      toast({
+        title: "Setup Skipped",
+        description: "You can always complete your profile later from settings.",
+        duration: 3000,
+      });
       navigate("/dashboard");
     } catch (error) {
       console.error("Error saving skip status:", error);
@@ -287,6 +295,8 @@ const Onboarding = () => {
         duration: 3000,
       });
       navigate("/dashboard");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
