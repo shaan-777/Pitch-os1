@@ -1,8 +1,7 @@
 import { create } from 'zustand';
 import { auth } from '../firebase';
-import { signInWithGoogle } from '../firebase'; // Make sure this import exists
 
-export const useAuthStore = create((set, get) => ({
+export const useAuthStore = create((set) => ({
   user: null,
   loading: true,
   
@@ -10,7 +9,6 @@ export const useAuthStore = create((set, get) => ({
   
   signInWithGoogle: async () => {
     try {
-      set({ loading: true });
       const user = await signInWithGoogle();
       set({ user, loading: false });
       return user;
@@ -23,8 +21,6 @@ export const useAuthStore = create((set, get) => ({
   logout: async () => {
     try {
       await auth.signOut();
-      // Clear onboarding status on logout
-      localStorage.removeItem("onboardingCompleted");
       set({ user: null });
     } catch (error) {
       console.error('Logout error:', error);
@@ -32,19 +28,9 @@ export const useAuthStore = create((set, get) => ({
   },
   
   initializeAuthListener: () => {
-    return auth.onAuthStateChanged((user) => {
-      console.log('Auth state changed:', user ? 'User logged in' : 'User logged out');
+    const unsubscribe = auth.onAuthStateChanged((user) => {
       set({ user, loading: false });
     });
-  },
-
-  // Add helper method to check if onboarding is completed
-  isOnboardingCompleted: () => {
-    return localStorage.getItem("onboardingCompleted") === "true";
-  },
-
-  // Add method to complete onboarding
-  completeOnboarding: () => {
-    localStorage.setItem("onboardingCompleted", "true");
+    return unsubscribe;
   }
 }));
