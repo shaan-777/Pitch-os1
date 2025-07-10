@@ -122,7 +122,7 @@ useEffect(() => {
 
                                     <h1 className="text-5xl md:text-7xl max-w-2xl tracking-tighter text-center font-regular">
 
-                                        <span className="text-gray-700">Craft Pitches That Win Investors</span>
+                                        <span className="text-gray-700">Turn Your Vision Into Investor-Ready Pitch Decks</span>
 
                                         <span className="relative flex w-full justify-center overflow-hidden text-center h-16 md:h-24 pb-6 md:pb-6 pt-2 md:pt-2">
 
