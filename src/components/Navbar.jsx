@@ -82,7 +82,7 @@ const Navbar = () => {
     const renderAuthButtons = () => {
         if (loading) {
             return (
-                <div className="animate-pulse bg-muted h-6 w-16 rounded"></div>
+                <div className="animate-pulse bg-amber-100 h-6 w-16 rounded"></div>
             );
         }
 
@@ -91,11 +91,11 @@ const Navbar = () => {
             
             return (
                 <div className="flex items-center gap-4">
-                    <ThemeToggle />
+                    
                     <NavigationMenu>
                         <NavigationMenuList>
                             <NavigationMenuItem>
-                                <NavigationMenuTrigger className="flex items-center space-x-2 bg-background border-border text-foreground hover:bg-accent hover:text-accent-foreground">
+                                <NavigationMenuTrigger className="flex items-center space-x-2 bg-white/80 border-purple-200 text-gray-700 hover:bg-purple-50 hover:text-purple-700 backdrop-blur-sm">
                                     {isGoogleUser ? (
                                         <img
                                             src={user.photoURL}
@@ -103,31 +103,31 @@ const Navbar = () => {
                                             className="w-8 h-8 rounded-full"
                                         />
                                     ) : (
-                                        <User size={20} className="text-foreground" />
+                                        <User size={20} className="text-gray-700" />
                                     )}
-                                    <span className="text-foreground hidden sm:inline">
+                                    <span className="text-gray-700 hidden sm:inline">
                                         {user.displayName || user.email}
                                     </span>
                                 </NavigationMenuTrigger>
-                                <NavigationMenuContent className="z-[60] bg-background border-border">
+                                <NavigationMenuContent className="z-[60] bg-white/90 border-purple-200 backdrop-blur-sm">
                                     <div className="w-48 p-2">
                                         <Link
                                             to="/dashboard"
-                                            className="flex items-center space-x-2 px-3 py-2 text-foreground hover:bg-accent hover:text-accent-foreground rounded-md transition-colors"
+                                            className="flex items-center space-x-2 px-3 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-700 rounded-md transition-colors"
                                         >
                                             <LayoutDashboard size={16} />
                                             <span>Dashboard</span>
                                         </Link>
                                         <Link
                                             to="/settings"
-                                            className="flex items-center space-x-2 px-3 py-2 text-foreground hover:bg-accent hover:text-accent-foreground rounded-md transition-colors"
+                                            className="flex items-center space-x-2 px-3 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-700 rounded-md transition-colors"
                                         >
                                             <Settings size={16} />
                                             <span>Settings</span>
                                         </Link>
                                         <button
                                             onClick={handleSignOut}
-                                            className="flex items-center space-x-2 w-full px-3 py-2 text-destructive hover:bg-destructive/10 rounded-md transition-colors"
+                                            className="flex items-center space-x-2 w-full px-3 py-2 text-red-600 hover:bg-red-50 rounded-md transition-colors"
                                         >
                                             <LogOut size={16} />
                                             <span>Sign Out</span>
@@ -144,24 +144,26 @@ const Navbar = () => {
         return (
             <>
                 <div className="flex items-center gap-2">
-                    <ThemeToggle />
+                    
                     <Button
                         asChild
                         variant="outline"
                         size="sm"
-                        className="border-border text-foreground hover:bg-accent hover:text-accent-foreground">
+                        className="border-purple-200 text-gray-700 hover:bg-purple-50 hover:text-purple-700 bg-white/80 backdrop-blur-sm">
                         <Link to="/login">
                             <span>Login</span>
                         </Link>
                     </Button>
-                    <Button
-                        asChild
-                        size="sm"
-                        className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                        <Link to="/register">
-                            <span>Sign Up</span>
-                        </Link>
-                    </Button>
+                    <div className="bg-gradient-to-r from-yellow-400/20 to-yellow-500/20 hover:from-yellow-400/30 hover:to-yellow-500/30 rounded-lg border border-yellow-500/50 hover:border-yellow-400 p-0.5 transition-all duration-300">
+                        <Button
+                            asChild
+                            size="sm"
+                            className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-300 hover:to-yellow-400 text-gray-800 font-semibold transition-all duration-300 shadow-lg hover:shadow-yellow-500/25 rounded-md">
+                            <Link to="/register">
+                                <span>Sign Up</span>
+                            </Link>
+                        </Button>
+                    </div>
                 </div>
             </>
         );
@@ -175,19 +177,19 @@ const Navbar = () => {
                 <div
                     className={cn(
                         'mx-auto mt-0 sm:mt-2 max-w-6xl px-4 sm:px-6 transition-all duration-300 lg:px-12',
-                        isScrolled && 'bg-background/80 max-w-4xl rounded-2xl border border-border backdrop-blur-lg lg:px-5'
+                        isScrolled && 'bg-white/80 max-w-4xl rounded-2xl border border-purple-200 backdrop-blur-lg lg:px-5 shadow-md shadow-purple-200/30'
                     )}>
                     <div
                         className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0 lg:py-4">
                         <div className="flex w-full justify-between lg:w-auto">
                             <Link to="/" aria-label="home" className="flex items-center space-x-2">
-                                <span className="text-foreground text-2xl font-bold">PitchOS</span>
+                                <span className="text-gray-700 text-2xl font-bold">PitchOS</span>
                             </Link>
 
                             <button
                                 onClick={() => setMenuState(!menuState)}
                                 aria-label={menuState == true ? 'Close Menu' : 'Open Menu'}
-                                className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden text-foreground">
+                                className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden text-gray-700">
                                 <Menu
                                     className="in-data-[state=active]:rotate-180 group-data-[state=active]:scale-0 group-data-[state=active]:opacity-0 m-auto size-6 duration-200" />
                                 <X
@@ -201,7 +203,7 @@ const Navbar = () => {
                                     <li key={index}>
                                         <a
                                             href={item.href}
-                                            className="text-muted-foreground hover:text-foreground block duration-150"
+                                            className="text-gray-600 hover:text-purple-600 block duration-150 transition-colors"
                                             onClick={(e) => handleNavClick(item.href, e)}>
                                             <span>{item.name}</span>
                                         </a>
@@ -211,14 +213,14 @@ const Navbar = () => {
                         </div>
 
                         <div
-                            className="bg-background border-border group-data-[state=active]:block lg:group-data-[state=active]:flex mb-4 hidden w-full flex-wrap items-center justify-end space-y-4 rounded-xl border p-4 shadow-lg md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none">
+                            className="bg-white/90 border-purple-200 group-data-[state=active]:block lg:group-data-[state=active]:flex mb-4 hidden w-full flex-wrap items-center justify-end space-y-4 rounded-xl border p-4 shadow-lg backdrop-blur-sm md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none">
                             <div className="lg:hidden">
                                 <ul className="space-y-6 text-base">
                                     {menuItems.map((item, index) => (
                                         <li key={index}>
                                             <a
                                                 href={item.href}
-                                                className="text-muted-foreground hover:text-foreground block duration-150"
+                                                className="text-gray-600 hover:text-purple-600 block duration-150 transition-colors"
                                                 onClick={(e) => handleNavClick(item.href, e)}>
                                                 <span>{item.name}</span>
                                             </a>

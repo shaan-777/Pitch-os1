@@ -40,86 +40,113 @@ const features = [
   { name: "Evaluate", basic: false, regular: true, pro: true },
   { name: "Mentorship & Guidance", basic: false, regular: false, pro: true },
   { name: "Founders Copilot", basic: false, regular: false, pro: true },
-  
 ];
 
 function Pricing() {
   return (
-    <div id="pricing" className="w-full py-20 lg:py-40">
-      <div className="container mx-auto">
+    <div 
+      id="pricing" 
+      className="w-full py-20 lg:py-40 bg-gradient-to-br from-amber-50 via-stone-100 to-amber-50" 
+      style={{backgroundColor: '#F5F2E8'}}
+    >
+      {/* Background decorative elements matching hero */}
+      <div
+        aria-hidden
+        className="z-[1] absolute inset-0 pointer-events-none isolate opacity-30 contain-strict hidden lg:block">
+        <div
+          className="w-[25rem] h-[60rem] -translate-y-[250px] absolute right-0 top-0 rotate-45 rounded-full bg-[radial-gradient(68.54%_68.72%_at_55.02%_31.46%,hsla(276,50%,70%,.06)_0,hsla(276,50%,60%,.02)_50%,hsla(276,50%,50%,0)_80%)]" />
+      </div>
+      
+      <div className="container mx-auto relative z-[2]">
         <div className="flex text-center justify-center items-center gap-4 flex-col">
-          <Badge>Pricing</Badge>
+          <div className="bg-white/80 group mx-auto flex w-fit items-center gap-2 rounded-full border border-purple-200 px-4 py-2 shadow-md shadow-purple-200/50 backdrop-blur-sm">
+            <span className="text-purple-600 text-sm font-medium">Pricing</span>
+          </div>
+          
           <div className="flex gap-2 flex-col">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-10 text-center">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-center text-gray-700">
               Prices that make sense!
             </h2>
-            <p className="text-lg leading-relaxed tracking-tight text-muted-foreground max-w-xl text-center">
+            <p className="text-lg leading-relaxed tracking-tight text-gray-600 max-w-xl text-center">
               Tailored plans to help every type of founder to achieve their funding goals.
             </p>
           </div>
 
-          {/* --- Desktop Pricing Grid (visible only on lg and larger screens) --- */}
-          {/* This section now dynamically uses the 'pricingPlans' and 'features' data */}
-          <div className="hidden lg:grid text-left w-full grid-cols-4 divide-x divide-y pt-10 md:pt-20 border rounded-lg overflow-hidden">
-            {/* Empty column for alignment on large screens */}
+          {/* --- Desktop Pricing Grid --- */}
+          <div className="hidden lg:grid text-left w-full grid-cols-4 divide-x divide-y pt-10 md:pt-20 border border-purple-200 rounded-2xl overflow-hidden bg-white/50 backdrop-blur-sm shadow-lg shadow-purple-200/30">
+            {/* Empty column for alignment */}
             <div className="col-span-1 px-3 py-4"></div>
 
             {/* Pricing Plan Headers */}
             {pricingPlans.map((plan, index) => (
               <div
                 key={plan.name}
-                className={`px-3 py-6 md:px-6 md:py-8 gap-2 flex flex-col items-center text-center ${
-                  plan.name === "Pro"
-                    ? "bg-gray-50 dark:bg-neutral-900 border-x border-gray-100 dark:border-neutral-800"
-                    : ""
+                className={`px-3 py-6 md:px-6 md:py-8 gap-2 flex flex-col items-center text-center transition-all duration-300 ${
+                  plan.name === "Regular"
+                    ? "bg-gradient-to-br from-purple-50 to-yellow-50 border-x-2 border-purple-300 relative"
+                    : "hover:bg-white/80"
                 }`}
               >
-                <p className="text-2xl font-semibold">{plan.name}</p>
-                <p className="text-sm text-muted-foreground mt-2">
+                {plan.name === "Regular" && (
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-800 text-xs font-semibold px-3 py-1 rounded-full">
+                      Most Popular
+                    </div>
+                  </div>
+                )}
+                
+                <p className="text-2xl font-semibold text-gray-700">{plan.name}</p>
+                <p className="text-sm text-gray-600 mt-2">
                   {plan.description}
                 </p>
                 <p className="flex flex-col lg:flex-row lg:items-center gap-2 text-xl mt-8">
-                  <span className="text-4xl">{plan.price}</span>
-                  <span className="text-sm text-muted-foreground">
-                    {" "}
+                  <span className="text-4xl font-bold text-purple-600">{plan.price}</span>
+                  <span className="text-sm text-gray-500">
                     {plan.frequency}
                   </span>
                 </p>
-                <Button variant={plan.buttonVariant} className="gap-4 mt-8 w-full">
-                  {plan.buttonText} <plan.icon className="w-4 h-4" />
-                </Button>
+                
+                <div className={`${plan.name === "Regular" ? "bg-gradient-to-r from-yellow-400/20 to-yellow-500/20 hover:from-yellow-400/30 hover:to-yellow-500/30 rounded-[14px] border border-yellow-500/50 hover:border-yellow-400 p-0.5" : ""} transition-all duration-300 mt-8 w-full`}>
+                  <Button 
+                    variant={plan.name === "Regular" ? "default" : "outline"}
+                    className={`gap-4 w-full ${
+                      plan.name === "Regular" 
+                        ? "rounded-xl px-5 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-300 hover:to-yellow-400 text-gray-800 font-semibold shadow-lg hover:shadow-yellow-500/25" 
+                        : "border-purple-200 hover:border-yellow-500/50 hover:bg-yellow-50 text-gray-700"
+                    }`}
+                  >
+                    {plan.buttonText} <plan.icon className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
             ))}
 
             {/* Feature Header */}
-            <div className="col-span-1 px-3 lg:px-6 py-4 border-t text-left bg-gray-50 dark:bg-neutral-900">
-              <b>Features</b>
+            <div className="col-span-1 px-3 lg:px-6 py-4 border-t text-left bg-gradient-to-r from-purple-50 to-yellow-50">
+              <b className="text-gray-700">Features</b>
             </div>
-            {/* These empty divs ensure the feature column aligns with the pricing columns visually. */}
-            {/* These are needed to fill the grid row for the "Features" header row on desktop */}
             <div className=""></div>
             <div className=""></div>
             <div className=""></div>
 
             {/* Feature Rows */}
-            {features.map((feature) => (
+            {features.map((feature, index) => (
               <>
-                <div key={feature.name} className="col-span-1 px-3 lg:px-6 py-4 border-t text-left">
+                <div key={feature.name} className={`col-span-1 px-3 lg:px-6 py-4 border-t text-left text-gray-700 ${index % 2 === 0 ? 'bg-white/30' : 'bg-transparent'}`}>
                   {feature.name}
                 </div>
-                {/* Render feature availability for each plan */}
                 {pricingPlans.map((plan) => {
-                  const featureValue = feature[plan.name.toLowerCase()]; // Get feature value for the current plan
+                  const featureValue = feature[plan.name.toLowerCase()];
                   return (
-                    <div key={`${plan.name}-${feature.name}-desktop`} className="px-3 py-4 flex justify-center border-t">
+                    <div key={`${plan.name}-${feature.name}-desktop`} className={`px-3 py-4 flex justify-center border-t ${index % 2 === 0 ? 'bg-white/30' : 'bg-transparent'}`}>
                       {typeof featureValue === "boolean" ? (
                         featureValue ? (
-                          <Check className="w-4 h-4 text-primary" />
+                          <Check className="w-5 h-5 text-purple-600" />
                         ) : (
-                          <Minus className="w-4 h-4 text-muted-foreground" />
+                          <Minus className="w-5 h-5 text-gray-400" />
                         )
                       ) : (
-                        <p className="text-muted-foreground text-sm">{featureValue}</p>
+                        <p className="text-gray-600 text-sm">{featureValue}</p>
                       )}
                     </div>
                   );
@@ -128,61 +155,78 @@ function Pricing() {
             ))}
           </div>
 
-
-          {/* --- Pricing Cards for Smaller Screens (visible only on screens smaller than lg) --- */}
+          {/* --- Mobile Pricing Cards --- */}
           <div className="lg:hidden w-full flex flex-col gap-8 pt-10 md:pt-20">
             {pricingPlans.map((plan) => (
               <div
                 key={`mobile-${plan.name}`}
-                className={`border rounded-lg p-6 flex flex-col items-center text-center ${
-                  plan.name === "Pro"
-                    ? "bg-gray-50 dark:bg-neutral-900 border-gray-100 dark:border-neutral-800"
-                    : ""
-                }`}
+                className={`border rounded-2xl p-6 flex flex-col items-center text-center transition-all duration-300 relative ${
+                  plan.name === "Regular"
+                    ? "bg-gradient-to-br from-purple-50 to-yellow-50 border-purple-300 shadow-lg shadow-purple-200/30"
+                    : "bg-white/50 border-purple-200 hover:border-yellow-500/50 hover:shadow-lg hover:shadow-yellow-500/10"
+                } backdrop-blur-sm`}
               >
-                <p className="text-2xl font-semibold">{plan.name}</p>
-                <p className="text-sm text-muted-foreground mt-2">
+                {plan.name === "Regular" && (
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-800 text-xs font-semibold px-3 py-1 rounded-full">
+                      Most Popular
+                    </div>
+                  </div>
+                )}
+                
+                <p className="text-2xl font-semibold text-gray-700">{plan.name}</p>
+                <p className="text-sm text-gray-600 mt-2">
                   {plan.description}
                 </p>
                 <p className="flex flex-col lg:flex-row lg:items-center gap-2 text-xl mt-8">
-                  <span className="text-4xl">{plan.price}</span>
-                  <span className="text-sm text-muted-foreground">
-                    {" "}
+                  <span className="text-4xl font-bold text-purple-600">{plan.price}</span>
+                  <span className="text-sm text-gray-500">
                     {plan.frequency}
                   </span>
                 </p>
-                <Button variant={plan.buttonVariant} className="gap-4 mt-8 w-full">
-                  {plan.buttonText} <plan.icon className="w-4 h-4" />
-                </Button>
+                
+                <div className={`${plan.name === "Regular" ? "bg-gradient-to-r from-yellow-400/20 to-yellow-500/20 hover:from-yellow-400/30 hover:to-yellow-500/30 rounded-[14px] border border-yellow-500/50 hover:border-yellow-400 p-0.5" : ""} transition-all duration-300 mt-8 w-full`}>
+                  <Button 
+                    variant={plan.name === "Regular" ? "default" : "outline"}
+                    className={`gap-4 w-full ${
+                      plan.name === "Regular" 
+                        ? "rounded-xl px-5 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-300 hover:to-yellow-400 text-gray-800 font-semibold shadow-lg hover:shadow-yellow-500/25" 
+                        : "border-purple-200 hover:border-yellow-500/50 hover:bg-yellow-50 text-gray-700"
+                    }`}
+                  >
+                    {plan.buttonText} <plan.icon className="w-4 h-4" />
+                  </Button>
+                </div>
 
-                <div className="mt-8 pt-8 border-t w-full text-left">
-                  <p className="font-bold mb-4">Features included:</p>
+                <div className="mt-8 pt-8 border-t border-purple-200/50 w-full text-left">
+                  <p className="font-bold mb-4 text-gray-700">Features included:</p>
                   <ul className="space-y-3">
                     {features.map((feature) => {
-                      const featureValue = feature[plan.name.toLowerCase()]; // Get feature value for the current plan
-
-                      // Determine if the feature should be explicitly listed on mobile
+                      const featureValue = feature[plan.name.toLowerCase()];
                       const shouldShowFeature = typeof featureValue === "boolean"
-                        ? featureValue // If boolean, show if true
-                        : !!featureValue; // If string, show if it has a value
+                        ? featureValue
+                        : !!featureValue;
 
                       if (shouldShowFeature) {
                         return (
                           <li key={`${plan.name}-${feature.name}-mobile`} className="flex items-center gap-2">
                             {typeof featureValue === "boolean" ? (
                               featureValue ? (
-                                <Check className="w-4 h-4 text-primary" />
+                                <Check className="w-4 h-4 text-purple-600" />
                               ) : (
-                                <Minus className="w-4 h-4 text-muted-foreground" />
+                                <Minus className="w-4 h-4 text-gray-400" />
                               )
                             ) : (
-                              <Check className="w-4 h-4 text-primary" /> // Assume string values mean included
+                              <Check className="w-4 h-4 text-purple-600" />
                             )}
-                            {feature.name} {typeof featureValue === "string" && <span className="text-muted-foreground">({featureValue})</span>}
+                            <span className="text-gray-700">{feature.name}</span>
+                            {typeof featureValue === "string" && (
+                              <span className="text-gray-500">({featureValue})</span>
+                            )}
                           </li>
                         );
                       }
-                      return null; // Don't render if not included and no specific detail for mobile
+                      return null;
                     })}
                   </ul>
                 </div>

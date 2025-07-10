@@ -1,27 +1,34 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ArrowRight, CheckCircle, Target, Users, TrendingUp, Lightbulb, AlertCircle, Play, Star, Zap } from 'lucide-react';
-import { HeroSection } from '@/components/Hero';
-import { FeatureSteps } from '@/components/GetStarted';
-import { Component } from '@/components/faq-section';
-import { FeaturesSectionWithHoverEffects } from '@/components/Features';
-import { Pricing } from '@/components/ui/Pricing';
-import { PageLoader } from '@/components/ui/page-loader';
-import { SolutionsSection } from '@/components/Solutions';
-
-
+import React from "react";
+import { motion } from "framer-motion";
+import {
+  ArrowRight,
+  CheckCircle,
+  Target,
+  Users,
+  TrendingUp,
+  Lightbulb,
+  AlertCircle,
+  Play,
+  Star,
+  Zap,
+} from "lucide-react";
+import { HeroSection } from "@/components/Hero";
+import { FeatureSteps } from "@/components/GetStarted";
+import { Component } from "@/components/faq-section";
+import { FeaturesSectionWithHoverEffects } from "@/components/Features";
+import { Pricing } from "@/components/ui/Pricing";
+import { PageLoader } from "@/components/ui/page-loader";
+import { SolutionsSection } from "@/components/Solutions";
 
 export default function Home() {
-  
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.3
-      }
-    }
+        staggerChildren: 0.3,
+      },
+    },
   };
 
   const childVariants = {
@@ -30,9 +37,9 @@ export default function Home() {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.5
-      }
-    }
+        duration: 0.5,
+      },
+    },
   };
 
   return (
@@ -41,11 +48,12 @@ export default function Home() {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
+        className="bg-[#FAF8F2]"
       >
         <motion.div variants={childVariants}>
           <HeroSection />
         </motion.div>
-        
+
         <motion.div variants={childVariants}>
           <div className="py-16 md:py-24">
             <FeatureSteps />
@@ -54,7 +62,7 @@ export default function Home() {
 
         <motion.div variants={childVariants}>
           <div className="py-16 md:py-24">
-            <SolutionsSection/>
+            <SolutionsSection />
           </div>
         </motion.div>
 

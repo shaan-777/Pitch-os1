@@ -43,12 +43,12 @@ export function FeatureSteps({
   // Early return if no features provided
   if (!features || features.length === 0) {
     return (
-      <div className={cn("p-8 md:p-12", className)}>
+      <div className={cn("p-8 md:p-12 bg-gradient-to-br from-amber-50 via-stone-100 to-amber-50", className)} style={{backgroundColor: '#F5F2E8'}}>
         <div className="max-w-7xl mx-auto w-full">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-10 text-center">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-10 text-center text-gray-700">
             {title}
           </h2>
-          <p className="text-center text-muted-foreground">No features to display</p>
+          <p className="text-center text-gray-600">No features to display</p>
         </div>
       </div>
     )
@@ -68,9 +68,9 @@ export function FeatureSteps({
   }, [progress, features.length, autoPlayInterval])
 
   return (
-    <div className={cn("p-8 md:p-8", className)}>
+    <div className={cn("p-8 md:p-8 bg-gradient-to-br from-amber-50 via-stone-100 to-amber-50", className)} style={{backgroundColor: '#F5F2E8'}}>
       <div className="max-w-7xl mx-auto w-full">
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-10 text-center">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-10 text-center text-gray-700">
           {title}
         </h2>
 
@@ -79,16 +79,17 @@ export function FeatureSteps({
             {features.map((feature, index) => (
               <motion.div
                 key={index}
-                className="flex items-center gap-6 md:gap-8"
+                className="flex items-center gap-6 md:gap-8 group cursor-pointer hover:bg-white/50 p-4 rounded-lg transition-all duration-300"
                 initial={{ opacity: 0.3 }}
                 animate={{ opacity: index === currentFeature ? 1 : 0.3 }}
-                transition={{ duration: 0.5 }}>
+                transition={{ duration: 0.5 }}
+                onClick={() => setCurrentFeature(index)}>
                 <motion.div
                   className={cn(
-                    "w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center border-2",
+                    "w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300",
                     index === currentFeature
-                      ? "bg-primary border-primary text-primary-foreground scale-110"
-                      : "bg-muted border-muted-foreground"
+                      ? "bg-purple-500 border-purple-500 text-white scale-110 group-hover:bg-yellow-500 group-hover:border-yellow-500"
+                      : "bg-white border-purple-300 text-purple-600 group-hover:border-yellow-400 group-hover:text-yellow-600"
                   )}>
                   {index <= currentFeature ? (
                     <span className="text-lg font-bold">✓</span>
@@ -98,10 +99,10 @@ export function FeatureSteps({
                 </motion.div>
 
                 <div className="flex-1">
-                  <h3 className="text-xl md:text-2xl font-semibold">
+                  <h3 className="text-xl md:text-2xl font-semibold text-gray-700 group-hover:text-purple-700 transition-colors duration-300">
                     {feature.title || feature.step}
                   </h3>
-                  <p className="text-sm md:text-lg text-muted-foreground">
+                  <p className="text-sm md:text-lg text-gray-600 group-hover:text-gray-700 transition-colors duration-300">
                     {feature.content}
                   </p>
                 </div>
@@ -111,7 +112,7 @@ export function FeatureSteps({
 
           <div
             className={cn(
-              "order-1 md:order-2 relative h-[200px] md:h-[300px] lg:h-[400px] overflow-hidden rounded-lg"
+              "order-1 md:order-2 relative h-[200px] md:h-[300px] lg:h-[400px] overflow-hidden rounded-lg border-2 border-purple-200 hover:border-yellow-400 transition-all duration-500 shadow-lg shadow-purple-200/30 hover:shadow-yellow-400/30"
             )}>
             <AnimatePresence mode="wait">
               {features.map((feature, index) =>
@@ -126,14 +127,29 @@ export function FeatureSteps({
                     <img
                       src={feature.image}
                       alt={feature.step || feature.title}
-                      className="w-full h-full object-cover transition-transform transform"
+                      className="w-full h-full object-cover transition-transform transform hover:scale-105 duration-700"
                       loading="lazy"
                     />
                     <div
-                      className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-background via-background/50 to-transparent" />
+                      className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-stone-100 via-stone-100/50 to-transparent" />
                   </motion.div>
                 ))}
             </AnimatePresence>
+            
+            {/* Progress indicator */}
+            <div className="absolute bottom-4 left-4 right-4">
+              <div className="flex gap-2">
+                {features.map((_, index) => (
+                  <div
+                    key={index}
+                    className={cn(
+                      "h-1 rounded-full transition-all duration-300",
+                      index === currentFeature ? "bg-yellow-500 flex-1" : "bg-purple-200 w-8"
+                    )}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
