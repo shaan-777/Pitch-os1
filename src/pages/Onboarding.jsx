@@ -1,25 +1,415 @@
+
+
+// import React, { useState, useEffect, useRef, useCallback } from "react";
+// import { useNavigate } from "react-router-dom";
+// import { Button } from "../components/ui/button";
+// import { Card } from "../components/ui/card";
+// import {
+//   CheckCircle,
+//   ArrowRight,
+//   ArrowLeft,
+//   Users,
+//   Target,
+//   Clock,
+//   Briefcase,
+// } from "lucide-react";
+// import { auth } from "../firebase";
+// import { doc, writeBatch, getFirestore } from "firebase/firestore";
+// import { useToast } from "../components/ui/use-toast";
+// import { useTheme } from "@/store/theme";
+
+// const db = getFirestore();
+
+// const indianStates = [
+//   "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
+//   "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka",
+//   "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram",
+//   "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu",
+//   "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal",
+//   "Delhi", "Jammu and Kashmir", "Ladakh", "Puducherry", "Chandigarh",
+//   "Dadra and Nagar Haveli", "Daman and Diu", "Lakshadweep"
+// ];
+
+// // The 5 personal info questions now treated as separate steps
+// const personalSteps = [
+//   {
+//     id: "name",
+//     question: "What's your name?",
+//     type: "text",
+//     placeholder: "Enter your full name",
+//   },
+//   {
+//     id: "city",
+//     question: "Which city do you live in?",
+//     type: "text",
+//     placeholder: "Enter your city",
+//   },
+//   {
+//     id: "state",
+//     question: "Which state are you from?",
+//     type: "search",
+//     placeholder: "Type to search state",
+//   },
+//   {
+//     id: "education",
+//     question: "What's your highest education?",
+//     type: "select",
+//     options: [
+//       { value: "highschool", label: "High School" },
+//       { value: "bachelors", label: "Bachelor's Degree" },
+//       { value: "masters", label: "Master's Degree" },
+//       { value: "phd", label: "PhD" },
+//     ],
+//   },
+//   {
+//     id: "age",
+//     question: "What's your age group?",
+//     type: "select",
+//     options: [
+//       { value: "18-24", label: "18-24 years" },
+//       { value: "25-34", label: "25-34 years" },
+//       { value: "35-44", label: "35-44 years" },
+//       { value: "45+", label: "45+ years" },
+//     ],
+//   },
+// ];
+
+// const otherSteps = [
+//   {
+//     id: "role",
+//     question: "What best describes your role?",
+//     icon: <Briefcase className="w-6 h-6" />,
+//     options: [
+//       { value: "entrepreneur", label: "Entrepreneur / Startup Founder" },
+//       { value: "investor", label: "Investor / VC" },
+//       { value: "consultant", label: "Business Consultant" },
+//       { value: "student", label: "Student / Researcher" },
+//     ],
+//   },
+//   {
+//     id: "industry",
+//     question: "Which industry are you most interested in?",
+//     icon: <Target className="w-6 h-6" />,
+//     options: [
+//       { value: "tech", label: "Technology & Software" },
+//       { value: "healthcare", label: "Healthcare & Biotech" },
+//       { value: "finance", label: "Finance & Fintech" },
+//       { value: "retail", label: "Retail & E-commerce" },
+//     ],
+//   },
+//   {
+//     id: "experience",
+//     question: "How much experience do you have with pitch presentations?",
+//     icon: <Users className="w-6 h-6" />,
+//     options: [
+//       { value: "beginner", label: "Beginner (0-1 years)" },
+//       { value: "intermediate", label: "Intermediate (2-5 years)" },
+//       { value: "advanced", label: "Advanced (5+ years)" },
+//       { value: "expert", label: "Expert (10+ years)" },
+//     ],
+//   },
+//   {
+//     id: "goal",
+//     question: "What is your primary goal with PitchOS?",
+//     icon: <Target className="w-6 h-6" />,
+//     options: [
+//       { value: "create", label: "Create compelling pitch decks" },
+//       { value: "analyze", label: "Analyze and improve existing pitches" },
+//       { value: "learn", label: "Learn best practices and techniques" },
+//       { value: "collaborate", label: "Collaborate with team members" },
+//     ],
+//   },
+//   {
+//     id: "frequency",
+//     question: "How often do you plan to use PitchOS?",
+//     icon: <Clock className="w-6 h-6" />,
+//     options: [
+//       { value: "daily", label: "Daily" },
+//       { value: "weekly", label: "Weekly" },
+//       { value: "monthly", label: "Monthly" },
+//       { value: "occasionally", label: "Occasionally" },
+//     ],
+//   },
+// ];
+
+// const questions = personalSteps.concat(otherSteps);
+
+// const Onboarding = () => {
+//   const navigate = useNavigate();
+//   const { toast } = useToast();
+//   const { theme } = useTheme();
+//   const [currentStep, setCurrentStep] = useState(0);
+//   const [answers, setAnswers] = useState({});
+//   const [isSubmitting, setIsSubmitting] = useState(false);
+
+//   // State search
+//   const [stateInput, setStateInput] = useState('');
+//   const [filteredStates, setFilteredStates] = useState([]);
+//   const [showStateDropdown, setShowStateDropdown] = useState(false);
+//   const dropdownRef = useRef(null);
+
+//   const handleStateSearch = useCallback((value) => {
+//     setStateInput(value);
+//     const filtered = indianStates.filter(state =>
+//       state.toLowerCase().includes(value.toLowerCase())
+//     );
+//     setFilteredStates(filtered);
+//     setShowStateDropdown(value.length >= 2 && filtered.length > 0);
+//   }, []);
+
+//   const handleStateSelect = useCallback((state) => {
+//     setAnswers(prev => ({ ...prev, state }));
+//     setStateInput(state);
+//     setShowStateDropdown(false);
+//   }, []);
+
+//   useEffect(() => {
+//     const handleClickOutside = (event) => {
+//       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+//         setShowStateDropdown(false);
+//       }
+//     };
+//     document.addEventListener('mousedown', handleClickOutside);
+//     return () => document.removeEventListener('mousedown', handleClickOutside);
+//   }, []);
+
+//   useEffect(() => {
+//     const curr = questions[currentStep];
+//     if (curr.id === 'state') setStateInput(answers.state || '');
+//   }, [currentStep]);
+
+//   const handleAnswerSelect = (id, value) => {
+//     setAnswers((prev) => ({ ...prev, [id]: value }));
+//   };
+
+//   const handleNext = () => {
+//     if (currentStep < questions.length - 1) {
+//       setCurrentStep(currentStep + 1);
+//     } else {
+//       handleComplete();
+//     }
+//   };
+
+//   const handlePrevious = () => {
+//     if (currentStep > 0) setCurrentStep(currentStep - 1);
+//   };
+
+//   const handleComplete = async () => {
+//     setIsSubmitting(true);
+//     try {
+//       const user = auth.currentUser;
+//       if (!user) throw new Error("User not authenticated");
+
+//       const batch = writeBatch(db);
+//       const prefsRef = doc(db, "userPreferences", user.uid);
+//       batch.set(prefsRef, {
+//         ...answers,
+//         completedAt: new Date(),
+//         userId: user.uid,
+//         email: user.email,
+//       });
+
+//       const settingsRef = doc(db, "userSettings", user.uid);
+//       batch.set(settingsRef, {
+//         onboardingCompleted: true,
+//         skipped: false,
+//         completedAt: new Date(),
+//       });
+
+//       await batch.commit();
+//       toast({
+//         title: "Setup Complete!",
+//         description: "Your preferences have been saved successfully.",
+//       });
+
+//       navigate("/dashboard", { replace: true });
+//     } catch (err) {
+//       console.error(err);
+//       toast({
+//         title: "Error",
+//         description: "Something went wrong. Please try again later.",
+//         variant: "destructive",
+//       });
+//     } finally {
+//       setIsSubmitting(false);
+//     }
+//   };
+
+//   const handleSkip = async () => {
+//     setIsSubmitting(true);
+//     try {
+//       let user = auth.currentUser;
+//       let retries = 0;
+//       while (!user && retries < 10) {
+//         await new Promise(res => setTimeout(res, 200));
+//         user = auth.currentUser;
+//         retries++;
+//       }
+//       if (!user) throw new Error("User not authenticated");
+
+//       const batch = writeBatch(db);
+//       const prefsRef = doc(db, "userPreferences", user.uid);
+//       batch.set(prefsRef, {
+//         userId: user.uid,
+//         email: user.email,
+//         skippedAt: new Date(),
+//       });
+//       const settingsRef = doc(db, "userSettings", user.uid);
+//       batch.set(settingsRef, {
+//         onboardingCompleted: true,
+//         skipped: true,
+//         completedAt: new Date(),
+//       });
+
+//       await batch.commit();
+//       toast({
+//         title: "Setup Skipped",
+//         description: "You can complete your profile later from settings.",
+//       });
+
+//       navigate("/dashboard", { replace: true });
+//     } catch (err) {
+//       console.error(err);
+//       toast({
+//         title: "Error Skipping Setup",
+//         description: "Try again or contact support.",
+//         variant: "destructive",
+//       });
+//     } finally {
+//       setIsSubmitting(false);
+//     }
+//   };
+
+//   const step = questions[currentStep];
+
+//   return (
+//     <div className="min-h-screen flex flex-col items-center justify-center py-10 px-4">
+//       <Card className="w-full max-w-3xl p-8">
+//         <div className="text-center mb-6">
+//           <h2 className="text-2xl font-semibold mb-2">{step.question}</h2>
+//           <p className="text-sm text-muted-foreground">
+//             Step {currentStep + 1} of {questions.length}
+//           </p>
+//         </div>
+
+//         {/* Render input based on type */}
+//         {step.type === "text" && (
+//           <input
+//             type="text"
+//             placeholder={step.placeholder}
+//             className="w-full p-3 border rounded-lg"
+//             value={answers[step.id] || ""}
+//             onChange={(e) => handleAnswerSelect(step.id, e.target.value)}
+//           />
+//         )}
+
+//         {step.type === "search" && (
+//           <div ref={dropdownRef} className="relative">
+//             <input
+//               type="text"
+//               placeholder={step.placeholder}
+//               className="w-full p-3 border rounded-lg"
+//               value={stateInput}
+//               onChange={(e) => {
+//                 handleStateSearch(e.target.value);
+//                 handleAnswerSelect("state", e.target.value);
+//               }}
+//             />
+//             {showStateDropdown && (
+//               <div className="absolute bg-white border w-full mt-1 rounded-md max-h-60 overflow-y-auto z-10">
+//                 {filteredStates.map((state, i) => (
+//                   <div
+//                     key={i}
+//                     className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+//                     onClick={() => handleStateSelect(state)}
+//                   >
+//                     {state}
+//                   </div>
+//                 ))}
+//               </div>
+//             )}
+//           </div>
+//         )}
+
+//         {step.type === "select" && (
+//           <select
+//             className="w-full p-3 border rounded-lg"
+//             value={answers[step.id] || ""}
+//             onChange={(e) => handleAnswerSelect(step.id, e.target.value)}
+//           >
+//             <option value="">Select...</option>
+//             {step.options.map((opt) => (
+//               <option key={opt.value} value={opt.value}>
+//                 {opt.label}
+//               </option>
+//             ))}
+//           </select>
+//         )}
+
+//         {step.options && !step.type && (
+//           <div className="grid grid-cols-1 gap-4 mt-4">
+//             {step.options.map((opt) => (
+//               <button
+//                 key={opt.value}
+//                 className={`p-4 border rounded-lg text-left ${
+//                   answers[step.id] === opt.value
+//                     ? "border-primary bg-accent"
+//                     : "border-gray-300"
+//                 }`}
+//                 onClick={() => handleAnswerSelect(step.id, opt.value)}
+//               >
+//                 {opt.label}
+//               </button>
+//             ))}
+//           </div>
+//         )}
+
+//         {/* Navigation buttons */}
+//         <div className="mt-8 flex justify-between">
+//           <Button onClick={handlePrevious} disabled={currentStep === 0}>
+//             <ArrowLeft className="w-4 h-4 mr-1" /> Previous
+//           </Button>
+//           <div className="flex gap-3">
+//             <Button variant="ghost" onClick={handleSkip}>
+//               Skip
+//             </Button>
+//             <Button
+//               onClick={handleNext}
+//               disabled={!answers[step.id] || isSubmitting}
+//             >
+//               {currentStep === questions.length - 1 ? "Finish" : "Next"}{" "}
+//               <ArrowRight className="w-4 h-4 ml-1" />
+//             </Button>
+//           </div>
+//         </div>
+//       </Card>
+//     </div>
+//   );
+
+
+// };
+
+// export default Onboarding;// ... everything above remains unchanged (imports, states, steps, etc.)
+
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
 import {
-  CheckCircle,
   ArrowRight,
   ArrowLeft,
   Users,
   Target,
   Clock,
   Briefcase,
-  Loader2,
+  User,
 } from "lucide-react";
 import { auth } from "../firebase";
-import { doc, writeBatch, getFirestore, setDoc } from "firebase/firestore";
+import { doc, writeBatch, getFirestore } from "firebase/firestore";
 import { useToast } from "../components/ui/use-toast";
-import { useTheme } from "@/store/theme";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 const db = getFirestore();
-
-// List of Indian states
 const indianStates = [
   "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
   "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka",
@@ -30,127 +420,96 @@ const indianStates = [
   "Dadra and Nagar Haveli", "Daman and Diu", "Lakshadweep"
 ];
 
+const personalSteps = [
+  { id: "name", question: "What's your name?", type: "text", placeholder: "Enter your full name" },
+  { id: "city", question: "Which city do you live in?", type: "text", placeholder: "Enter your city" },
+  { id: "state", question: "Which state are you from?", type: "search", placeholder: "Type to search state" },
+  {
+    id: "education", question: "What's your highest education?", type: "select",
+    options: [
+      { value: "highschool", label: "High School" },
+      { value: "bachelors", label: "Bachelor's Degree" },
+      { value: "masters", label: "Master's Degree" },
+      { value: "phd", label: "PhD" },
+    ],
+  },
+  {
+    id: "age", question: "What's your age group?", type: "select",
+    options: [
+      { value: "18-24", label: "18-24 years" },
+      { value: "25-34", label: "25-34 years" },
+      { value: "35-44", label: "35-44 years" },
+      { value: "45+", label: "45+ years" },
+    ],
+  },
+];
+
+const otherSteps = [
+  {
+    id: "role", question: "What best describes your role?", icon: <Briefcase className="w-6 h-6" />,
+    options: [
+      { value: "entrepreneur", label: "Entrepreneur / Startup Founder" },
+      { value: "investor", label: "Investor / VC" },
+      { value: "consultant", label: "Business Consultant" },
+      { value: "student", label: "Student / Researcher" },
+    ],
+  },
+  {
+    id: "industry", question: "Which industry are you most interested in?", icon: <Target className="w-6 h-6" />,
+    options: [
+      { value: "tech", label: "Technology & Software" },
+      { value: "healthcare", label: "Healthcare & Biotech" },
+      { value: "finance", label: "Finance & Fintech" },
+      { value: "retail", label: "Retail & E-commerce" },
+      { value: "other", label: "Other" },
+    ],
+  },
+  {
+    id: "experience", question: "How much experience do you have with pitch presentations?", icon: <Users className="w-6 h-6" />,
+    options: [
+      { value: "beginner", label: "Beginner (0–1 years)" },
+      { value: "intermediate", label: "Intermediate (2–5 years)" },
+      { value: "advanced", label: "Advanced (5+ years)" },
+      { value: "expert", label: "Expert (10+ years)" },
+    ],
+  },
+  {
+    id: "goal", question: "What is your primary goal with PitchOS?", icon: <Target className="w-6 h-6" />,
+    options: [
+      { value: "create", label: "Create compelling pitch decks" },
+      { value: "analyze", label: "Analyze and improve existing pitches" },
+      { value: "learn", label: "Learn best practices and techniques" },
+      { value: "collaborate", label: "Collaborate with team members" },
+    ],
+  },
+  {
+    id: "frequency", question: "How often do you plan to use PitchOS?", icon: <Clock className="w-6 h-6" />,
+    options: [
+      { value: "daily", label: "Daily" },
+      { value: "weekly", label: "Weekly" },
+      { value: "monthly", label: "Monthly" },
+      { value: "occasionally", label: "Occasionally" },
+    ],
+  },
+];
+
+const questions = [...personalSteps, ...otherSteps];
+
 const Onboarding = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { theme } = useTheme();
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  // State-related state
   const [stateInput, setStateInput] = useState('');
   const [filteredStates, setFilteredStates] = useState([]);
   const [showStateDropdown, setShowStateDropdown] = useState(false);
-  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showCompletionAnimation, setShowCompletionAnimation] = useState(false);
+
   const dropdownRef = useRef(null);
+  const step = questions[currentStep];
+  const isPersonal = currentStep < personalSteps.length;
 
-  const questions = [
-    {
-      id: "personalInfo",
-      question: "Tell us about yourself",
-      icon: <Users className="w-6 h-6" />,
-      options: [
-        {
-          value: "name",
-          label: "What's your name?",
-          type: "text",
-          placeholder: "Enter your full name",
-        },
-        {
-          value: "city",
-          label: "Which city do you live in?",
-          type: "text",
-          placeholder: "Enter your city",
-        },
-        {
-          value: "state",
-          label: "Which state are you from?",
-          type: "search",
-          placeholder: "Type to search state",
-        },
-        {
-          value: "education",
-          label: "What's your highest education?",
-          type: "select",
-          options: [
-            { value: "highschool", label: "High School" },
-            { value: "bachelors", label: "Bachelor's Degree" },
-            { value: "masters", label: "Master's Degree" },
-            { value: "phd", label: "PhD" },
-          ],
-        },
-        {
-          value: "age",
-          label: "What's your age group?",
-          type: "select",
-          options: [
-            { value: "18-24", label: "18-24 years" },
-            { value: "25-34", label: "25-34 years" },
-            { value: "35-44", label: "35-44 years" },
-            { value: "45+", label: "45+ years" },
-          ],
-        },
-      ],
-    },
-    {
-      id: "role",
-      question: "What best describes your role?",
-      icon: <Briefcase className="w-6 h-6" />,
-      options: [
-        { value: "entrepreneur", label: "Entrepreneur / Startup Founder" },
-        { value: "investor", label: "Investor / VC" },
-        { value: "consultant", label: "Business Consultant" },
-        { value: "student", label: "Student / Researcher" },
-      ],
-    },
-    {
-      id: "industry",
-      question: "Which industry are you most interested in?",
-      icon: <Target className="w-6 h-6" />,
-      options: [
-        { value: "tech", label: "Technology & Software" },
-        { value: "healthcare", label: "Healthcare & Biotech" },
-        { value: "finance", label: "Finance & Fintech" },
-        { value: "retail", label: "Retail & E-commerce" },
-      ],
-    },
-    {
-      id: "experience",
-      question: "How much experience do you have with pitch presentations?",
-      icon: <Users className="w-6 h-6" />,
-      options: [
-        { value: "beginner", label: "Beginner (0-1 years)" },
-        { value: "intermediate", label: "Intermediate (2-5 years)" },
-        { value: "advanced", label: "Advanced (5+ years)" },
-        { value: "expert", label: "Expert (10+ years)" },
-      ],
-    },
-    {
-      id: "goal",
-      question: "What is your primary goal with PitchOS?",
-      icon: <Target className="w-6 h-6" />,
-      options: [
-        { value: "create", label: "Create compelling pitch decks" },
-        { value: "analyze", label: "Analyze and improve existing pitches" },
-        { value: "learn", label: "Learn best practices and techniques" },
-        { value: "collaborate", label: "Collaborate with team members" },
-      ],
-    },
-    {
-      id: "frequency",
-      question: "How often do you plan to use PitchOS?",
-      icon: <Clock className="w-6 h-6" />,
-      options: [
-        { value: "daily", label: "Daily" },
-        { value: "weekly", label: "Weekly" },
-        { value: "monthly", label: "Monthly" },
-        { value: "occasionally", label: "Occasionally" },
-      ],
-    },
-  ];
-
-  // Handle state search
   const handleStateSearch = useCallback((value) => {
     setStateInput(value);
     const filtered = indianStates.filter(state =>
@@ -160,73 +519,56 @@ const Onboarding = () => {
     setShowStateDropdown(value.length >= 2 && filtered.length > 0);
   }, []);
 
-  // Handle state selection
   const handleStateSelect = useCallback((state) => {
     setAnswers(prev => ({ ...prev, state }));
     setStateInput(state);
     setShowStateDropdown(false);
   }, []);
 
-  // Handle clicks outside dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowStateDropdown(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Update state input when step changes
   useEffect(() => {
-    setStateInput(answers.state || '');
-  }, [currentStep, answers.state]);
+    if (step.id === 'state') setStateInput(answers.state || '');
+  }, [currentStep]);
 
-  const handleAnswerSelect = (questionId, value) => {
-    setAnswers((prev) => ({ ...prev, [questionId]: value }));
+  const handleAnswerSelect = (id, value) => {
+    setAnswers((prev) => ({ ...prev, [id]: value }));
   };
 
   const handleNext = () => {
     if (currentStep < questions.length - 1) {
-      setCurrentStep(currentStep + 1);
+      setCurrentStep((prev) => prev + 1);
     } else {
       handleComplete();
     }
   };
 
   const handlePrevious = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
-    }
+    if (currentStep > 0) setCurrentStep((prev) => prev - 1);
   };
 
   const handleComplete = async () => {
     setIsSubmitting(true);
-
     try {
       const user = auth.currentUser;
-      if (!user) {
-        throw new Error("User not authenticated");
-      }
+      if (!user) throw new Error("User not authenticated");
 
       const batch = writeBatch(db);
-
-      // Save user preferences
-      const prefsRef = doc(db, "userPreferences", user.uid);
-      batch.set(prefsRef, {
+      batch.set(doc(db, "userPreferences", user.uid), {
         ...answers,
         completedAt: new Date(),
         userId: user.uid,
         email: user.email,
       });
-
-      // Set onboarding as completed
-      const settingsRef = doc(db, "userSettings", user.uid);
-      batch.set(settingsRef, {
+      batch.set(doc(db, "userSettings", user.uid), {
         onboardingCompleted: true,
         skipped: false,
         completedAt: new Date(),
@@ -234,24 +576,16 @@ const Onboarding = () => {
 
       await batch.commit();
 
-      console.log('Onboarding completed successfully for user:', user.uid);
-
+      setShowCompletionAnimation(true);
+      setTimeout(() => {
+        navigate("/dashboard", { replace: true });
+      }, 2500);
+    } catch (err) {
+      console.error(err);
       toast({
-        title: "Setup Complete!",
-        description: "Your preferences have been saved successfully.",
-        duration: 3000,
-      });
-
-      // Add a small delay before navigation to ensure Firestore update is processed
-      await new Promise(resolve => setTimeout(resolve, 500));
-      navigate("/dashboard", { replace: true });
-    } catch (error) {
-      console.error("Error saving onboarding data:", error);
-      toast({
-        title: "Error Saving Preferences",
-        description: "Please try again. If the problem persists, contact support.",
+        title: "Error",
+        description: "Something went wrong. Please try again later.",
         variant: "destructive",
-        duration: 5000,
       });
     } finally {
       setIsSubmitting(false);
@@ -261,268 +595,176 @@ const Onboarding = () => {
   const handleSkip = async () => {
     setIsSubmitting(true);
     try {
-      let user = auth.currentUser;
-      // Wait for user to be available (max 2 seconds)
-      let retries = 0;
-      while (!user && retries < 10) {
-        await new Promise(res => setTimeout(res, 200));
-        user = auth.currentUser;
-        retries++;
-      }
+      const user = auth.currentUser;
       if (!user) throw new Error("User not authenticated");
 
-      // Create a batch write
       const batch = writeBatch(db);
-
-      // Set minimal user preferences
-      const prefsRef = doc(db, "userPreferences", user.uid);
-      batch.set(prefsRef, {
+      batch.set(doc(db, "userPreferences", user.uid), {
         userId: user.uid,
         email: user.email,
         skippedAt: new Date(),
       });
-
-      // Set onboarding as completed with skipped flag
-      const settingsRef = doc(db, "userSettings", user.uid);
-      batch.set(settingsRef, {
+      batch.set(doc(db, "userSettings", user.uid), {
         onboardingCompleted: true,
         skipped: true,
         completedAt: new Date(),
       });
 
-      // Commit both operations
       await batch.commit();
-
-      console.log('Onboarding skipped successfully for user:', user.uid);
-
       toast({
         title: "Setup Skipped",
-        description: "You can always complete your profile later from settings.",
-        duration: 3000,
+        description: "You can complete your profile later from settings.",
       });
 
-      // Add a small delay before navigation to ensure Firestore update is processed
-      await new Promise(resolve => setTimeout(resolve, 500));
       navigate("/dashboard", { replace: true });
-    } catch (error) {
-      console.error("Error skipping onboarding:", error);
+    } catch (err) {
+      console.error(err);
       toast({
         title: "Error Skipping Setup",
-        description: "Please try again. If the problem persists, contact support.",
+        description: "Try again or contact support.",
         variant: "destructive",
-        duration: 5000,
       });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const currentQuestion = questions[currentStep];
-  const isPersonalInfoComplete = currentQuestion.id === "personalInfo" && 
-    answers.name && answers.city && answers.state && answers.education && answers.age;
-  const isOtherQuestionAnswered = currentQuestion.id !== "personalInfo" && answers[currentQuestion.id];
-
   return (
-    <div className="min-h-screen bg-background pt-20 sm:pt-16 pb-8">
-      <div className="flex items-center justify-center min-h-[calc(100vh-5rem)] sm:min-h-[calc(100vh-6rem)] p-4 sm:p-6 lg:p-8">
-        <div className="w-full max-w-4xl">
-          {/* Header */}
-          <div className="text-center mb-8 lg:mb-12">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-              Welcome to PitchOS!
-            </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed px-4">
-              Let's customize your experience with a few quick questions
-            </p>
-          </div>
+    <div className="min-h-screen flex flex-col items-center px-4 pt-24 pb-10 relative">
+      <div className="mb-10 text-center">
+        <h1 className="text-4xl font-bold">Welcome to PitchOS!</h1>
+        <p className="text-gray-500 mt-1">Let’s personalize your experience with a few quick questions</p>
+      </div>
 
-          {/* Question Card */}
-          <Card className="p-6 sm:p-8 lg:p-10 mb-8 shadow-lg border bg-card">
-            {/* Question counter */}
-            <div className="flex justify-end mb-4">
-              <span className="text-sm text-muted-foreground">
-                {currentStep + 1} of {questions.length}
-              </span>
-            </div>
-
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-muted rounded-full mb-4">
-                {currentQuestion.icon}
-              </div>
-              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground mb-2">
-                {currentQuestion.question}
-              </h2>
-              <div className="w-12 h-1 bg-primary rounded-full mx-auto"></div>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {currentQuestion.options.map((option, index) => {
-                // Text input
-                if (option.type === "text") {
-                  return (
-                    <div key={option.value} className="flex flex-col gap-2 p-4 border-2 rounded-xl border-border bg-card">
-                      <label className="text-sm font-semibold text-foreground">{option.label}</label>
-                      <input
-                        type="text"
-                        placeholder={option.placeholder}
-                        className="w-full p-3 border border-border rounded-md bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                        value={answers[option.value] || ''}
-                        onChange={(e) => handleAnswerSelect(option.value, e.target.value)}
-                      />
-                    </div>
-                  );
-                }
-
-                // Search input for state
-                if (option.type === "search") {
-                  return (
-                    <div key={option.value} className="flex flex-col gap-2 p-4 border-2 rounded-xl border-border bg-card">
-                      <label className="text-sm font-semibold text-foreground">{option.label}</label>
-                      <div className="relative" ref={dropdownRef}>
-                        <input
-                          type="text"
-                          placeholder={option.placeholder}
-                          className="w-full p-3 border border-border rounded-md bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                          value={stateInput}
-                          onChange={(e) => {
-                            handleStateSearch(e.target.value);
-                            handleAnswerSelect('state', e.target.value);
-                          }}
-                        />
-                        
-                        {/* Dropdown */}
-                        {showStateDropdown && (
-                          <div className="absolute z-10 w-full mt-1 max-h-60 overflow-auto bg-background border border-border rounded-md shadow-lg">
-                            {filteredStates.length > 0 ? (
-                              filteredStates.map((state, i) => (
-                                <div
-                                  key={i}
-                                  className="px-4 py-2 text-sm cursor-pointer hover:bg-accent focus:bg-accent outline-none transition-colors border-b border-border last:border-b-0"
-                                  onClick={() => handleStateSelect(state)}
-                                  onMouseDown={(e) => e.preventDefault()}
-                                >
-                                  {state}
-                                </div>
-                              ))
-                            ) : (
-                              <div className="px-4 py-2 text-sm text-muted-foreground">
-                                No states found
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                }
-
-                // Select dropdown
-                if (option.type === "select") {
-                  return (
-                    <div key={option.value} className="flex flex-col gap-2 p-4 border-2 rounded-xl border-border bg-card">
-                      <label className="text-sm font-semibold text-foreground">{option.label}</label>
-                      <select
-                        className="p-3 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent appearance-none cursor-pointer"
-                        value={answers[option.value] || ''}
-                        onChange={(e) => handleAnswerSelect(option.value, e.target.value)}
-                        style={{
-                          backgroundImage: `url("data:image/svg+xml;charset=utf-8,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
-                          backgroundPosition: 'right 0.5rem center',
-                          backgroundRepeat: 'no-repeat',
-                          backgroundSize: '1.5em 1.5em',
-                          paddingRight: '2.5rem'
-                        }}
-                      >
-                        <option value="">Select {option.label.toLowerCase()}</option>
-                        {option.options.map(opt => (
-                          <option key={opt.value} value={opt.value}>
-                            {opt.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  );
-                }
-
-                // Radio button options
-                return (
-                  <button
-                    key={option.value}
-                    onClick={() => handleAnswerSelect(currentQuestion.id, option.value)}
-                    className={`group relative p-4 sm:p-6 text-left rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg ${
-                      answers[currentQuestion.id] === option.value
-                        ? "border-primary bg-accent shadow-lg scale-105"
-                        : "border-border bg-card hover:border-muted-foreground hover:bg-accent/50"
-                    }`}
-                    style={{ animationDelay: `${index * 100}ms` }}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className={`font-semibold text-sm sm:text-base transition-colors ${
-                        answers[currentQuestion.id] === option.value
-                          ? "text-foreground"
-                          : "text-muted-foreground group-hover:text-foreground"
-                      }`}>
-                        {option.label}
-                      </span>
-                      {answers[currentQuestion.id] === option.value && (
-                        <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
-                      )}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </Card>
-
-          {/* Navigation */}
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <Button
-              variant="outline"
-              onClick={handlePrevious}
-              disabled={currentStep === 0}
-              className="flex items-center gap-2 px-6 py-3 rounded-full order-2 sm:order-1"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Previous
-            </Button>
-
-            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 order-1 sm:order-2">
-              <Button
-                variant="ghost"
-                onClick={handleSkip}
-                className="px-6 py-3 rounded-full"
-              >
-                Skip for now
-              </Button>
-
-              <Button
-                onClick={handleNext}
-                disabled={(!isPersonalInfoComplete && !isOtherQuestionAnswered) || isSubmitting}
-                className="flex items-center gap-2 px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-105 disabled:opacity-50 disabled:transform-none disabled:hover:scale-100"
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"></div>
-                    Saving...
-                  </>
-                ) : (
-                  <>
-                    {currentStep === questions.length - 1 ? "Complete Setup" : "Next"}
-                    <ArrowRight className="w-4 h-4" />
-                  </>
-                )}
-              </Button>
-            </div>
-          </div>
-
-          {/* Footer text */}
-          <div className="text-center mt-8">
-            <p className="text-sm text-muted-foreground">
-              Almost there! This will help us personalize your PitchOS experience.
-            </p>
-          </div>
+      <div className="w-full max-w-3xl mb-6">
+        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-black transition-all duration-500"
+            style={{ width: `${((currentStep + 1) / questions.length) * 100}%` }}
+          />
         </div>
       </div>
+
+      <Card className="w-full max-w-3xl px-8 py-12 relative shadow-xl mt-2">
+        <div className="flex justify-center mb-6">
+          <div className="bg-gray-100 p-4 rounded-full shadow">
+            {isPersonal ? <User className="w-6 h-6 text-gray-600" /> : step.icon}
+          </div>
+        </div>
+
+        <h3 className="text-xl font-semibold text-center mb-6">{step.question}</h3>
+
+        {step.type === "text" && (
+          <input
+            type="text"
+            placeholder={step.placeholder}
+            className="w-full border p-3 rounded-lg mb-6"
+            value={answers[step.id] || ""}
+            onChange={(e) => handleAnswerSelect(step.id, e.target.value)}
+          />
+        )}
+
+        {step.type === "search" && (
+          <div ref={dropdownRef} className="relative mb-6">
+            <input
+              type="text"
+              placeholder={step.placeholder}
+              className="w-full border p-3 rounded-lg"
+              value={stateInput}
+              onChange={(e) => {
+                handleStateSearch(e.target.value);
+                handleAnswerSelect("state", e.target.value);
+              }}
+            />
+            {showStateDropdown && (
+              <div className="absolute bg-white border w-full mt-1 rounded-md max-h-60 overflow-y-auto z-10">
+                {filteredStates.map((state, i) => (
+                  <div
+                    key={i}
+                    className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                    onClick={() => handleStateSelect(state)}
+                  >
+                    {state}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {step.type === "select" && (
+          <select
+            className="w-full border p-3 rounded-lg mb-6"
+            value={answers[step.id] || ""}
+            onChange={(e) => handleAnswerSelect(step.id, e.target.value)}
+          >
+            <option value="">Select...</option>
+            {step.options.map((opt) => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
+          </select>
+        )}
+
+        {!step.type && step.options && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 w-full">
+            {step.options.map((opt) => {
+              const isSelected = answers[step.id] === opt.value;
+              return (
+                <button
+                  key={opt.value}
+                  onClick={() => handleAnswerSelect(step.id, opt.value)}
+                  className={`w-full flex justify-between items-center p-4 rounded-xl border transition-all duration-200 transform
+                    ${isSelected ? "border-black bg-gray-100 font-semibold shadow" : "border-gray-300 bg-white hover:scale-[1.02] hover:shadow-md"}`}
+                >
+                  <span>{opt.label}</span>
+                  {isSelected && (
+                    <span className="w-5 h-5 rounded-full border border-black flex items-center justify-center">
+                      <svg className="w-3 h-3 text-black" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </Card>
+
+      <div className="mt-14 flex justify-between items-center w-full max-w-3xl">
+        <Button variant="ghost" onClick={handlePrevious} disabled={currentStep === 0}>
+          <ArrowLeft className="w-4 h-4 mr-1" /> Previous
+        </Button>
+
+        <div className="flex gap-2 items-center">
+          <button className="text-sm text-gray-500 hover:underline" onClick={handleSkip}>
+            Skip for now
+          </button>
+          <Button
+            onClick={handleNext}
+            disabled={!answers[step.id] || isSubmitting}
+            className="bg-black text-white hover:bg-gray-900 px-6 py-2 rounded-full"
+          >
+            {currentStep === questions.length - 1 ? "Finish" : "Next"}
+            <ArrowRight className="w-4 h-4 ml-1" />
+          </Button>
+        </div>
+      </div>
+
+      <p className="mt-6 text-sm text-gray-500 text-center max-w-xl">
+        Almost there! This will help us personalize your PitchOS experience.
+      </p>
+
+      {showCompletionAnimation && (
+        <div className="fixed inset-0 bg-white z-50 flex items-center justify-center">
+          <DotLottieReact
+            src="https://lottie.host/c80a72e1-f821-4d2e-9904-74064ee63083/vori2mu8tz.lottie"
+            autoplay
+            loop={false}
+            className="w-72 h-72"
+          />
+        </div>
+      )}
     </div>
   );
 };
