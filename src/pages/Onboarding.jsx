@@ -645,7 +645,7 @@ const Onboarding = () => {
         </div>
       </div>
 
-      <Card className="w-full max-w-3xl px-8 py-12 relative shadow-xl mt-2">
+      <Card className="w-full max-w-3xl px-8 py-12 relative shadow-xl mt-8">
         <div className="flex justify-center mb-6">
           <div className="bg-gray-100 p-4 rounded-full shadow">
             {isPersonal ? <User className="w-6 h-6 text-gray-600" /> : step.icon}
