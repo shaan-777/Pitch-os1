@@ -391,6 +391,7 @@
 
 // export default Onboarding;// ... everything above remains unchanged (imports, states, steps, etc.)
 
+
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
@@ -410,6 +411,7 @@ import { useToast } from "../components/ui/use-toast";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 const db = getFirestore();
+
 const indianStates = [
   "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
   "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka",
@@ -575,7 +577,6 @@ const Onboarding = () => {
       });
 
       await batch.commit();
-
       setShowCompletionAnimation(true);
       setTimeout(() => {
         navigate("/dashboard", { replace: true });
@@ -630,13 +631,13 @@ const Onboarding = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center px-4 pt-24 pb-10 relative">
-      <div className="mb-10 text-center">
+    <div className="min-h-screen flex flex-col items-center px-4 pt-32 pb-10 relative">
+      <div className="mt-8 mb-10 text-center">
         <h1 className="text-4xl font-bold">Welcome to PitchOS!</h1>
         <p className="text-gray-500 mt-1">Let’s personalize your experience with a few quick questions</p>
       </div>
 
-      <div className="w-full max-w-3xl mb-6">
+      <div className="w-full max-w-3xl mb-10">
         <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
           <div
             className="h-full bg-black transition-all duration-500"
@@ -645,7 +646,11 @@ const Onboarding = () => {
         </div>
       </div>
 
-      <Card className="w-full max-w-3xl px-8 py-12 relative shadow-xl mt-8">
+      <Card
+        className={`w-full max-w-3xl px-8 ${
+          step.id === 'industry' ? 'py-8' : 'py-12'
+        } relative shadow-xl mt-6`}
+      >
         <div className="flex justify-center mb-6">
           <div className="bg-gray-100 p-4 rounded-full shadow">
             {isPersonal ? <User className="w-6 h-6 text-gray-600" /> : step.icon}
@@ -770,3 +775,4 @@ const Onboarding = () => {
 };
 
 export default Onboarding;
+
