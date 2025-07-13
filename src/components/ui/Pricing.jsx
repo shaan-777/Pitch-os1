@@ -447,3 +447,7 @@ function Pricing() {
 }
 
 export { Pricing };
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4b7238ea2c66b8beb35c82d7fe2b9d086a063873
