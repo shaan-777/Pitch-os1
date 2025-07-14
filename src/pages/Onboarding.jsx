@@ -412,7 +412,6 @@ import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 const db = getFirestore();
 
-// Static data remains unchanged
 const indianStates = [
   "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
   "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka",
@@ -424,28 +423,11 @@ const indianStates = [
 ];
 
 const personalSteps = [
+  { id: "name", question: "What's your name?", type: "text", placeholder: "Enter your full name" },
+  { id: "city", question: "Which city do you live in?", type: "text", placeholder: "Enter your city" },
+  { id: "state", question: "Which state are you from?", type: "search", placeholder: "Type to search state" },
   {
-    id: "name",
-    question: "What's your name?",
-    type: "text",
-    placeholder: "Enter your full name"
-  },
-  {
-    id: "city",
-    question: "Which city do you live in?",
-    type: "text",
-    placeholder: "Enter your city"
-  },
-  {
-    id: "state",
-    question: "Which state are you from?",
-    type: "search",
-    placeholder: "Type to search state"
-  },
-  {
-    id: "education",
-    question: "What's your highest education?",
-    type: "select",
+    id: "education", question: "What's your highest education?", type: "select",
     options: [
       { value: "highschool", label: "High School" },
       { value: "bachelors", label: "Bachelor's Degree" },
@@ -454,9 +436,7 @@ const personalSteps = [
     ]
   },
   {
-    id: "age",
-    question: "What's your age group?",
-    type: "select",
+    id: "age", question: "What's your age group?", type: "select",
     options: [
       { value: "18-24", label: "18-24 years" },
       { value: "25-34", label: "25-34 years" },
@@ -465,11 +445,10 @@ const personalSteps = [
     ]
   }
 ];
+
 const otherSteps = [
   {
-    id: "role",
-    question: "What best describes your role?",
-    icon: <Briefcase className="w-6 h-6" />,
+    id: "role", question: "What best describes your role?", icon: <Briefcase className="w-6 h-6" />,
     options: [
       { value: "entrepreneur", label: "Entrepreneur / Startup Founder" },
       { value: "investor", label: "Investor / VC" },
@@ -478,9 +457,7 @@ const otherSteps = [
     ]
   },
   {
-    id: "industry",
-    question: "Which industry are you most interested in?",
-    icon: <Target className="w-6 h-6" />,
+    id: "industry", question: "Which industry are you most interested in?", icon: <Target className="w-6 h-6" />,
     options: [
       { value: "tech", label: "Technology & Software" },
       { value: "healthcare", label: "Healthcare & Biotech" },
@@ -490,9 +467,7 @@ const otherSteps = [
     ]
   },
   {
-    id: "experience",
-    question: "How much experience do you have with pitch presentations?",
-    icon: <Users className="w-6 h-6" />,
+    id: "experience", question: "How much experience do you have with pitch presentations?", icon: <Users className="w-6 h-6" />,
     options: [
       { value: "beginner", label: "Beginner (0–1 years)" },
       { value: "intermediate", label: "Intermediate (2–5 years)" },
@@ -501,9 +476,7 @@ const otherSteps = [
     ]
   },
   {
-    id: "goal",
-    question: "What is your primary goal with PitchOS?",
-    icon: <Target className="w-6 h-6" />,
+    id: "goal", question: "What is your primary goal with PitchOS?", icon: <Target className="w-6 h-6" />,
     options: [
       { value: "create", label: "Create compelling pitch decks" },
       { value: "analyze", label: "Analyze and improve existing pitches" },
@@ -512,9 +485,7 @@ const otherSteps = [
     ]
   },
   {
-    id: "frequency",
-    question: "How often do you plan to use PitchOS?",
-    icon: <Clock className="w-6 h-6" />,
+    id: "frequency", question: "How often do you plan to use PitchOS?", icon: <Clock className="w-6 h-6" />,
     options: [
       { value: "daily", label: "Daily" },
       { value: "weekly", label: "Weekly" },
@@ -527,7 +498,6 @@ const otherSteps = [
 const questions = [...personalSteps, ...otherSteps];
 
 const Onboarding = () => {
-  // All hooks and logic remain same
   const navigate = useNavigate();
   const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(0);
@@ -548,9 +518,7 @@ const Onboarding = () => {
 
   const handleStateSearch = useCallback((value) => {
     setStateInput(value);
-    const filtered = indianStates.filter(state =>
-      state.toLowerCase().includes(value.toLowerCase())
-    );
+    const filtered = indianStates.filter(state => state.toLowerCase().includes(value.toLowerCase()));
     setFilteredStates(filtered);
     setShowStateDropdown(value.length >= 2 && filtered.length > 0);
   }, []);
@@ -576,7 +544,6 @@ const Onboarding = () => {
   }, [currentStep]);
 
   const handleAnswerSelect = (id, value) => setAnswers((prev) => ({ ...prev, [id]: value }));
-
   const handleNext = () => currentStep < questions.length - 1 ? setCurrentStep((prev) => prev + 1) : handleComplete();
   const handlePrevious = () => currentStep > 0 && setCurrentStep((prev) => prev - 1);
 
@@ -616,7 +583,11 @@ const Onboarding = () => {
     setIsSubmitting(true);
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error("User not authenticated");
+      console.log("Skip clicked. Current user:", user);
+      if (!user) {
+        navigate("/dashboard", { replace: true });
+        return;
+      }
       const batch = writeBatch(db);
       batch.set(doc(db, "userPreferences", user.uid), {
         userId: user.uid,
@@ -634,7 +605,7 @@ const Onboarding = () => {
         title: "Setup Skipped",
         description: "You can complete your profile later from settings.",
       });
-      navigate("/dashboard", { replace: true });
+      setTimeout(() => navigate("/dashboard", { replace: true }), 800);
     } catch (err) {
       toast({
         title: "Error Skipping Setup",
@@ -647,7 +618,7 @@ const Onboarding = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center px-4 pt-32 pb-10 relative bg-white dark:bg-black transition-colors duration-300">
+    <div className="min-h-screen flex flex-col items-center px-4 pt-32 pb-10 bg-white dark:bg-black">
       <div className="mt-8 mb-4 text-center">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white">Welcome to PitchOS!</h1>
         <p className="text-gray-500 dark:text-gray-400 mt-1">
@@ -665,121 +636,122 @@ const Onboarding = () => {
           </p>
         </div>
         <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-black dark:bg-white transition-all duration-500"
-            style={{ width: `${progressPercent}%` }}
-          />
+          <div className="h-full bg-black dark:bg-white transition-all duration-500" style={{ width: `${progressPercent}%` }} />
         </div>
       </div>
 
       <Card
-        className={`w-full max-w-3xl px-8 ${
-          step.id === 'industry' ? 'py-8' : 'py-12'
-        } relative shadow-xl mt-6 bg-white dark:bg-zinc-900 transition-colors`}
-      >
-        <div className="flex justify-center mb-6">
-          <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-full shadow">
-            {isPersonal ? <User className="w-6 h-6 text-gray-600 dark:text-gray-300" /> : step.icon}
-          </div>
+  className={`w-full max-w-3xl px-8 ${step.id === 'industry' ? 'py-8' : 'py-12'} relative shadow-xl mt-6 bg-white dark:bg-zinc-900 transition-colors`}
+>
+  <div className="flex justify-center mb-6">
+    <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-full shadow">
+      {isPersonal ? <User className="w-6 h-6 text-gray-600 dark:text-gray-300" /> : step.icon}
+    </div>
+  </div>
+
+  <h3 className="text-xl font-semibold text-center mb-6 text-gray-900 dark:text-white">
+    {step.question}
+  </h3>
+
+  {/* Text input */}
+  {step.type === "text" && (
+    <input
+      type="text"
+      placeholder={step.placeholder}
+      className="w-full border p-3 rounded-lg mb-6 bg-white dark:bg-zinc-800 dark:text-white dark:border-gray-700"
+      value={answers[step.id] || ""}
+      onChange={(e) => handleAnswerSelect(step.id, e.target.value)}
+    />
+  )}
+
+  {/* State search */}
+  {step.type === "search" && (
+    <div ref={dropdownRef} className="relative mb-6">
+      <input
+        type="text"
+        placeholder={step.placeholder}
+        className="w-full border p-3 rounded-lg bg-white dark:bg-zinc-800 dark:text-white dark:border-gray-700"
+        value={stateInput}
+        onChange={(e) => {
+          handleStateSearch(e.target.value);
+          handleAnswerSelect("state", e.target.value);
+        }}
+      />
+      {showStateDropdown && (
+        <div className="absolute bg-white dark:bg-zinc-900 border dark:border-gray-700 w-full mt-1 rounded-md max-h-60 overflow-y-auto z-10">
+          {filteredStates.map((state, i) => (
+            <div
+              key={i}
+              className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-700 text-gray-900 dark:text-white"
+              onClick={() => handleStateSelect(state)}
+            >
+              {state}
+            </div>
+          ))}
         </div>
+      )}
+    </div>
+  )}
 
-        <h3 className="text-xl font-semibold text-center mb-6 text-gray-900 dark:text-white">
-          {step.question}
-        </h3>
+  {/* Select dropdown */}
+  {step.type === "select" && (
+    <select
+      className="w-full border p-3 rounded-lg mb-6 bg-white dark:bg-zinc-800 dark:text-white dark:border-gray-700"
+      value={answers[step.id] || ""}
+      onChange={(e) => handleAnswerSelect(step.id, e.target.value)}
+    >
+      <option value="">Select...</option>
+      {step.options.map((opt) => (
+        <option key={opt.value} value={opt.value}>
+          {opt.label}
+        </option>
+      ))}
+    </select>
+  )}
 
-        {step.type === "text" && (
-          <input
-            type="text"
-            placeholder={step.placeholder}
-            className="w-full border p-3 rounded-lg mb-6 bg-white dark:bg-zinc-800 dark:text-white dark:border-gray-700"
-            value={answers[step.id] || ""}
-            onChange={(e) => handleAnswerSelect(step.id, e.target.value)}
-          />
-        )}
-
-        {step.type === "search" && (
-          <div ref={dropdownRef} className="relative mb-6">
-            <input
-              type="text"
-              placeholder={step.placeholder}
-              className="w-full border p-3 rounded-lg bg-white dark:bg-zinc-800 dark:text-white dark:border-gray-700"
-              value={stateInput}
-              onChange={(e) => {
-                handleStateSearch(e.target.value);
-                handleAnswerSelect("state", e.target.value);
-              }}
-            />
-            {showStateDropdown && (
-              <div className="absolute bg-white dark:bg-zinc-900 border dark:border-gray-700 w-full mt-1 rounded-md max-h-60 overflow-y-auto z-10">
-                {filteredStates.map((state, i) => (
-                  <div
-                    key={i}
-                    className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-700 text-gray-900 dark:text-white"
-                    onClick={() => handleStateSelect(state)}
-                  >
-                    {state}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {step.type === "select" && (
-          <select
-            className="w-full border p-3 rounded-lg mb-6 bg-white dark:bg-zinc-800 dark:text-white dark:border-gray-700"
-            value={answers[step.id] || ""}
-            onChange={(e) => handleAnswerSelect(step.id, e.target.value)}
+  {/* Multi-button selection (for role, goal, etc) */}
+  {!step.type && step.options && (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 w-full">
+      {step.options.map((opt) => {
+        const isSelected = answers[step.id] === opt.value;
+        return (
+          <button
+            key={opt.value}
+            onClick={() => handleAnswerSelect(step.id, opt.value)}
+            className={`w-full flex justify-between items-center p-4 rounded-xl border transition-all duration-200 transform text-left
+              ${
+                isSelected
+                  ? "border-black dark:border-white bg-gray-100 dark:bg-zinc-800 font-semibold shadow"
+                  : "border-gray-300 dark:border-gray-700 bg-white dark:bg-zinc-900 hover:scale-[1.02] hover:shadow-md"
+              }`}
           >
-            <option value="">Select...</option>
-            {step.options.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        )}
-
-        {!step.type && step.options && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 w-full">
-            {step.options.map((opt) => {
-              const isSelected = answers[step.id] === opt.value;
-              return (
-                <button
-                  key={opt.value}
-                  onClick={() => handleAnswerSelect(step.id, opt.value)}
-                  className={`w-full flex justify-between items-center p-4 rounded-xl border transition-all duration-200 transform text-left
-                    ${
-                      isSelected
-                        ? "border-black dark:border-white bg-gray-100 dark:bg-zinc-800 font-semibold shadow"
-                        : "border-gray-300 dark:border-gray-700 bg-white dark:bg-zinc-900 hover:scale-[1.02] hover:shadow-md"
-                    }`}
+            <span className="text-gray-900 dark:text-white">{opt.label}</span>
+            {isSelected && (
+              <span className="w-5 h-5 rounded-full border border-black dark:border-white flex items-center justify-center">
+                <svg
+                  className="w-3 h-3 text-black dark:text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
                 >
-                  <span className="text-gray-900 dark:text-white">{opt.label}</span>
-                  {isSelected && (
-                    <span className="w-5 h-5 rounded-full border border-black dark:border-white flex items-center justify-center">
-                      <svg
-                        className="w-3 h-3 text-black dark:text-white"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </Card>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </span>
+            )}
+          </button>
+        );
+      })}
+    </div>
+  )}
+</Card>
 
+
+      {/* Footer Buttons */}
       <div className="mt-14 flex justify-between items-center w-full max-w-3xl">
         <Button variant="ghost" onClick={handlePrevious} disabled={currentStep === 0}>
           <ArrowLeft className="w-4 h-4 mr-1" /> Previous
@@ -794,8 +766,8 @@ const Onboarding = () => {
             disabled={!answers[step.id] || isSubmitting}
             className="bg-black text-white hover:bg-gray-900 px-6 py-2 rounded-full"
           >
-            {currentStep === questions.length - 1 ? "Finish" : "Next"}
-            <ArrowRight className="w-4 h-4 ml-1" />
+            {isSubmitting ? "Loading..." : (currentStep === questions.length - 1 ? "Finish" : "Next")}
+            {!isSubmitting && <ArrowRight className="w-4 h-4 ml-1" />}
           </Button>
         </div>
       </div>
