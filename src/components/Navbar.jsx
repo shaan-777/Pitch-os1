@@ -316,9 +316,7 @@ const Navbar = () => {
                   )}
                   <span className="text-gray-700 dark:text-white hidden sm:inline">{user.displayName || user.email}</span>
                 </NavigationMenuTrigger>
-                {/* <NavigationMenuContent className="z-[60] bg-white/90 dark:bg-zinc-900 border-purple-200 dark:border-zinc-700 backdrop-blur-sm text-gray-800 dark:text-white"> */}
-                <NavigationMenuContent className="z-[60] bg-white/90 dark:bg-black border-purple-200 dark:border-zinc-700 backdrop-blur-sm text-gray-800 dark:text-white">
-
+                <NavigationMenuContent className="z-[60] bg-white/90 dark:bg-zinc-900 border-purple-200 dark:border-zinc-700 backdrop-blur-sm text-gray-800 dark:text-white">
                   <div className="w-48 p-2">
                     <Link
                       to="/dashboard"
