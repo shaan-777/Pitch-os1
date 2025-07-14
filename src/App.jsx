@@ -1,3 +1,161 @@
+// import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+// import { useEffect, useState } from 'react';
+// import Navbar from './components/Navbar';
+// import Home from './pages/Home';
+// import Dashboard from './pages/Dashboard';
+// import Register from './pages/Register';
+// import Login from './pages/Login';
+// import Onboarding from './pages/Onboarding';
+// import { useTheme } from './store/theme';
+// import { useAuthStore } from './store/auth';
+// import { Toaster } from './components/ui/toaster';
+// import { Footer } from './components/Footer';
+// import { doc, getDoc, getFirestore } from 'firebase/firestore';
+
+// // Route guard for onboarding
+// function RequireOnboarding({ children }) {
+//   const { user, loading } = useAuthStore();
+//   const [checking, setChecking] = useState(true);
+//   const [onboardingStatus, setOnboardingStatus] = useState(null); // null = unknown, true = completed, false = not completed
+//   const location = useLocation();
+//   const navigate = useNavigate();
+//   const db = getFirestore();
+
+//   // Check onboarding status
+//   useEffect(() => {
+//     let isMounted = true;
+//     let timeoutId;
+
+//     const checkOnboarding = async () => {
+//       if (!user || loading) {
+//         if (isMounted) {
+//           setChecking(false);
+//         }
+//         return;
+//       }
+
+//       try {
+//         console.log('Checking onboarding status for user:', user.uid);
+//         const settingsRef = doc(db, 'userSettings', user.uid);
+//         const settingsSnap = await getDoc(settingsRef);
+        
+//         const isCompleted = settingsSnap.exists() && settingsSnap.data().onboardingCompleted === true;
+//         console.log('Onboarding completed:', isCompleted);
+        
+//         if (isMounted) {
+//           setOnboardingStatus(isCompleted);
+//           setChecking(false);
+//         }
+//       } catch (error) {
+//         console.error('Error checking onboarding status:', error);
+//         if (isMounted) {
+//           setChecking(false);
+//         }
+//       }
+//     };
+
+//     // Clear any existing timeout
+//     if (timeoutId) {
+//       clearTimeout(timeoutId);
+//     }
+
+//     // Add a small delay to prevent rapid re-checks
+//     timeoutId = setTimeout(checkOnboarding, 100);
+
+//     return () => {
+//       isMounted = false;
+//       if (timeoutId) {
+//         clearTimeout(timeoutId);
+//       }
+//     };
+//   }, [user, loading, db]);
+
+//   // Handle redirects
+//   useEffect(() => {
+//     if (!checking && user && onboardingStatus !== null) {
+//       const currentPath = location.pathname;
+//       console.log('Current path:', currentPath);
+//       console.log('Onboarding completed:', onboardingStatus);
+
+//       if (!onboardingStatus && currentPath !== '/onboarding') {
+//         console.log('Redirecting to onboarding');
+//         navigate('/onboarding', { replace: true });
+//       } else if (onboardingStatus && currentPath === '/onboarding') {
+//         console.log('Redirecting to dashboard');
+//         navigate('/dashboard', { replace: true });
+//       }
+//     }
+//   }, [checking, onboardingStatus, location.pathname, navigate, user]);
+
+//   // Show loading state
+//   if (checking) {
+//     return (
+//       <div className="min-h-screen flex items-center justify-center">
+//         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+//       </div>
+//     );
+//   }
+
+//   // If we're not checking and either there's no user or onboarding is completed, render children
+//   if (!checking && (!user || onboardingStatus === true || location.pathname === '/onboarding')) {
+//     return children;
+//   }
+
+//   // Otherwise, render nothing while we handle the redirect
+//   return null;
+// }
+
+// function AppContent() {
+//   const location = useLocation();
+//   const { theme } = useTheme();
+//   const { initializeAuthListener } = useAuthStore();
+  
+//   useEffect(() => {
+//     const unsubscribe = initializeAuthListener();
+//     return () => unsubscribe();
+//   }, [initializeAuthListener]);
+  
+//   // Hide navbar and footer on dashboard route
+//   const isDashboard = location.pathname === '/dashboard';
+
+//   return (
+//     <div className="min-h-screen bg-background text-foreground">
+//       {!isDashboard && <Navbar />}
+      
+//       <main>
+//         <Routes>
+//           <Route path="/" element={<Home />} />
+//           <Route path="/register" element={<Register />} />
+//           <Route path="/login" element={<Login />} />
+//           <Route path="/onboarding" element={<Onboarding />} />
+//           <Route path="/dashboard" element={
+//             <RequireOnboarding>
+//               <Dashboard />
+//             </RequireOnboarding>
+//           } />
+//         </Routes>
+//       </main>
+//       {!isDashboard && <Footer />}
+//     </div>
+//   );
+// }
+
+// function App() {
+//   const { theme } = useTheme();
+
+//   return (
+//     <div className={theme}>
+//       <Router>
+//         <AppContent />
+//         <Toaster />
+//       </Router>
+//     </div>
+//   );
+// }
+
+// export default App;
+
+
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
@@ -12,82 +170,60 @@ import { Toaster } from './components/ui/toaster';
 import { Footer } from './components/Footer';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
 
-// Route guard for onboarding
+// ✅ Route guard for onboarding
 function RequireOnboarding({ children }) {
   const { user, loading } = useAuthStore();
   const [checking, setChecking] = useState(true);
-  const [onboardingStatus, setOnboardingStatus] = useState(null); // null = unknown, true = completed, false = not completed
+  const [onboardingStatus, setOnboardingStatus] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
   const db = getFirestore();
 
-  // Check onboarding status
   useEffect(() => {
     let isMounted = true;
     let timeoutId;
 
     const checkOnboarding = async () => {
       if (!user || loading) {
-        if (isMounted) {
-          setChecking(false);
-        }
+        if (isMounted) setChecking(false);
         return;
       }
 
       try {
-        console.log('Checking onboarding status for user:', user.uid);
         const settingsRef = doc(db, 'userSettings', user.uid);
         const settingsSnap = await getDoc(settingsRef);
-        
         const isCompleted = settingsSnap.exists() && settingsSnap.data().onboardingCompleted === true;
-        console.log('Onboarding completed:', isCompleted);
-        
+
         if (isMounted) {
           setOnboardingStatus(isCompleted);
           setChecking(false);
         }
       } catch (error) {
         console.error('Error checking onboarding status:', error);
-        if (isMounted) {
-          setChecking(false);
-        }
+        if (isMounted) setChecking(false);
       }
     };
 
-    // Clear any existing timeout
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-
-    // Add a small delay to prevent rapid re-checks
     timeoutId = setTimeout(checkOnboarding, 100);
 
     return () => {
       isMounted = false;
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
+      if (timeoutId) clearTimeout(timeoutId);
     };
   }, [user, loading, db]);
 
-  // Handle redirects
   useEffect(() => {
     if (!checking && user && onboardingStatus !== null) {
       const currentPath = location.pathname;
-      console.log('Current path:', currentPath);
-      console.log('Onboarding completed:', onboardingStatus);
 
       if (!onboardingStatus && currentPath !== '/onboarding') {
-        console.log('Redirecting to onboarding');
         navigate('/onboarding', { replace: true });
       } else if (onboardingStatus && currentPath === '/onboarding') {
-        console.log('Redirecting to dashboard');
         navigate('/dashboard', { replace: true });
       }
     }
   }, [checking, onboardingStatus, location.pathname, navigate, user]);
 
-  // Show loading state
   if (checking) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -96,43 +232,43 @@ function RequireOnboarding({ children }) {
     );
   }
 
-  // If we're not checking and either there's no user or onboarding is completed, render children
   if (!checking && (!user || onboardingStatus === true || location.pathname === '/onboarding')) {
     return children;
   }
 
-  // Otherwise, render nothing while we handle the redirect
   return null;
 }
 
+// ✅ Main content wrapper
 function AppContent() {
   const location = useLocation();
   const { theme } = useTheme();
   const { initializeAuthListener } = useAuthStore();
-  
+
   useEffect(() => {
     const unsubscribe = initializeAuthListener();
     return () => unsubscribe();
   }, [initializeAuthListener]);
-  
-  // Hide navbar and footer on dashboard route
+
   const isDashboard = location.pathname === '/dashboard';
 
   return (
     <div className="min-h-screen bg-background text-foreground">
       {!isDashboard && <Navbar />}
-      
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/onboarding" element={<Onboarding />} />
-          <Route path="/dashboard" element={
-            <RequireOnboarding>
-              <Dashboard />
-            </RequireOnboarding>
-          } />
+          <Route
+            path="/dashboard"
+            element={
+              <RequireOnboarding>
+                <Dashboard />
+              </RequireOnboarding>
+            }
+          />
         </Routes>
       </main>
       {!isDashboard && <Footer />}
@@ -140,17 +276,28 @@ function AppContent() {
   );
 }
 
+// ✅ Fixed App with Router first
+function AppWrapper() {
+  return (
+    <Router>
+      <App />
+    </Router>
+  );
+}
+
+// ✅ Final App component with conditional theming
 function App() {
   const { theme } = useTheme();
+  const location = useLocation();
+
+  const isThemedRoute = ['/dashboard', '/onboarding'].includes(location.pathname);
 
   return (
-    <div className={theme}>
-      <Router>
-        <AppContent />
-        <Toaster />
-      </Router>
+    <div className={isThemedRoute ? theme : 'light'}>
+      <AppContent />
+      <Toaster />
     </div>
   );
 }
 
-export default App;
+export default AppWrapper;
