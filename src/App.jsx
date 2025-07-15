@@ -14,7 +14,7 @@ import { Toaster } from './components/ui/toaster';
 import { Footer } from './components/Footer';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
 
-// ✅ Route guard for onboarding
+
 function RequireOnboarding({ children }) {
   const { user, loading } = useAuthStore();
   const [checking, setChecking] = useState(true);
@@ -83,7 +83,7 @@ function RequireOnboarding({ children }) {
   return null;
 }
 
-// ✅ Main content wrapper
+
 function AppContent() {
   const location = useLocation();
   const { theme } = useTheme();
@@ -120,7 +120,7 @@ function AppContent() {
   );
 }
 
-// ✅ Fixed App with Router first
+
 function AppWrapper() {
   return (
     <Router>
@@ -129,7 +129,7 @@ function AppWrapper() {
   );
 }
 
-// ✅ Final App component with conditional theming
+
 function App() {
   const { theme } = useTheme();
   const location = useLocation();
