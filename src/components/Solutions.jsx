@@ -164,75 +164,43 @@ export const SolutionsSection = () => {
     },
   ];
 
-//   const colorClasses = {
-//     purple: {
-//       border: "border-purple-200",
-//       shadow: "shadow-purple-200/30 hover:shadow-purple-200/50",
-//       bgIcon: "from-purple-100 to-purple-200 border border-purple-300",
-//       iconColor: "text-purple-600",
-//       bgSolution: "from-purple-200 to-purple-400 border border-purple-300 shadow-purple-300/40 hover:shadow-purple-400/60"
-//     },
-//     blue: {
-//   border: "border-[#ccbbdb]",
-//   shadow: "shadow-[#ccbbdb]/30 hover:shadow-[#ccbbdb]/50",
-//   bgIcon: "from-[#e7e1ee] to-[#d8cde4] border border-[#ccbbdb]",
-//   iconColor: "text-[#8b78a5]",
-//   bgSolution: "from-[#ccbbdb] to-[#bda6d1] border border-[#ccbbdb] shadow-[#ccbbdb]/40 hover:shadow-[#bda6d1]/60"
-// },
-
-
-//     mint: {
-//       border: "border-[#A4E9B1]",
-//       shadow: "shadow-[#A4E9B1]/30 hover:shadow-[#A4E9B1]/50",
-//       bgIcon: "from-[#D1F7D6] to-[#B5EEC9] border border-[#A4E9B1]",
-//       iconColor: "text-[#7CC99A]",
-//       bgSolution: "from-[#D1F7D6] to-[#A4E9B1] border border-[#A4E9B1] shadow-[#A4E9B1]/40 hover:shadow-[#A4E9B1]/60"
-//     },
-//     yellow: {
-//       border: "border-yellow-300",
-//       shadow: "shadow-yellow-300/30 hover:shadow-yellow-400/50",
-//       bgIcon: "from-yellow-100 to-yellow-200 border border-yellow-300",
-//       iconColor: "text-yellow-600",
-//       bgSolution: "from-yellow-400 to-yellow-500 border border-yellow-500/50 shadow-yellow-500/30 hover:shadow-yellow-500/50"
-//     }
-//   };
-const colorClasses = {
-  purple: {
-    border: "border-purple-200",
-    shadow: "shadow-purple-200/30 hover:shadow-purple-200/50",
-    bgIcon: "from-purple-100 to-purple-200 border border-purple-300",
-    iconColor: "text-purple-600",
-    bgSolution: "from-purple-200 to-purple-400 border border-purple-300 shadow-purple-300/40 hover:shadow-purple-400/60"
-  },
-  blue: {
-    border: "border-[#ccbbdb]",
-    shadow: "shadow-[#ccbbdb]/30 hover:shadow-[#ccbbdb]/50",
-    bgIcon: "from-[#e7e1ee] to-[#d8cde4] border border-[#ccbbdb]",
-    iconColor: "text-[#8b78a5]",
-    bgSolution: "from-[#ccbbdb] to-[#bda6d1] border border-[#ccbbdb] shadow-[#ccbbdb]/40 hover:shadow-[#bda6d1]/60"
-  },
-  teal: {
-    border: "border-[#EBE5D9]",
-    shadow: "shadow-[#EBE5D9]/30 hover:shadow-[#EBE5D9]/50",
-    bgIcon: "from-[#F4F1EC] to-[#E7DFD3] border border-[#EBE5D9]",
-    iconColor: "text-[#9B8C78]",
-    bgSolution: "from-[#EBE5D9] to-[#D8CFC2] border border-[#EBE5D9] shadow-[#EBE5D9]/40 hover:shadow-[#D8CFC2]/60"
-  },
-  mint: {
-    border: "border-[#A4E9B1]",
-    shadow: "shadow-[#A4E9B1]/30 hover:shadow-[#A4E9B1]/50",
-    bgIcon: "from-[#D1F7D6] to-[#B5EEC9] border border-[#A4E9B1]",
-    iconColor: "text-[#7CC99A]",
-    bgSolution: "from-[#D1F7D6] to-[#A4E9B1] border border-[#A4E9B1] shadow-[#A4E9B1]/40 hover:shadow-[#A4E9B1]/60"
-  },
-  yellow: {
-    border: "border-yellow-300",
-    shadow: "shadow-yellow-300/30 hover:shadow-yellow-400/50",
-    bgIcon: "from-yellow-100 to-yellow-200 border border-yellow-300",
-    iconColor: "text-yellow-600",
-    bgSolution: "from-yellow-400 to-yellow-500 border border-yellow-500/50 shadow-yellow-500/30 hover:shadow-yellow-500/50"
-  }
-};
+  const colorClasses = {
+    purple: {
+      border: "border-purple-200",
+      shadow: "shadow-purple-200/30 hover:shadow-purple-200/50",
+      bgIcon: "from-purple-100 to-purple-200 border border-purple-300",
+      iconColor: "text-purple-600",
+      bgSolution: "from-purple-200 to-purple-400 border border-purple-300 shadow-purple-300/40 hover:shadow-purple-400/60"
+    },
+    blue: {
+      border: "border-[#ccbbdb]",
+      shadow: "shadow-[#ccbbdb]/30 hover:shadow-[#ccbbdb]/50",
+      bgIcon: "from-[#e7e1ee] to-[#d8cde4] border border-[#ccbbdb]",
+      iconColor: "text-[#8b78a5]",
+      bgSolution: "from-[#ccbbdb] to-[#bda6d1] border border-[#ccbbdb] shadow-[#ccbbdb]/40 hover:shadow-[#bda6d1]/60"
+    },
+    teal: {
+      border: "border-[#EBE5D9]",
+      shadow: "shadow-[#EBE5D9]/30 hover:shadow-[#EBE5D9]/50",
+      bgIcon: "from-[#F4F1EC] to-[#E7DFD3] border border-[#EBE5D9]",
+      iconColor: "text-[#9B8C78]",
+      bgSolution: "from-[#EBE5D9] to-[#D8CFC2] border border-[#EBE5D9] shadow-[#EBE5D9]/40 hover:shadow-[#D8CFC2]/60"
+    },
+    mint: {
+      border: "border-[#A4E9B1]",
+      shadow: "shadow-[#A4E9B1]/30 hover:shadow-[#A4E9B1]/50",
+      bgIcon: "from-[#D1F7D6] to-[#B5EEC9] border border-[#A4E9B1]",
+      iconColor: "text-[#7CC99A]",
+      bgSolution: "from-[#D1F7D6] to-[#A4E9B1] border border-[#A4E9B1] shadow-[#A4E9B1]/40 hover:shadow-[#A4E9B1]/60"
+    },
+    yellow: {
+      border: "border-yellow-300",
+      shadow: "shadow-yellow-300/30 hover:shadow-yellow-400/50",
+      bgIcon: "from-yellow-100 to-yellow-200 border border-yellow-300",
+      iconColor: "text-yellow-600",
+      bgSolution: "from-yellow-400 to-yellow-500 border border-yellow-500/50 shadow-yellow-500/30 hover:shadow-yellow-500/50"
+    }
+  };
 
   const renderSolutionBlock = (solution, index) => {
     const c = colorClasses[solution.color] || colorClasses.yellow;
@@ -288,11 +256,12 @@ const colorClasses = {
           </div>
         </div>
 
-        {/* Mobile layout */}
-        <div className="lg:hidden">
-          <div className="flex items-center justify-center gap-4 mb-8">
+        {/* Mobile layout - modified */}
+        <div className="lg:hidden space-y-8">
+          {/* Problem Section */}
+          <div className="flex flex-col items-center">
             {/* Problem Box */}
-            <div className={`rounded-3xl p-8 w-56 flex-shrink-0 bg-white/70 ${c.border} ${c.shadow} border shadow-lg backdrop-blur-sm transition-all duration-300`}>
+            <div className={`rounded-3xl p-8 w-56 flex-shrink-0 bg-white/70 ${c.border} ${c.shadow} border shadow-lg backdrop-blur-sm transition-all duration-300 mb-6`}>
               <div className="flex items-center justify-between mb-4">
                 <div className={`p-3 rounded-full bg-gradient-to-br ${c.bgIcon}`}>
                   <Search className={`h-6 w-6 ${c.iconColor}`} />
@@ -303,9 +272,22 @@ const colorClasses = {
                 <div className={`text-2xl font-light ${c.iconColor}`}>{String(index + 1).padStart(2, '0')}</div>
               </div>
             </div>
+            
+            {/* Problem Text */}
+            <div className="w-full text-center px-4">
+              <h3 className="text-2xl font-light mb-4 mt-1 text-gray-800">
+                {solution.problem.title}
+              </h3>
+              <p className="text-base leading-relaxed text-gray-600">
+                {solution.problem.description}
+              </p>
+            </div>
+          </div>
 
+          {/* Solution Section */}
+          <div className="flex flex-col items-center mt-8">
             {/* Solution Box */}
-            <div className={`rounded-3xl p-8 w-56 flex-shrink-0 bg-gradient-to-br ${c.bgSolution} shadow-lg backdrop-blur-sm transition-all duration-300`}>
+            <div className={`rounded-3xl p-8 w-56 flex-shrink-0 bg-gradient-to-br ${c.bgSolution} shadow-lg backdrop-blur-sm transition-all duration-300 mb-6`}>
               <div className="flex items-center justify-between mb-4">
                 <div className={`p-3 rounded-full bg-white/90 border ${c.border}`}>
                   <Lightbulb className={`h-6 w-6 ${c.iconColor}`} />
@@ -316,18 +298,9 @@ const colorClasses = {
                 <div className="text-2xl font-light text-gray-800">{String(index + 1).padStart(2, '0')}</div>
               </div>
             </div>
-          </div>
-
-          <div className="space-y-8">
-            <div className="text-center">
-              <h3 className="text-2xl font-light mb-4 mt-1 text-gray-800">
-                {solution.problem.title}
-              </h3>
-              <p className="text-base leading-relaxed text-gray-600">
-                {solution.problem.description}
-              </p>
-            </div>
-            <div className="text-center">
+            
+            {/* Solution Text */}
+            <div className="w-full text-center px-4">
               <h3 className="text-2xl font-light mb-4 mt-1 text-gray-800">
                 {solution.solution.title}
               </h3>
