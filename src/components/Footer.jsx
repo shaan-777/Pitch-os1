@@ -1,9 +1,21 @@
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+// "use client";
+// import React from "react";
+// import { motion, useReducedMotion } from "motion/react";
+=======
+>>>>>>> 4b4fe73
 
 
 // "use client";
 // import React from "react";
 // import { motion, useReducedMotion } from "motion/react";
 // import { useLocation, useNavigate } from "react-router-dom";
+<<<<<<< HEAD
+=======
+>>>>>>> ae1b615 (Initial commit)
+>>>>>>> 4b4fe73
 // import {
 //   FacebookIcon,
 //   InstagramIcon,
@@ -11,33 +23,74 @@
 //   YoutubeIcon,
 // } from "lucide-react";
 
+<<<<<<< HEAD
 // // Footer links
+=======
+<<<<<<< HEAD
+=======
+// // Footer links
+>>>>>>> ae1b615 (Initial commit)
+>>>>>>> 4b4fe73
 // const footerLinks = [
 //   {
 //     label: "Product",
 //     links: [
 //       { title: "Features", href: "#features" },
 //       { title: "Pricing", href: "#pricing" },
+<<<<<<< HEAD
 //       { title: "Testimonials", href: "/testimonials", isRoute: true }, // ✅ updated!
+=======
+<<<<<<< HEAD
+//       { title: "Testimonials", href: "#testimonials" },
+=======
+//       { title: "Testimonials", href: "/testimonials", isRoute: true }, // ✅ updated!
+>>>>>>> ae1b615 (Initial commit)
+>>>>>>> 4b4fe73
 //       { title: "Integration", href: "/" },
 //     ],
 //   },
 //   {
 //     label: "Company",
 //     links: [
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+//       { title: "FAQs", href: "/faqs" },
+//       { title: "About Us", href: "/about" },
+//       { title: "Privacy Policy", href: "/privacy" },
+//       { title: "Terms of Services", href: "/terms" },
+=======
+>>>>>>> 4b4fe73
 //       { title: "FAQs", href: "#faq", scrollTo: "faq" },
 //       { title: "About Us", href: "/about", isRoute: true },
 //       { title: "Privacy Policy", href: "/privacy", isRoute: true },
 //       { title: "Terms of Service", href: "/terms", isRoute: true },
+<<<<<<< HEAD
+=======
+>>>>>>> ae1b615 (Initial commit)
+>>>>>>> 4b4fe73
 //     ],
 //   },
 //   {
 //     label: "Resources",
 //     links: [
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+//       { title: "Blog", href: "/blog" },
+//       { title: "Changelog", href: "/changelog" },
+//       { title: "Brand", href: "/brand" },
+//       { title: "Help", href: "/help" },
+=======
+>>>>>>> 4b4fe73
 //       { title: "Blog", href: "/blog", isRoute: true },
 //       { title: "Changelog", href: "/changelog", isRoute: true },
 //       { title: "Brand", href: "/brand", isRoute: true },
 //       { title: "Help", href: "/help", isRoute: true },
+<<<<<<< HEAD
+=======
+>>>>>>> ae1b615 (Initial commit)
+>>>>>>> 4b4fe73
 //     ],
 //   },
 //   {
@@ -46,16 +99,31 @@
 //       { title: "Facebook", href: "#", icon: FacebookIcon },
 //       { title: "Instagram", href: "#", icon: InstagramIcon },
 //       { title: "Youtube", href: "#", icon: YoutubeIcon },
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+//       { title: "LinkedIn", href: "#", icon: LinkedinIcon },
+=======
+>>>>>>> 4b4fe73
 //       {
 //         title: "LinkedIn",
 //         href: "https://www.linkedin.com/company/founderoo-circle/posts/?feedView=all",
 //         icon: LinkedinIcon,
 //       },
+<<<<<<< HEAD
+=======
+>>>>>>> ae1b615 (Initial commit)
+>>>>>>> 4b4fe73
 //     ],
 //   },
 // ];
 
 // export function Footer() {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 4b4fe73
 //   const navigate = useNavigate();
 //   const location = useLocation();
 
@@ -74,6 +142,10 @@
 //     navigate(href);
 //   };
 
+<<<<<<< HEAD
+=======
+>>>>>>> ae1b615 (Initial commit)
+>>>>>>> 4b4fe73
 //   return (
 //     <footer className="w-full bg-[#FAF8F2] border-t">
 //       <div className="relative w-full max-w-6xl mx-auto flex flex-col items-center justify-center rounded-t-4xl px-6 py-12 lg:py-16">
@@ -91,6 +163,24 @@
 //             {footerLinks.map((section, index) => (
 //               <AnimatedContainer key={section.label} delay={0.1 + index * 0.1}>
 //                 <div className="mb-10 md:mb-0">
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+//                   <h3 className="text-xs text-purple-700">{section.label}</h3>
+//                   <ul className="text-muted-foreground mt-4 space-y-2 text-sm">
+//                     {section.links.map((link) => (
+//                       <li key={link.title}>
+//                         <a
+//                           href={link.href}
+//                           className="hover:text-yellow-600 hover:underline inline-flex items-center transition-all duration-300"
+//                         >
+//                           {link.icon && (
+//                             <link.icon className="me-1 size-4 text-purple-700 group-hover:text-yellow-600 transition-colors duration-300" />
+//                           )}
+//                           {link.title}
+//                         </a>
+=======
+>>>>>>> 4b4fe73
 //                   <h3 className="text-xs text-purple-700 font-semibold">{section.label}</h3>
 //                   <ul className="text-muted-foreground mt-4 space-y-2 text-sm">
 //                     {section.links.map((link) => (
@@ -120,6 +210,10 @@
 //                             {link.title}
 //                           </a>
 //                         )}
+<<<<<<< HEAD
+=======
+>>>>>>> ae1b615 (Initial commit)
+>>>>>>> 4b4fe73
 //                       </li>
 //                     ))}
 //                   </ul>
@@ -135,9 +229,23 @@
 
 // function AnimatedContainer({ className, delay = 0.1, children }) {
 //   const shouldReduceMotion = useReducedMotion();
+<<<<<<< HEAD
 //   if (shouldReduceMotion) {
 //     return <div className={className}>{children}</div>;
 //   }
+=======
+<<<<<<< HEAD
+
+//   if (shouldReduceMotion) {
+//     return <div className={className}>{children}</div>;
+//   }
+
+=======
+//   if (shouldReduceMotion) {
+//     return <div className={className}>{children}</div>;
+//   }
+>>>>>>> ae1b615 (Initial commit)
+>>>>>>> 4b4fe73
 //   return (
 //     <motion.div
 //       initial={{ filter: "blur(4px)", translateY: -8, opacity: 0 }}
@@ -151,7 +259,14 @@
 //   );
 // }
 
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+=======
+
+>>>>>>> ae1b615 (Initial commit)
+>>>>>>> 4b4fe73
 "use client";
 import React from "react";
 import { motion, useReducedMotion } from "motion/react";

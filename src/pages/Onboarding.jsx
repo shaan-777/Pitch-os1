@@ -1,5 +1,7 @@
 
 
+<<<<<<< HEAD
+=======
 // import React, { useState, useEffect, useRef, useCallback } from "react";
 // import { useNavigate } from "react-router-dom";
 // import { Button } from "../components/ui/button";
@@ -836,10 +838,17 @@
 // };
 
 // export default Onboarding;
+<<<<<<< HEAD
+
+
+// Your imports stay exactly the same
+=======
+>>>>>>> 4b4fe73
 
 
 // Your imports stay exactly the same
 
+>>>>>>> ae1b615 (Initial commit)
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
