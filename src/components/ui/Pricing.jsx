@@ -446,4 +446,8 @@ function Pricing() {
   );
 }
 
+<<<<<<< HEAD
 export { Pricing };
+=======
+export { Pricing };
+>>>>>>> ae1b615 (Initial commit)

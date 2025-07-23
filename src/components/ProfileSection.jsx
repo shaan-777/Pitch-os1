@@ -435,3 +435,7 @@ const ProfileSection = ({ user, isOpen, onClose, onLogout }) => {
 };
 
 export default ProfileSection;
+ProfileSection.jsx
+
+
+ProfileSection.jsx

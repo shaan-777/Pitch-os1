@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '@/store/auth';
@@ -35,51 +36,44 @@ import ProfileSection from '@/components/ProfileSection';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { user, loading, logout, isOnboardingCompleted } = useAuthStore();
+  const { user, loading, logout } = useAuthStore();
   const [aiPrompt, setAiPrompt] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
   const [tutorialOpen, setTutorialOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
 
-  // Tutorial steps configuration
   const tutorialSteps = [
     {
       target: '[data-tutorial="new-pitch-btn"]',
       title: 'Create Your First Pitch',
-      content: 'Click this button to start building your pitch deck with our AI-powered tools. You can create professional presentations in minutes.',
+      content: 'Click this button to start building your pitch deck with our AI-powered tools.',
       placement: 'bottom'
     },
     {
       target: '[data-tutorial="ai-assistant"]',
       title: 'AI Pitch Assistant',
-      content: 'Use our AI assistant to get help with your pitch content, market research, and business strategy. Just type your question and get instant insights.',
+      content: 'Use our AI assistant to get help with your pitch content, market research, and strategy.',
       placement: 'top'
     },
     {
       target: '[data-tutorial="stats-grid"]',
       title: 'Track Your Progress',
-      content: 'Monitor your pitch development, community engagement, and funding progress with these key metrics.',
+      content: 'Monitor your pitch development and funding progress.',
       placement: 'bottom'
     }
   ];
 
   useEffect(() => {
-    // Only perform auth checks once loading is complete
     if (!loading && !authChecked) {
       setAuthChecked(true);
-
       if (!user) {
-        console.log('No user found, redirecting to login');
         navigate('/login');
         return;
       }
-
-      console.log('User authenticated, staying on dashboard');
     }
   }, [user, loading, navigate, authChecked]);
 
-  // Show loading spinner while auth is being checked
   if (loading || !authChecked) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -91,24 +85,16 @@ const Dashboard = () => {
     );
   }
 
-  // Don't render anything if user is not authenticated
-  if (!user) {
-    return null;
-  }
+  if (!user) return null;
 
   const handleLogout = async () => {
     try {
       await logout();
-      // Clear onboarding status on logout
       localStorage.removeItem("onboardingCompleted");
       navigate('/');
     } catch (error) {
       console.error('Logout error:', error);
     }
-  };
-
-  const startTutorial = () => {
-    setTutorialOpen(true);
   };
 
   const sidebarItems = [
@@ -138,15 +124,14 @@ const Dashboard = () => {
   ];
 
   const recentActivity = [
-    { action: "Pitch deck updated", time: "2 hours ago", type: "update" },
-    { action: "Received community feedback", time: "4 hours ago", type: "feedback" },
-    { action: "AI enhancement completed", time: "1 day ago", type: "ai" },
-    { action: "New funding opportunity", time: "2 days ago", type: "funding" },
+    { action: "Pitch deck updated", time: "2 hours ago" },
+    { action: "Received community feedback", time: "4 hours ago" },
+    { action: "AI enhancement completed", time: "1 day ago" },
+    { action: "New funding opportunity", time: "2 days ago" },
   ];
 
   return (
     <div className="min-h-screen bg-background flex">
-      {/* Tutorial Component */}
       <Tutorial
         steps={tutorialSteps}
         isOpen={tutorialOpen}
@@ -154,7 +139,6 @@ const Dashboard = () => {
         onComplete={() => setTutorialOpen(false)}
       />
 
-      {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
@@ -163,14 +147,14 @@ const Dashboard = () => {
       )}
 
       {/* Sidebar */}
-      <div className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-card border-r border-border transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:fixed lg:inset-y-0
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-      `}>
+      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-card border-r border-border transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:fixed lg:inset-y-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex flex-col h-screen">
-          {/* Header */}
+          {/* Header with clickable logo */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
-            <div className="flex items-center gap-2">
+            <div
+              className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition"
+              onClick={() => navigate("/")}
+            >
               <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">P</span>
               </div>
@@ -179,10 +163,7 @@ const Dashboard = () => {
                 <p className="text-xs text-gray-500">Founder Dashboard</p>
               </div>
             </div>
-            <button
-              className="lg:hidden p-1"
-              onClick={() => setSidebarOpen(false)}
-            >
+            <button className="lg:hidden p-1" onClick={() => setSidebarOpen(false)}>
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -194,13 +175,9 @@ const Dashboard = () => {
                 <Link
                   key={item.title}
                   to={item.url}
-                  className={`
-                    flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
-                    ${item.active
-                      ? 'bg-accent text-foreground'
-                      : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground'
-                    }
-                  `}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    item.active ? 'bg-accent text-foreground' : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground'
+                  }`}
                 >
                   <item.icon className="w-4 h-4" />
                   <span>{item.title}</span>
@@ -216,9 +193,7 @@ const Dashboard = () => {
               onClick={() => setProfileOpen(true)}
             >
               <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
-                <span className="text-sm font-medium">
-                  {user?.displayName?.[0] || user?.email?.[0] || '?'}
-                </span>
+                <span className="text-sm font-medium">{user?.displayName?.[0] || user?.email?.[0] || '?'}</span>
               </div>
               <div className="flex-1">
                 <p className="text-sm font-medium">{user?.displayName || 'User'}</p>
@@ -245,11 +220,7 @@ const Dashboard = () => {
               <div className="relative flex-1 max-w-md hidden sm:block">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                  <Input
-                    type="text"
-                    placeholder="Search tools, pitches, resources..."
-                    className="pl-10"
-                  />
+                  <Input type="text" placeholder="Search tools, pitches, resources..." className="pl-10" />
                 </div>
               </div>
             </div>
@@ -259,11 +230,10 @@ const Dashboard = () => {
                 <Bell className="w-5 h-5" />
               </Button>
               <ThemeToggle />
-              {/* Tutorial Button */}
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={startTutorial}
+                onClick={() => setTutorialOpen(true)}
                 className="gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
               >
                 <Play className="w-4 h-4" />
@@ -279,17 +249,13 @@ const Dashboard = () => {
           {/* Mobile Search */}
           <div className="relative mt-4 sm:hidden">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <Input
-              type="text"
-              placeholder="Search tools, pitches, resources..."
-              className="pl-10"
-            />
+            <Input type="text" placeholder="Search tools, pitches, resources..." className="pl-10" />
           </div>
         </header>
 
-        {/* Main Content */}
+        {/* Main Section */}
         <main className="flex-1 p-4 lg:p-6 space-y-6 overflow-y-auto">
-          {/* Welcome Section */}
+          {/* Welcome */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-2xl lg:text-3xl font-bold">Welcome back, {user?.displayName || 'User'}!</h1>
@@ -320,7 +286,7 @@ const Dashboard = () => {
             ))}
           </div>
 
-          {/* Main Content Grid */}
+          {/* AI Assistant & Recent Activity */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6" data-tutorial="ai-assistant">
             {/* AI Assistant */}
             <Card className="lg:col-span-2">
@@ -334,25 +300,17 @@ const Dashboard = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex gap-2">
-                  <textarea
-                    placeholder="Ask me anything about your pitch, market analysis, funding strategy..."
-                    value={aiPrompt}
-                    onChange={(e) => setAiPrompt(e.target.value)}
-                    className="flex-1 min-h-[100px] p-3 border border-input rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground"
-                  />
-                </div>
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                  <div className="flex flex-wrap gap-2">
-                    <span className="inline-flex items-center px-2 py-1 rounded-full bg-muted text-muted-foreground text-xs">
-                      Pitch Review
-                    </span>
-                    <span className="inline-flex items-center px-2 py-1 rounded-full bg-muted text-muted-foreground text-xs">
-                      Market Research
-                    </span>
-                    <span className="inline-flex items-center px-2 py-1 rounded-full bg-muted text-muted-foreground text-xs">
-                      Financial Model
-                    </span>
+                <textarea
+                  placeholder="Ask me anything about your pitch, market analysis, funding strategy..."
+                  value={aiPrompt}
+                  onChange={(e) => setAiPrompt(e.target.value)}
+                  className="w-full min-h-[100px] p-3 border border-input rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground"
+                />
+                <div className="flex flex-wrap gap-2 justify-between items-center">
+                  <div className="flex gap-2 flex-wrap">
+                    <span className="bg-muted text-muted-foreground px-2 py-1 text-xs rounded-full">Pitch Review</span>
+                    <span className="bg-muted text-muted-foreground px-2 py-1 text-xs rounded-full">Market Research</span>
+                    <span className="bg-muted text-muted-foreground px-2 py-1 text-xs rounded-full">Financial Model</span>
                   </div>
                   <Button className="gap-2">
                     <Send className="w-4 h-4" />
@@ -371,8 +329,8 @@ const Dashboard = () => {
                 {recentActivity.map((activity, index) => (
                   <div key={index} className="flex items-start gap-3">
                     <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate text-foreground">{activity.action}</p>
+                    <div>
+                      <p className="text-sm font-medium">{activity.action}</p>
                       <p className="text-xs text-muted-foreground">{activity.time}</p>
                     </div>
                   </div>
@@ -384,111 +342,9 @@ const Dashboard = () => {
               </CardContent>
             </Card>
           </div>
-
-          {/* Quick Actions */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
-              <CardDescription>Jump into your most-used tools</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {quickActions.map((action, index) => (
-                  <Button
-                    key={index}
-                    variant="outline"
-                    className="h-auto p-4 flex flex-col items-start gap-2"
-                  >
-                    <action.icon className="w-6 h-6" />
-                    <div>
-                      <p className="font-medium text-sm">{action.title}</p>
-                      <p className="text-xs text-muted-foreground mt-1">{action.description}</p>
-                    </div>
-                  </Button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Progress & Goals */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Funding Progress</CardTitle>
-                <CardDescription>Track your journey to funding success</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Pitch Completion</span>
-                    <span>75%</span>
-                  </div>
-                  <div className="w-full bg-muted rounded-full h-2">
-                    <div className="bg-primary h-2 rounded-full" style={{ width: '75%' }}></div>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Market Validation</span>
-                    <span>60%</span>
-                  </div>
-                  <div className="w-full bg-muted rounded-full h-2">
-                    <div className="bg-primary h-2 rounded-full" style={{ width: '60%' }}></div>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Financial Model</span>
-                    <span>40%</span>
-                  </div>
-                  <div className="w-full bg-muted rounded-full h-2">
-                    <div className="bg-primary h-2 rounded-full" style={{ width: '40%' }}></div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Upcoming Deadlines</CardTitle>
-                <CardDescription>Stay on track with your goals</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <Calendar className="w-4 h-4 text-gray-500 flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">Pitch Competition Submission</p>
-                    <p className="text-xs text-gray-500">Due in 5 days</p>
-                  </div>
-                  <span className="inline-flex items-center px-2 py-1 rounded-full bg-red-100 text-red-800 text-xs flex-shrink-0">
-                    High
-                  </span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Calendar className="w-4 h-4 text-gray-500 flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">Investor Meeting Prep</p>
-                    <p className="text-xs text-gray-500">Due in 2 weeks</p>
-                  </div>
-                  <span className="inline-flex items-center px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 text-xs flex-shrink-0">
-                    Medium
-                  </span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Calendar className="w-4 h-4 text-gray-500 flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">Market Research Update</p>
-                    <p className="text-xs text-gray-500">Due in 3 weeks</p>
-                  </div>
-                  <span className="inline-flex items-center px-2 py-1 rounded-full bg-green-100 text-green-800 text-xs flex-shrink-0">
-                    Low
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
         </main>
       </div>
+
       <ProfileSection
         user={user}
         isOpen={profileOpen}

@@ -1,20 +1,42 @@
 
+<<<<<<< HEAD
 
 // import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 // import { useEffect, useState } from 'react';
+=======
+// import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+// import { useEffect, useState } from 'react';
+
+>>>>>>> ae1b615 (Initial commit)
 // import Navbar from './components/Navbar';
 // import Home from './pages/Home';
 // import Dashboard from './pages/Dashboard';
 // import Register from './pages/Register';
 // import Login from './pages/Login';
 // import Onboarding from './pages/Onboarding';
+<<<<<<< HEAD
+=======
+// import About from './pages/About';
+// import PrivacyPolicy from './pages/privacypolicy';
+// import TermsOfService from './pages/termsofservice';
+// import Testimonials from './pages/testimonials';      // ✅ Added
+// import Integrations from './pages/integrations';      // ✅ Added
+
+>>>>>>> ae1b615 (Initial commit)
 // import { useTheme } from './store/theme';
 // import { useAuthStore } from './store/auth';
 // import { Toaster } from './components/ui/toaster';
 // import { Footer } from './components/Footer';
+<<<<<<< HEAD
 // import { doc, getDoc, getFirestore } from 'firebase/firestore';
 
 
+=======
+
+// import { doc, getDoc, getFirestore } from 'firebase/firestore';
+
+// // ✅ Middleware component for onboarding checks
+>>>>>>> ae1b615 (Initial commit)
 // function RequireOnboarding({ children }) {
 //   const { user, loading } = useAuthStore();
 //   const [checking, setChecking] = useState(true);
@@ -59,7 +81,10 @@
 //   useEffect(() => {
 //     if (!checking && user && onboardingStatus !== null) {
 //       const currentPath = location.pathname;
+<<<<<<< HEAD
 
+=======
+>>>>>>> ae1b615 (Initial commit)
 //       if (!onboardingStatus && currentPath !== '/onboarding') {
 //         navigate('/onboarding', { replace: true });
 //       } else if (onboardingStatus && currentPath === '/onboarding') {
@@ -71,19 +96,31 @@
 //   if (checking) {
 //     return (
 //       <div className="min-h-screen flex items-center justify-center">
+<<<<<<< HEAD
 //         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+=======
+//         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
+>>>>>>> ae1b615 (Initial commit)
 //       </div>
 //     );
 //   }
 
+<<<<<<< HEAD
 //   if (!checking && (!user || onboardingStatus === true || location.pathname === '/onboarding')) {
+=======
+//   if (!checking && (!user || onboardingStatus || location.pathname === '/onboarding')) {
+>>>>>>> ae1b615 (Initial commit)
 //     return children;
 //   }
 
 //   return null;
 // }
 
+<<<<<<< HEAD
 
+=======
+// // ✅ Main route rendered inside Theme and Auth context
+>>>>>>> ae1b615 (Initial commit)
 // function AppContent() {
 //   const location = useLocation();
 //   const { theme } = useTheme();
@@ -105,6 +142,14 @@
 //           <Route path="/register" element={<Register />} />
 //           <Route path="/login" element={<Login />} />
 //           <Route path="/onboarding" element={<Onboarding />} />
+<<<<<<< HEAD
+=======
+//           <Route path="/about" element={<About />} />
+//           <Route path="/privacy" element={<PrivacyPolicy />} />
+//           <Route path="/terms" element={<TermsOfService />} />
+//           <Route path="/testimonials" element={<Testimonials />} />
+//           <Route path="/integrations" element={<Integrations />} />  {/* ✅ NEW */}
+>>>>>>> ae1b615 (Initial commit)
 //           <Route
 //             path="/dashboard"
 //             element={
@@ -120,7 +165,11 @@
 //   );
 // }
 
+<<<<<<< HEAD
 
+=======
+// // ✅ AppWrapper for Router context
+>>>>>>> ae1b615 (Initial commit)
 // function AppWrapper() {
 //   return (
 //     <Router>
@@ -129,11 +178,18 @@
 //   );
 // }
 
+<<<<<<< HEAD
 
 // function App() {
 //   const { theme } = useTheme();
 //   const location = useLocation();
 
+=======
+// // ✅ App for Theme wrapper
+// function App() {
+//   const { theme } = useTheme();
+//   const location = useLocation();
+>>>>>>> ae1b615 (Initial commit)
 //   const isThemedRoute = ['/dashboard', '/onboarding'].includes(location.pathname);
 
 //   return (
@@ -145,7 +201,10 @@
 // }
 
 // export default AppWrapper;
+<<<<<<< HEAD
 
+=======
+>>>>>>> ae1b615 (Initial commit)
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 

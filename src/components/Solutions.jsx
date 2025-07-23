@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 
 // import React from 'react';
@@ -17,10 +18,32 @@
 //         title: 'PitchMaster',
 //         description:
 //           'Our PitchMasterAI helps craft powerful pitches — from refining messaging to targeting investors.',
+=======
+// "use client";
+
+// import React from "react";
+// import { Search, Lightbulb } from "lucide-react";
+
+// export default function SolutionsSection() {
+//   const solutions = [
+//     {
+//       id: 1,
+//       color: "yellow",
+//       problem: {
+//         title: "Master the Perfect Pitch",
+//         description:
+//           "First-time founders struggle to craft strong pitches and often miss funding due to unclear messaging.",
+//       },
+//       solution: {
+//         title: "PitchMaster",
+//         description:
+//           "Our PitchMasterAI helps craft powerful pitches — from refining messaging to targeting investors.",
+>>>>>>> ae1b615 (Initial commit)
 //       },
 //     },
 //     {
 //       id: 2,
+<<<<<<< HEAD
 //       color: 'purple',
 //       problem: {
 //         title: 'Isolated Founders Network',
@@ -59,11 +82,33 @@
 //         title: 'CoPilot',
 //         description:
 //           'Our in-house AI CoPilot solves your queries in real-time — from strategy help to tactical support.',
+=======
+//       color: "purple",
+//       problem: {
+//         title: "Isolated Founders Network",
+//         description:
+//           "Founders stay isolated from tools, insights, and real advice. Peer learning and networking feel hard to access.",
+//       },
+//       solution: {
+//         title: "Founderoo Community",
+//         description:
+//           "Founderoo connects founders with an active network — real-time insights, peer collaboration, and expert access.",
+>>>>>>> ae1b615 (Initial commit)
 //       },
 //     },
 //   ];
 
 //   const colorClasses = {
+<<<<<<< HEAD
+=======
+//     yellow: {
+//       border: "border-yellow-400",
+//       shadow: "shadow-yellow-300/30 hover:shadow-yellow-400/50",
+//       bgIcon: "from-yellow-100 to-yellow-200 border border-yellow-300",
+//       iconColor: "text-yellow-600",
+//       bgSolution: "from-yellow-400 to-yellow-500 border border-yellow-500/50 shadow-yellow-500/30 hover:shadow-yellow-500/50"
+//     },
+>>>>>>> ae1b615 (Initial commit)
 //     purple: {
 //       border: "border-purple-200",
 //       shadow: "shadow-purple-200/30 hover:shadow-purple-200/50",
@@ -71,6 +116,7 @@
 //       iconColor: "text-purple-600",
 //       bgSolution: "from-purple-200 to-purple-400 border border-purple-300 shadow-purple-300/40 hover:shadow-purple-400/60"
 //     },
+<<<<<<< HEAD
 //     blue: {
 //       border: "border-[#ccbbdb]",
 //       shadow: "shadow-[#ccbbdb]/30 hover:shadow-[#ccbbdb]/50",
@@ -109,6 +155,19 @@
 //         {/* Desktop layout */}
 //         <div className="hidden lg:grid lg:grid-cols-12 lg:gap-8 lg:items-start">
 //           <div className="col-span-4 text-right pr-8">
+=======
+//   };
+
+//   const renderSolutionBlock = (solution, index) => {
+//     const c = colorClasses[solution.color];
+
+//     return (
+//       <div key={solution.id} className="relative">
+//         {/* Desktop layout: horizontal/side by side */}
+//         <div className="hidden lg:grid lg:grid-cols-12 lg:gap-8 lg:items-start">
+//           {/* Problem Text */}
+//           <div className="col-span-4 text-right pr-8 flex flex-col justify-center">
+>>>>>>> ae1b615 (Initial commit)
 //             <h3 className="text-2xl md:text-3xl font-light mb-4 mt-1 text-gray-800">
 //               {solution.problem.title}
 //             </h3>
@@ -116,8 +175,13 @@
 //               {solution.problem.description}
 //             </p>
 //           </div>
+<<<<<<< HEAD
 
 //           <div className="col-span-4 flex items-start justify-center gap-4">
+=======
+//           {/* Problem & Solution Boxes side by side */}
+//           <div className="col-span-4 flex items-center justify-center gap-4">
+>>>>>>> ae1b615 (Initial commit)
 //             {/* Problem Box */}
 //             <div className={`rounded-3xl p-8 w-56 flex-shrink-0 bg-white/70 ${c.border} ${c.shadow} border shadow-lg backdrop-blur-sm transition-all duration-300`}>
 //               <div className="flex items-center justify-between mb-4">
@@ -127,10 +191,18 @@
 //               </div>
 //               <div className="text-center">
 //                 <div className="text-sm font-medium mb-1 text-gray-700">Problem</div>
+<<<<<<< HEAD
 //                 <div className={`text-2xl font-light ${c.iconColor}`}>{String(index + 1).padStart(2, '0')}</div>
 //               </div>
 //             </div>
 
+=======
+//                 <div className={`text-2xl font-light ${c.iconColor}`}>
+//                   {String(index + 1).padStart(2, "0")}
+//                 </div>
+//               </div>
+//             </div>
+>>>>>>> ae1b615 (Initial commit)
 //             {/* Solution Box */}
 //             <div className={`rounded-3xl p-8 w-56 flex-shrink-0 bg-gradient-to-br ${c.bgSolution} shadow-lg backdrop-blur-sm transition-all duration-300`}>
 //               <div className="flex items-center justify-between mb-4">
@@ -140,12 +212,23 @@
 //               </div>
 //               <div className="text-center">
 //                 <div className="text-sm font-medium mb-1 text-gray-800">Solution</div>
+<<<<<<< HEAD
 //                 <div className="text-2xl font-light text-gray-800">{String(index + 1).padStart(2, '0')}</div>
 //               </div>
 //             </div>
 //           </div>
 
 //           <div className="col-span-4 text-left pl-8">
+=======
+//                 <div className="text-2xl font-light text-gray-800">
+//                   {String(index + 1).padStart(2, "0")}
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//           {/* Solution Text */}
+//           <div className="col-span-4 text-left pl-8 flex flex-col justify-center">
+>>>>>>> ae1b615 (Initial commit)
 //             <h3 className="text-2xl md:text-3xl font-light mb-4 mt-1 text-gray-800">
 //               {solution.solution.title}
 //             </h3>
@@ -154,10 +237,15 @@
 //             </p>
 //           </div>
 //         </div>
+<<<<<<< HEAD
 
 //         {/* Mobile layout - modified */}
 //         <div className="lg:hidden space-y-8">
 //           {/* Problem Section */}
+=======
+//         {/* Mobile layout: vertical */}
+//         <div className="lg:hidden space-y-8">
+>>>>>>> ae1b615 (Initial commit)
 //           <div className="flex flex-col items-center">
 //             {/* Problem Box */}
 //             <div className={`rounded-3xl p-8 w-56 flex-shrink-0 bg-white/70 ${c.border} ${c.shadow} border shadow-lg backdrop-blur-sm transition-all duration-300 mb-6`}>
@@ -168,10 +256,16 @@
 //               </div>
 //               <div className="text-center">
 //                 <div className="text-sm font-medium mb-1 text-gray-700">Problem</div>
+<<<<<<< HEAD
 //                 <div className={`text-2xl font-light ${c.iconColor}`}>{String(index + 1).padStart(2, '0')}</div>
 //               </div>
 //             </div>
             
+=======
+//                 <div className={`text-2xl font-light ${c.iconColor}`}>{String(index + 1).padStart(2, "0")}</div>
+//               </div>
+//             </div>
+>>>>>>> ae1b615 (Initial commit)
 //             {/* Problem Text */}
 //             <div className="w-full text-center px-4">
 //               <h3 className="text-2xl font-light mb-4 mt-1 text-gray-800">
@@ -182,8 +276,11 @@
 //               </p>
 //             </div>
 //           </div>
+<<<<<<< HEAD
 
 //           {/* Solution Section */}
+=======
+>>>>>>> ae1b615 (Initial commit)
 //           <div className="flex flex-col items-center mt-8">
 //             {/* Solution Box */}
 //             <div className={`rounded-3xl p-8 w-56 flex-shrink-0 bg-gradient-to-br ${c.bgSolution} shadow-lg backdrop-blur-sm transition-all duration-300 mb-6`}>
@@ -194,10 +291,16 @@
 //               </div>
 //               <div className="text-center">
 //                 <div className="text-sm font-medium mb-1 text-gray-800">Solution</div>
+<<<<<<< HEAD
 //                 <div className="text-2xl font-light text-gray-800">{String(index + 1).padStart(2, '0')}</div>
 //               </div>
 //             </div>
             
+=======
+//                 <div className="text-2xl font-light text-gray-800">{String(index + 1).padStart(2, "0")}</div>
+//               </div>
+//             </div>
+>>>>>>> ae1b615 (Initial commit)
 //             {/* Solution Text */}
 //             <div className="w-full text-center px-4">
 //               <h3 className="text-2xl font-light mb-4 mt-1 text-gray-800">
@@ -217,7 +320,11 @@
 //     <div
 //       id="solution"
 //       className="bg-gradient-to-br from-amber-50 via-stone-100 to-amber-50 transition-colors duration-300"
+<<<<<<< HEAD
 //       style={{ backgroundColor: '#F5F2E8', paddingTop: '6rem' }}
+=======
+//       style={{ backgroundColor: "#F5F2E8", paddingTop: "6rem" }}
+>>>>>>> ae1b615 (Initial commit)
 //     >
 //       <div className="container mx-auto px-4 sm:px-6 md:px-8 pt-4 pb-16 md:pb-20 max-w-7xl">
 //         <div className="text-center mb-12 md:mb-20">
@@ -229,6 +336,7 @@
 //             Solution To The Problem
 //           </h1>
 //         </div>
+<<<<<<< HEAD
 
 //         <div className="relative">
 //           <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px bg-gray-200 -translate-x-1/2"></div>
@@ -239,6 +347,14 @@
 //           </div>
 
 //           {/* MOBILE BLOCKS */}
+=======
+//         <div className="relative">
+//           <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px bg-gray-200 -translate-x-1/2"></div>
+//           {/* For each block */}
+//           <div className="hidden lg:grid lg:grid-cols-1 lg:gap-y-32">
+//             {solutions.map((s, i) => renderSolutionBlock(s, i))}
+//           </div>
+>>>>>>> ae1b615 (Initial commit)
 //           <div className="lg:hidden space-y-32">
 //             {solutions.map((s, i) => renderSolutionBlock(s, i))}
 //           </div>
@@ -246,7 +362,11 @@
 //       </div>
 //     </div>
 //   );
+<<<<<<< HEAD
 // };
+=======
+// }
+>>>>>>> ae1b615 (Initial commit)
 
 "use client";
 
