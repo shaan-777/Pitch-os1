@@ -18,7 +18,7 @@ import { Component } from "@/components/faq-section";
 import { FeaturesSectionWithHoverEffects } from "@/components/Features";
 import { Pricing } from "@/components/ui/Pricing";
 import { PageLoader } from "@/components/ui/page-loader";
-import { SolutionsSection } from "@/components/Solutions";
+import SolutionsSection from "@/components/Solutions"; // ✅ FIXED HERE
 
 export default function Home() {
   const containerVariants = {
