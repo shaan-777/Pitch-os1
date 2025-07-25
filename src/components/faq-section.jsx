@@ -1,3 +1,4 @@
+
 "use client";
 import * as React from "react";
 import { useState } from "react";
@@ -49,8 +50,44 @@ const TabsContent = React.forwardRef(({ className, ...props }, ref) => (
 ));
 TabsContent.displayName = TabsPrimitive.Content.displayName;
 
-// FAQ Data
+const improvedGeneralFAQs = [
+  {
+    id: "what-is-pitchos",
+    question: "What is PitchOS and describe its goal ?",
+    answer:
+      "PitchOS is an AI-powered platform that helps entrepreneurs and startups create impressive pitch decks quickly and smartly. It streamlines your fundraising journey by generating compelling presentations with minimal effort.",
+  },
+  {
+    id: "pricing-plan",
+    question: "What are the pricing plans?",
+    answer:
+      "You can start using PitchOS for free (₹0) with core features. For advanced tools and enhanced support, upgrade to the Pro plan at just ₹499/month.",
+  },
+  {
+    id: "mobile-compatible",
+    question: "Is PitchOS available for both mobile and desktop?",
+    answer:
+      "Yes! PitchOS works seamlessly on both desktop and mobile devices, so you can create and edit your pitch deck anywhere.",
+  },
+  {
+    id: "customer-support",
+    question: "What kind of customer support do you offer?",
+    answer:
+      "We provide 24/7 chatbot support, so you can get instant assistance whenever you need it.",
+  },
+  {
+    id: "is-it-for-beginner",
+    question: "Is PitchOS suitable for beginners?",
+    answer:
+      "Absolutely! We provide beginner-friendly resources, mentorship, and an AI-powered pitch generator to make the pitching process easy for everyone.",
+  },
+];
+
 const FAQ_SECTIONS = {
+  general: {
+    category: "General",
+    items: improvedGeneralFAQs,
+  },
   technical: {
     category: "Technical",
     items: [
@@ -58,67 +95,36 @@ const FAQ_SECTIONS = {
         id: "tech-requirements",
         question: "What kind of technical requirements does PitchOS have? Do I need special software?",
         answer:
-          "PitchOS is a cloud-based platform, so you won't need to install any special software. You can access it directly through your web browser on any modern device (desktop, laptop, tablet, or smartphone). A stable internet connection is all you need to get the most out of our service.",
+          "PitchOS is a cloud-based platform, so you don't need to install any special software. Access it directly via any modern web browser with a stable internet connection.",
       },
       {
         id: "data-security-privacy",
         question: "How does PitchOS ensure the security and privacy of my pitch data?",
         answer:
-          "We prioritize the security and confidentiality of your sensitive pitch data. PitchOS employs industry-standard encryption protocols for data in transit and at rest. Access to your account is secured through robust authentication methods, and we adhere to strict privacy policies to ensure your intellectual property remains yours.",
+          "Your data's security is paramount. We use industry-standard encryption in transit and at rest, and have robust authentication and strict privacy policies.",
       },
       {
         id: "technical-support",
         question: "What kind of technical support can I expect if I encounter an issue?",
         answer:
-          "Our team is here to help! If you encounter any technical difficulties, you can reach out to our support team through our dedicated help desk or email. We offer assistance with platform navigation, troubleshooting common issues, and general guidance to ensure a smooth experience with PitchOS.",
+          "You can reach our support team via help desk or email. We provide assistance with navigation, troubleshooting, and general guidance.",
       },
       {
         id: "feature-updates",
-        question: "How often does PitchOS get updated with new features or improvements?",
+        question: "How often does PitchOS get updated?",
         answer:
-          "We're continuously working to enhance PitchOS with new features, AI model improvements, and performance optimizations. Updates are rolled out regularly to ensure you always have access to the latest tools and a cutting-edge experience. We strive for a seamless update process that won't disrupt your workflow.",
+          "We regularly roll out updates with new features, AI improvements and performance enhancements – so you'll always have the latest tools!",
       },
       {
         id: "api-integrations",
-        question: "Is there an API or any integration capabilities for PitchOS down the line?",
+        question: "Is there API or integration for PitchOS?",
         answer:
-          "While not fully launched yet, we are actively exploring and planning API access and various integration possibilities for PitchOS. Our goal is to enable seamless connections with other tools and workflows in the future, providing more flexibility and automation for our users. Stay tuned for updates on our development roadmap!",
-      },
-    ],
-  },
-  general: {
-    category: "General",
-    items: [
-      {
-        id: "what-is-pitchos",
-        question: "What is PitchOS?",
-        answer: "PitchOS is an AI-powered platform that helps startups and entrepreneurs create powerful pitch decks quickly and intelligently.",
-      },
-      {
-        id: "free-trial",
-        question: "Is there a free trial available?",
-        answer: "Yes! We offer a free trial so you can explore the platform before committing to a paid plan.",
-      },
-      {
-        id: "cancel-anytime",
-        question: "Can I cancel my subscription anytime?",
-        answer: "Yes, you can cancel any time from your account dashboard without any additional charges.",
-      },
-      {
-        id: "mobile-access",
-        question: "Can I use PitchOS on mobile devices?",
-        answer: "Absolutely. PitchOS is fully responsive and optimized for mobile, tablet, and desktop usage.",
-      },
-      {
-        id: "how-to-contact",
-        question: "How do I contact support?",
-        answer: "You can reach us through in-app chat, our support email, or the Help Center for immediate assistance.",
+          "We're planning API access and integration features soon, to help you connect PitchOS with your workflows. Stay tuned!",
       },
     ],
   },
 };
 
-// Accordion
 const FAQAccordion = ({ items }) => (
   <div className="space-y-6">
     <div className="bg-white/50 backdrop-blur-sm border border-purple-200 rounded-2xl shadow-lg shadow-purple-200/30 overflow-hidden">
@@ -127,9 +133,7 @@ const FAQAccordion = ({ items }) => (
           <AccordionItem
             key={faq.id}
             value={faq.id}
-            className={`border-b border-purple-200/50 last:border-b-0 ${
-              index % 2 === 0 ? "bg-white/30" : "bg-transparent"
-            }`}
+            className={`border-b border-purple-200/50 last:border-b-0 ${index % 2 === 0 ? "bg-white/30" : "bg-transparent"}`}
           >
             <AccordionTrigger className="text-left hover:no-underline px-6 py-4 text-gray-700 hover:text-purple-700 transition-colors duration-300 font-medium">
               {faq.question}
@@ -144,9 +148,8 @@ const FAQAccordion = ({ items }) => (
   </div>
 );
 
-// Component
 export const Component = () => {
-  const [activeView, setActiveView] = useState("technical");
+  const [activeView, setActiveView] = useState("general");
 
   return (
     <div
@@ -164,7 +167,6 @@ export const Component = () => {
 
       <div className="container mx-auto px-4 max-w-4xl relative z-[2]">
         <header className="text-center mb-12">
-          {/* ✅ Removed Purple "FAQs" Label */}
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 text-gray-700">
             Frequently asked questions
           </h1>
@@ -175,10 +177,14 @@ export const Component = () => {
 
         {/* Tabs */}
         <div className="flex justify-center sticky top-2 mb-8 z-[3]">
-          <Tabs defaultValue="technical" onValueChange={(value) => setActiveView(value)} className="max-w-xl">
+          <Tabs
+            defaultValue="general"
+            onValueChange={(value) => setActiveView(value)}
+            className="max-w-xl"
+          >
             <TabsList className="w-full justify-center">
-              <TabsTrigger value="technical">Technical FAQs</TabsTrigger>
               <TabsTrigger value="general">General FAQs</TabsTrigger>
+              <TabsTrigger value="technical">Technical FAQs</TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
