@@ -43,8 +43,9 @@
 //     </div>
 //   );
 // }
+
 import React from "react";
-import HeroImg from "../assets/about-hero.jpg"; // Your yellow hero image here
+import HeroImg from "../assets/about-hero.jpg";
 
 const AboutUs = () => (
   <section className="min-h-screen bg-white flex flex-col px-0 pt-28 pb-0">
@@ -54,7 +55,13 @@ const AboutUs = () => (
         About Us
       </h1>
       <div className="max-w-xl ml-auto text-[#434161] text-base md:text-[1.09rem] leading-normal font-normal">
-        Superly is a marketplace where individuals and organizations can purchase carbon offsets and renewable energy certificates for cryptocurrency, NFTs, Metaverse assets, DAOs, and gaming as well as their overall lifestyle. Superly supports users who want to pay with cryptocurrency. Superly provides a tailored methodology for calculating how many carbon offsets are needed to create a virtual portfolio that is carbon neutral. We offer climate forward services at the personal and corporate levels.
+        PitchOS is an AI platform for startup founders and entrepreneurs.  
+        You can make beautiful pitch decks in minutes with our intelligent tools.<br />
+        The platform works on both desktop and mobile devices for your convenience.<br />
+        We offer a simple, user-friendly interface—no experience needed.<br />
+        Our team provides 24/7 chatbot support to help at every step.<br />
+        New founders get learning resources, mentorship, and AI guidance.<br />
+        With PitchOS, anyone can impress investors and share big ideas confidently.
       </div>
     </div>
 
