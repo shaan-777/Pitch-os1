@@ -1,4 +1,3 @@
-
 import { Check, Minus, MoveRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -39,7 +38,7 @@ function Pricing() {
     <div 
       id="pricing" 
       className="w-full py-20 lg:py-40 bg-gradient-to-br from-amber-50 via-stone-100 to-amber-50" 
-      style={{backgroundColor: '#F5F2E8'}}
+      style={{ backgroundColor: '#F5F2E8' }}
     >
       {/* Background Gradient */}
       <div
@@ -205,5 +204,4 @@ function Pricing() {
   );
 }
 
-export { Pricing };
-
+export default Pricing;
