@@ -16,7 +16,7 @@ import { HeroSection } from "@/components/Hero";
 import { FeatureSteps } from "@/components/GetStarted";
 import { Component } from "@/components/faq-section";
 import { FeaturesSectionWithHoverEffects } from "@/components/Features";
-import { Pricing } from "@/components/ui/Pricing";
+import  Pricing  from "@/components/ui/Pricing";
 import { PageLoader } from "@/components/ui/page-loader";
 import SolutionsSection from "@/components/Solutions"; // ✅ FIXED HERE
 
