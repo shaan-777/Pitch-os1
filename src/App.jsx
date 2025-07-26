@@ -1,27 +1,33 @@
 
-import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+import { useEffect, useState } from "react";
 
-import Navbar from './components/Navbar';
-import Home from './pages/Home';
-import Dashboard from './pages/Dashboard';
-import Register from './pages/Register';
-import Login from './pages/Login';
-import Onboarding from './pages/Onboarding';
-import About from './pages/About';
-import PrivacyPolicy from './pages/PrivacyPolicy'; // <-- Use correct casing and path
-import TermsOfService from './pages/TermsOfService';
-import Testimonials from './pages/Testimonials';
-import Integrations from './pages/Integrations';
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import Onboarding from "./pages/Onboarding";
+import About from "./pages/About";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import Testimonials from "./pages/Testimonials";
+import Integrations from "./pages/Integrations";
 
-import { useTheme } from './store/theme';
-import { useAuthStore } from './store/auth';
-import { Toaster } from './components/ui/toaster';
-import { Footer } from './components/Footer';
+import { useTheme } from "./store/theme";
+import { useAuthStore } from "./store/auth";
+import { Toaster } from "./components/ui/toaster";
+import { Footer } from "./components/Footer";
 
-import { doc, getDoc, getFirestore } from 'firebase/firestore';
+import { doc, getDoc, getFirestore } from "firebase/firestore";
 
-// Middleware for redirecting users based on onboarding status
+// Middleware for onboarding check
 function RequireOnboarding({ children }) {
   const { user, loading } = useAuthStore();
   const [checking, setChecking] = useState(true);
@@ -40,17 +46,20 @@ function RequireOnboarding({ children }) {
         if (isMounted) setChecking(false);
         return;
       }
+
       try {
-        const settingsRef = doc(db, 'userSettings', user.uid);
+        const settingsRef = doc(db, "userSettings", user.uid);
         const settingsSnap = await getDoc(settingsRef);
-        const isCompleted = settingsSnap.exists() && settingsSnap.data().onboardingCompleted === true;
+        const isCompleted =
+          settingsSnap.exists() &&
+          settingsSnap.data().onboardingCompleted === true;
 
         if (isMounted) {
           setOnboardingStatus(isCompleted);
           setChecking(false);
         }
       } catch (error) {
-        console.error('Error checking onboarding status:', error);
+        console.error("Error checking onboarding status:", error);
         if (isMounted) setChecking(false);
       }
     };
@@ -66,10 +75,10 @@ function RequireOnboarding({ children }) {
   useEffect(() => {
     if (!checking && user && onboardingStatus !== null) {
       const currentPath = location.pathname;
-      if (!onboardingStatus && currentPath !== '/onboarding') {
-        navigate('/onboarding', { replace: true });
-      } else if (onboardingStatus && currentPath === '/onboarding') {
-        navigate('/dashboard', { replace: true });
+      if (!onboardingStatus && currentPath !== "/onboarding") {
+        navigate("/onboarding", { replace: true });
+      } else if (onboardingStatus && currentPath === "/onboarding") {
+        navigate("/dashboard", { replace: true });
       }
     }
   }, [checking, onboardingStatus, location.pathname, navigate, user]);
@@ -82,14 +91,14 @@ function RequireOnboarding({ children }) {
     );
   }
 
-  if (!checking && (!user || onboardingStatus || location.pathname === '/onboarding')) {
+  if (!checking && (!user || onboardingStatus || location.pathname === "/onboarding")) {
     return children;
   }
 
   return null;
 }
 
-// Main app content - routes and conditional layout
+// Main route + layout logic
 function AppContent() {
   const location = useLocation();
   const { initializeAuthListener } = useAuthStore();
@@ -99,7 +108,7 @@ function AppContent() {
     return () => unsubscribe();
   }, [initializeAuthListener]);
 
-  const isDashboard = location.pathname === '/dashboard';
+  const isDashboard = location.pathname === "/dashboard";
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -111,7 +120,7 @@ function AppContent() {
           <Route path="/login" element={<Login />} />
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/about" element={<About />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} /> {/* <- updated path */}
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/testimonials" element={<Testimonials />} />
           <Route path="/integrations" element={<Integrations />} />
@@ -130,26 +139,26 @@ function AppContent() {
   );
 }
 
-// Top-level router wrapper
-function AppWrapper() {
-  return (
-    <Router>
-      <App />
-    </Router>
-  );
-}
-
-// Handles theming across routes
+// App-level theme & toaster
 function App() {
   const { theme } = useTheme();
   const location = useLocation();
-  const isThemedRoute = ['/dashboard', '/onboarding'].includes(location.pathname);
+  const isThemedRoute = ["/dashboard", "/onboarding"].includes(location.pathname);
 
   return (
-    <div className={isThemedRoute ? theme : 'light'}>
+    <div className={isThemedRoute ? theme : "light"}>
       <AppContent />
       <Toaster />
     </div>
+  );
+}
+
+// Top-level wrapper with React Router + future flags
+function AppWrapper() {
+  return (
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <App />
+    </BrowserRouter>
   );
 }
 
