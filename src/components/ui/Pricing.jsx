@@ -1,8 +1,8 @@
 import { Check, Minus, MoveRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import React from "react"; // ✅ Needed for React.Fragment
 
-// --- Simplified Pricing Plans (Only Basic & Regular) ---
 const pricingPlans = [
   {
     name: "Basic",
@@ -21,7 +21,7 @@ const pricingPlans = [
     buttonText: "Start Regular Plan",
     buttonVariant: "default",
     icon: MoveRight,
-  }
+  },
 ];
 
 const features = [
@@ -40,7 +40,6 @@ function Pricing() {
       className="w-full py-20 lg:py-40 bg-gradient-to-br from-amber-50 via-stone-100 to-amber-50" 
       style={{ backgroundColor: '#F5F2E8' }}
     >
-      {/* Background Gradient */}
       <div
         aria-hidden
         className="z-[1] absolute inset-0 pointer-events-none isolate opacity-30 contain-strict hidden lg:block"
@@ -106,17 +105,15 @@ function Pricing() {
               </div>
             ))}
 
-            {/* Features Header */}
             <div className="col-span-1 px-3 lg:px-6 py-4 border-t text-left bg-gradient-to-r from-purple-50 to-yellow-50">
               <b className="text-gray-700">Features</b>
             </div>
             <div></div>
             <div></div>
 
-            {/* Feature Rows */}
             {features.map((feature, index) => (
-              <>
-                <div key={feature.name} className={`col-span-1 px-3 lg:px-6 py-4 border-t text-left text-gray-700 ${index % 2 === 0 ? "bg-white/30" : "bg-transparent"}`}>
+              <React.Fragment key={feature.name}>
+                <div className={`col-span-1 px-3 lg:px-6 py-4 border-t text-left text-gray-700 ${index % 2 === 0 ? "bg-white/30" : "bg-transparent"}`}>
                   {feature.name}
                 </div>
                 {pricingPlans.map((plan) => {
@@ -135,11 +132,11 @@ function Pricing() {
                     </div>
                   );
                 })}
-              </>
+              </React.Fragment>
             ))}
           </div>
 
-          {/* Mobile Pricing Cards */}
+          {/* Mobile Cards */}
           <div className="lg:hidden w-full flex flex-col gap-8 pt-10 md:pt-20">
             {pricingPlans.map((plan) => (
               <div
@@ -157,7 +154,6 @@ function Pricing() {
                     </div>
                   </div>
                 )}
-
                 <p className="text-2xl font-semibold text-gray-700">{plan.name}</p>
                 <p className="text-sm text-gray-600 mt-2">{plan.description}</p>
                 <p className="flex flex-col lg:flex-row lg:items-center gap-2 text-xl mt-8">
