@@ -13,7 +13,7 @@ import Dashboard from "./pages/Dashboard";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Onboarding from "./pages/Onboarding";
-import About from "./pages/about"; // ✅ Correct lowercase import
+import AboutUs from "./pages/about"; // ✅ Correct lowercase file + correct component name
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import Testimonials from "./pages/Testimonials";
@@ -97,7 +97,7 @@ function RequireOnboarding({ children }) {
   return null;
 }
 
-// Main route + layout logic
+// Main layout + routes
 function AppContent() {
   const location = useLocation();
   const { initializeAuthListener } = useAuthStore();
@@ -118,7 +118,7 @@ function AppContent() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/onboarding" element={<Onboarding />} />
-          <Route path="/about" element={<About />} />
+          <Route path="/about" element={<AboutUs />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/testimonials" element={<Testimonials />} />
@@ -138,7 +138,7 @@ function AppContent() {
   );
 }
 
-// App-level theme & toaster
+// Theme wrapper
 function App() {
   const { theme } = useTheme();
   const location = useLocation();
@@ -152,7 +152,7 @@ function App() {
   );
 }
 
-// Top-level wrapper with React Router + future flags
+// Top level wrapper
 function AppWrapper() {
   return (
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
